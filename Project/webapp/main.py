@@ -17,10 +17,11 @@ def login_usrn():
         username = request.form.get('username')
         password = request.form.get('password')
         remember = request.form.get('remember')
-        user =models.User.query.filter(models.User.username == username,models.User.password == password).first()
+        user = models.User.query.filter(models.User.username == username,models.User.password == password).first()
         if user:
             if user.role == models.Role.admin:
                 login_user(user,remember)
+                flash('Đăng nhập thành công')
                 return redirect('/admin')
             else:
                 flash("Cần đăng nhập tài khoản admin",category='error')

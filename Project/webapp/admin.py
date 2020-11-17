@@ -13,11 +13,15 @@ class LogoutView(BaseView):
         return redirect('/admin')
     def is_accessible(self):
         return current_user.is_authenticated
+class AuthenticationView(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated
 
 
-admin.add_view(ModelView(models.User, db.session))
-admin.add_view(ModelView(models.Round,db.session))
-admin.add_view(ModelView(models.Result,db.session))
-admin.add_view(ModelView(models.Player,db.session))
-admin.add_view(ModelView(models.Team,db.session))
-admin.add_view(ModelView(models.Match,db.session))
+
+admin.add_view(AuthenticationView(models.User, db.session))
+admin.add_view(AuthenticationView(models.Round,db.session))
+admin.add_view(AuthenticationView(models.Result,db.session))
+admin.add_view(AuthenticationView(models.Player,db.session))
+admin.add_view(AuthenticationView(models.Team,db.session))
+admin.add_view(AuthenticationView(models.Match,db.session))
