@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.config</OriginalElement>
+  <nodes>
+    <node x="0.0" y="415.0">fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.teamsinround</node>
+    <node x="362.0" y="327.0">fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.player</node>
+    <node x="190.00000000000003" y="393.0">fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.match</node>
+    <node x="2.25" y="77.0">fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.round</node>
+    <node x="480.88166666666666" y="871.0">fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.goal</node>
+    <node x="815.0" y="0.0">fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.prioritysort</node>
+    <node x="228.86166666666668" y="0.0">fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.team</node>
+    <node x="796.0" y="195.0">fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.config</node>
+    <node x="567.0" y="687.0">fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.typegoals</node>
+    <node x="203.50000000000003" y="654.0">fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.result</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.result" target="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.match">
+      <point x="-52.5" y="-83.5" />
+      <point x="256.0" y="629.0" />
+      <point x="265.5" y="629.0" />
+      <point x="0.0" y="72.5" />
+    </edge>
+    <edge source="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.match" target="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.team">
+      <point x="50.333333333333314" y="-72.5" />
+      <point x="315.83333333333337" y="307.0" />
+      <point x="324.8616666666667" y="307.0" />
+      <point x="0.0" y="138.5" />
+    </edge>
+    <edge source="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.teamsinround" target="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.round">
+      <point x="-42.5" y="-50.5" />
+      <point x="-40.25" y="61.5" />
+    </edge>
+    <edge source="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.teamsinround" target="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.team">
+      <point x="42.5" y="-50.5" />
+      <point x="127.5" y="307.0" />
+      <point x="248.06166666666667" y="307.0" />
+      <point x="-76.80000000000001" y="138.5" />
+    </edge>
+    <edge source="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.match" target="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.round">
+      <point x="-50.33333333333334" y="-72.5" />
+      <point x="215.16666666666669" y="297.0" />
+      <point x="123.0" y="297.0" />
+      <point x="40.25" y="61.5" />
+    </edge>
+    <edge source="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.goal" target="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.player">
+      <point x="0.0" y="-83.5" />
+      <point x="549.8816666666667" y="846.0" />
+      <point x="556.5" y="846.0" />
+      <point x="0.0" y="138.5" />
+    </edge>
+    <edge source="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.result" target="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.team">
+      <point x="52.5" y="-83.5" />
+      <point x="361.0" y="629.0" />
+      <point x="351.5" y="629.0" />
+      <point x="351.5" y="307.0" />
+      <point x="363.2616666666667" y="307.0" />
+      <point x="38.400000000000034" y="138.5" />
+    </edge>
+    <edge source="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.goal" target="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.typegoals">
+      <point x="46.0" y="-83.5" />
+      <point x="595.8816666666667" y="846.0" />
+      <point x="634.0" y="846.0" />
+      <point x="0.0" y="50.5" />
+    </edge>
+    <edge source="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.config" target="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.prioritysort">
+      <point x="0.0" y="-149.5" />
+      <point x="0.0" y="72.5" />
+    </edge>
+    <edge source="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.goal" target="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.result">
+      <point x="-46.0" y="-83.5" />
+      <point x="503.88166666666666" y="846.0" />
+      <point x="308.5" y="846.0" />
+      <point x="0.0" y="83.5" />
+    </edge>
+    <edge source="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.player" target="fedf8210-7d27-4fd1-ac9e-20b2760871f3.TABLE:dbmanagersoccer.team">
+      <point x="0.0" y="-138.5" />
+      <point x="556.5" y="307.0" />
+      <point x="401.6616666666667" y="307.0" />
+      <point x="76.80000000000001" y="138.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.5332703213610587" x="624.1811414392058" y="509.19922013470386" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Key columns</Category>
+    <Category>Virtual foreign keys</Category>
+    <Category>Columns</Category>
+  </Categories>
+</Diagram>
+
