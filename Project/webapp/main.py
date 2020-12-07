@@ -12,12 +12,12 @@ def logout():
     logout_user()
     return redirect('/admin')
 @app.route("/admin/login",methods=['post'])
-def login_usrn():
+def login_admin():
     if request.method=="POST":
         username = request.form.get('username')
         password = request.form.get('password')
         remember = request.form.get('remember')
-        user = models.User.query.filter(models.User.username == username,models.User.password == password).first()
+        user = models.User.query.filter(models.User.username == username,models.User.password == password ,models.User.active == True).first()
         if user:
             if user.role == models.Role.admin:
                 login_user(user,remember)

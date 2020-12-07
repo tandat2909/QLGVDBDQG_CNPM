@@ -1,10 +1,12 @@
 class thongso:
-    server = 'TANDAT_2909\DBSQL2019_01'
-    database = 'QLGVDBDQG'
-    username = 'sa'
-    password = 'root'
-    driver = 'ODBC+Driver+17+for+SQL+Server'
+    server = 'localhost'
+    database = 'dbmanagersoccer'
+    username = 'user1'
+    password = 'Khongbietphaidatgi'
+    driver = 'utf8mb4'
 class Config(object):
-    SQLALCHEMY_DATABASE_URI=str.format(f"mssql+pyodbc://{thongso.username}:{thongso.password}@{thongso.server}/{thongso.database}?driver={thongso.driver}")
+    #'mysql+pymysql://root:123456@localhost/saledbv1?charset=utf8'
+    SQLALCHEMY_DATABASE_URI=str.format(f"mysql+pymysql://{thongso.username}:{thongso.password}@{thongso.server}/{thongso.database}?charset={thongso.driver}")
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SECRET_KEY = '=xx08_xe2xd6o#$%x0cxadxad'
+    FLASK_ADMIN_FLUID_LAYOUT = True

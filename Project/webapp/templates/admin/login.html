@@ -4,7 +4,7 @@
         <div class="card card-container">
             <img id="profile-img" class="profile-img-card" src="{{ url_for('static',filename = 'image/avatar.png')}}" />
             <p id="profile-name" class="profile-name-card"></p>
-            <form method="post" action="{{url_for('login_usrn')}}" class="form-signin">
+            <form method="post" action="{{url_for('login_admin')}}" class="form-signin">
                 <span id="reauth-email" class="reauth-email"></span>
                 <input type="text" id="username" name="username" class="form-control" placeholder="User name" required autofocus>
                 <input type="password" id="password" name = "password" class="form-control" placeholder="Password" required>

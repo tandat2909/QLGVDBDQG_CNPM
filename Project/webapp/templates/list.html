@@ -1,7 +1,11 @@
-{% extends 'admin/master.html' %}
+{% extends 'admin/model/list.html' %}
+{% import 'admin/model/layout.html' as model_layout with context %}
+
+
 {% block head %}
     <link href="{{url_for('static',filename ='css/style.css')}}" rel="stylesheet">
 {% endblock %}
+
 {% block access_control %}
 {% if current_user.is_authenticated %}
     {% import 'layout.html' as layout with context -%}
@@ -9,11 +13,11 @@
 
 {% endif %}
 {% endblock %}
-
-{% block body %}
-    {% if current_user.is_authenticated %}
-        <h1>helo admin </h1>
-    {% else %}
-        {% include 'admin/login.html' %}
+{% block brand %}
+    <h2 id="brand" class="text-white mr-4">{{ admin_view.name|capitalize }}list </h2>
+    {% if admin_view.can_create %}
     {% endif %}
+{% endblock %}
+
+{% block model_menu_bar %}
 {% endblock %}
