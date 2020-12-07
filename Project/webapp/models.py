@@ -9,7 +9,6 @@ from enum import Enum
 from sqlalchemy.orm import relationship, backref
 
 
-
 class Role(Enum):
     admin = 2
     manager = 1
@@ -55,6 +54,13 @@ class EPosition(Enum):
     RM = "Tièn vệ phải"
 
 
+class UuTienSapXep(Enum):
+    Diem = 1
+    HieuSo = 2
+    TongBanThang = 3
+    DoiKhang = 4
+
+
 class BaseModel(db.Model):
     __abstract__ = True
     id = Column(UUIDType(binary=True), primary_key=True, default=uuid.uuid4)
@@ -64,8 +70,8 @@ class BaseModel(db.Model):
         return self.name
 
 
-class User(BaseModel, UserMixin):
-    __tablename__ = "User"
+class Team(BaseModel, UserMixin):
+    __tablename__ = "team"
 
     username = Column(String(50), nullable=False)
     password = Column(String(600), nullable=False)
@@ -73,22 +79,13 @@ class User(BaseModel, UserMixin):
     role = Column(EnumSQL(Role), nullable=False, default=Role.manager)
     email = Column(String(100), nullable=False)
     phonenumber = Column(String(20), nullable=True)
+    stadium = Column(String(200), nullable=False)
     active = Column(Boolean, nullable=False, default=True)
-    # relationship
-    team_user = relationship("Team", backref=backref('users'), lazy=True)
-
-
-# Danh sach doi bong
-class Team(BaseModel):
-    __tablename__ = "ListTeam"
-    stadium = Column(String(50), nullable=False)
     # Được duyệt hay chưa
     invalid = Column(Boolean, default=False)
     # relationship
-    player_team = relationship("Player", backref="teams", lazy=True)
-    match_team = relationship('Match', backref=backref('teams'), lazy=True)
-    # ForeignKey
-    user_id = Column(UUIDType(binary=True), ForeignKey(User.id), nullable=False)
+    player_team = relationship("Player", backref="team", lazy=True)
+    match_team = relationship('Match', backref=backref('team'), lazy=True)
 
 
 # Danh sach cau thu
@@ -103,19 +100,27 @@ class Player(BaseModel):
     #  Tổng số bàn thắng
     scorecount = Column(Integer)
     note = Column(String(100))
-    # Được duyệt hay chưa
-    invalid = Column(Boolean, default=False)
+
     gender = Column(EnumSQL(EGender), default=EGender.Orther)
     # anh cau thu
     avatar = Column(String(200))
 
     # relationship
 
-    player_result = relationship("Result", backref="players", lazy=True)
+    player_result = relationship("Result", backref="player", lazy=True)
 
     # ForeignKey
 
     team_id = Column(UUIDType(binary=True), ForeignKey(Team.id), nullable=False)
+
+
+class TypeGoals(db.Model):
+    __tablename__ = "TypeGoals"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(100), nullable=False)
+    value = Column(String(500), nullable=False)
+
+    goal_Type = relationship('Goal', backref=backref('TypeGoals'), lazy=True)
 
 
 # Bảng đấu
@@ -125,12 +130,21 @@ class Round(BaseModel):
     groupname = Column(String(10))
     # Số lượng các dội
     numberofteam = Column(Integer, nullable=False)
-    # Số lượn team được chọn
-    teamselected = Column(Integer, nullable=False)
     # Thể thức
     format = Column(String(100))
     # relationship
     round_match = relationship("Match", backref="rounds", lazy=True)
+    # team đc chọn
+    teamselected = relationship('team', secondary="TeamsInRound", lazy='subquery', backref=backref('round', lazy=True))
+
+
+class TeamsInRound(BaseModel):
+    __tablename__ = "TeamsInRound"
+    id = None
+    name = None
+    round_id = Column(UUIDType(binary=True), ForeignKey(Round.id), primary_key=True)
+    team_id = Column(UUIDType(binary=True), ForeignKey(Team.id), primary_key=True)
+    timeJoinRound = Column(DATETIME, default=datetime.now())
 
 
 # Trận đấu
@@ -140,9 +154,9 @@ class Match(BaseModel):
     name = None
     datetime = Column(DATETIME, nullable=False)
     # relationship
-    match_result = relationship("Result", backref=backref("matchs", uselist=False), lazy=True)
+    match_result = relationship("Result", backref=backref("match", uselist=False), lazy=True)
     # ForeignKey
-    stadium_id = Column(UUIDType(binary=True), ForeignKey(Team.id), nullable=False, )
+
     round_id = Column(UUIDType(binary=True), ForeignKey(Round.id), nullable=False)
     # đội nhà
     hometeam = Column(UUIDType(binary=True), ForeignKey(Team.id), nullable=False)
@@ -150,18 +164,44 @@ class Match(BaseModel):
     awayteam = Column(UUIDType(binary=True), ForeignKey(Team.id), nullable=False)
 
 
+class Config(BaseModel):
+    __tablename__ = "Config"
+    winScore = Column(Integer, nullable=False)
+    tieScore = Column(Integer, nullable=False)
+    loseScore = Column(Integer, nullable=False)
+    maxPlayer = Column(Integer, nullable=False)
+    minPlayer = Column(Integer, nullable=False)
+    amountForeignPlayer = Column(Integer, nullable=False)
+    maxAgePlayer = Column(Integer, nullable=False)
+    minAgePlayer = Column(Integer, nullable=False)
+    thoiDiemGhiBanToiDa = Column(Integer, nullable=False)
+    prioritySort_id = Column(Integer, ForeignKey('PrioritySort.id'))
+
+
+class PrioritySort(BaseModel):
+    __tablename__ = "PrioritySort"
+    """
+        thứ tự ưu tiên sắp xếp
+    """
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = None
+    Diem = Column(Integer, nullable=False, default=1)
+    HieuSo = Column(Integer, nullable=False, default=2)
+    TongBanThang = Column(Integer, nullable=False, default=3)
+    DoiKhang = Column(Integer, nullable=False, default=4)
+    PrioritySort_Config = relationship('Config', backref=backref('prioritySort'), lazy=True)
+
+
 # Bán thắng
 class Goal(BaseModel):
-    # cầu thủ ghi bàn
-
-    type = Column(EnumSQL(ETypeGoal), nullable=False)
     # thời gian ghi bàn
     time = Column(DATETIME, nullable=False)  # Kết quả
-
     # relationship
-    result_goal = relationship('Result', backref=backref('goals'), lazy=True)
-    #ForeignKey
+    # ForeignKey
+    result_id = Column(UUIDType(binary=True), ForeignKey("Result.id"))
     player = Column(UUIDType(binary=True), ForeignKey(Player.id), nullable=False)
+    type_id = Column(Integer, ForeignKey(TypeGoals.id), nullable=False)
+
 
 class Result(BaseModel):
     __tablename__ = "Result"
@@ -169,15 +209,18 @@ class Result(BaseModel):
     # loại kết quả thắng thua hoa
     typeresult = Column(EnumSQL(ETypeResult), nullable=False)
 
+    # relationship
+    result_goal = relationship('Goal', backref=backref('result'), lazy=True)
+
     # ForeignKey
     # kết quả của trận đấu nào
-    match_id = Column(UUIDType(binary=True), ForeignKey(Match.id), nullable=False, )
+    match_id = Column(UUIDType(binary=True), ForeignKey(Match.id), nullable=False, primary_key=True)
     # đội thắng
     team_id = Column(UUIDType(binary=True), ForeignKey(Team.id), nullable=False)
     # số bàn thắng của đội thắng
-    winnergoals_id = Column(UUIDType(binary=True), ForeignKey(Goal.id), nullable=False)
-    # Số bàn thắng đội thua (???)
-    losergoals_id = Column(UUIDType(binary=True), ForeignKey(Goal.id), nullable=False)
+    winnergoals = Column(Integer, nullable=False)
+    # Số bàn thắng đội thua
+    losergoals = Column(Integer, nullable=False)
 
 
 if __name__ == '__main__':
