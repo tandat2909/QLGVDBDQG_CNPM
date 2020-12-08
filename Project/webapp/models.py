@@ -92,6 +92,8 @@ class Position(BaseModel):
 # Danh sach cau thu
 class Player(BaseModel):
     __tablename__ = "Player"
+    lastname = Column(String(100))
+    firstname = Column(String(100))
     birthdate = Column(DATETIME, nullable=False)
     nationality = Column(String(100), default="")
     # loai cầu thủ
@@ -99,15 +101,11 @@ class Player(BaseModel):
     #  Tổng số bàn thắng
     scorecount = Column(Integer, default=0)
     note = Column(String(100))
-
     gender = Column(EnumSQL(EGender), default=EGender.Orther)
     # anh cau thu
     avatar = Column(String(200))
-
     # relationship
-
     player_goal = relationship("Goal", backref="player", lazy=True)
-
     # ForeignKey
     # Vị trí thi đấu(Tiền vệ trái, hậu vệ phải...) Có thể để dạng Enum
     position_id = Column(UUIDType(binary=True), ForeignKey(Position.id), nullable=False)
