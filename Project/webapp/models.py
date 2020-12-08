@@ -39,6 +39,7 @@ class ETypeGoal(Enum):
 
 
 class EPosition(Enum):
+    HLV = "Huấn luyện viên"
     GK = "Thủ môn"
     LF = "Tiền đạo cánh trái"
     RF = "Tiền đạo cánh phải"
@@ -52,14 +53,6 @@ class EPosition(Enum):
     LS = "Hậu vệ trái"
     LM = "Tiền vệ trái"
     RM = "Tièn vệ phải"
-
-
-class UuTienSapXep(Enum):
-    Diem = 1
-    HieuSo = 2
-    TongBanThang = 3
-    DoiKhang = 4
-
 
 class BaseModel(db.Model):
     __abstract__ = True
@@ -87,14 +80,18 @@ class Team(BaseModel, UserMixin):
     player_team = relationship("Player", backref="team", lazy=True)
     match_team = relationship('Match', backref=backref('team'), lazy=True)
 
+class Position(BaseModel):
+    __tablename = "Position"
+    symbol = Column(String(10))
+    detail = Column(String(300))
+
 
 # Danh sach cau thu
 class Player(BaseModel):
     __tablename__ = "Player"
     birthdate = Column(DATETIME, nullable=False)
     nationality = Column(String(100), default="")
-    # Vị trí thi đấu(Tiền vệ trái, hậu vệ phải...) Có thể để dạng Enum
-    position = Column(EnumSQL(EPosition), nullable=False, default="")
+
     # loai cau
     typeplayer = Column(EnumSQL(ETyEpePlayer), nullable=False, default=ETyEpePlayer.localplayer)
     #  Tổng số bàn thắng
@@ -110,7 +107,8 @@ class Player(BaseModel):
     player_result = relationship("Result", backref="player", lazy=True)
 
     # ForeignKey
-
+    # Vị trí thi đấu(Tiền vệ trái, hậu vệ phải...) Có thể để dạng Enum
+    position_id = Column(UUIDType(binary=True),ForeignKey(Position.id),nullable=False, default="")
     team_id = Column(UUIDType(binary=True), ForeignKey(Team.id), nullable=False)
 
 
