@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block head %}
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    {% block title %}
+      <title>{{params.get('title','Homes')}}</title>
+    {% endblock %}
+    <link href="{{url_for('static',filename= 'image/logo.png')}}"  rel="shortcut icon" type="image/png">
+    {% block head_css %}
+    <link href="{{url_for('static',filename = 'home/css/bootstrap.css')}}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{{url_for('static',filename = 'home/css/style.css')}}" rel="stylesheet" type="text/css" media="all" />
+
+    {% endblock%}
+  {% block head_script%}
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <script src="{{url_for('static',filename = 'home/js/jquery.min.js')}}"></script>
+  {%endblock%}
+  {% endblock %}
+</head>
+<body>
+<!-- header -->
+<div class="header">
+	 <div class="container">
+		 <div class="logo">
+			   <h1><a href="index.html">SOCCER</a></h1>
+		 </div>
+		 <div class="top-menu">
+			 <span class="menu"></span>
+			  <ul>
+				 <li class="active"><a href="index.html">HOME</a></li>
+				 <li><a href="about.html">ABOUT US</a></li>
+				 <li><a href="gallery.html">GALLERY</a></li>
+				 <li><a href="404.html">TRAINING</a></li>
+				 <li><a href="event.html">NEWS & EVENTS</a></li>
+				 <li><a href="contact.html">CONTACT</a></li>
+			 </ul>
+		 </div>
+		 <!-- script-for-menu -->
+		 <script>
+				$("span.menu").click(function(){
+					$(".top-menu ul").slideToggle("slow" , function(){
+					});
+				});
+		 </script>
+		 <!-- script-for-menu -->
+
+		 <div class="clearfix"></div>
+	 </div>
+</div>
+<!-- //header -->
+</body>
+</html>
