@@ -9,4 +9,5 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 login = LoginManager(app)
-admin = Admin(app,name='Quản lý giải vô địch bóng đá quốc gia',template_mode='bootstrap4')
+login.login_view='login_us'
+#admin = Admin(app,name='Quản lý giải vô địch bóng đá quốc gia',template_mode='bootstrap4')

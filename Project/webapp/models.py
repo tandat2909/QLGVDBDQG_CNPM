@@ -38,6 +38,16 @@ class ETypeGoal(Enum):
     C = 3
 
 
+class EActive(Enum):
+    Active = True
+    InActive = False
+
+
+class EStatusValidation(Enum):
+    InValid = False
+    Validity = True
+
+
 class EPosition(Enum):
     HLV = "Huấn luyện viên"
     GK = "Thủ môn"
@@ -73,7 +83,7 @@ class Team(BaseModel, UserMixin):
     role = Column(EnumSQL(Role), nullable=False, default=Role.manager)
     email = Column(String(100), nullable=False)
     phonenumber = Column(String(20), nullable=True)
-    stadium = Column(String(200), nullable=False)
+    stadium = Column(String(200))
     active = Column(Boolean, nullable=False, default=True)
     # Được duyệt hay chưa
     invalid = Column(Boolean, default=False)
@@ -94,6 +104,8 @@ class Player(BaseModel):
     __tablename__ = "Player"
     birthdate = Column(DATETIME, nullable=False)
     nationality = Column(String(100), default="")
+    lastname = Column(String(100))
+    firstname = Column(String(100))
     # loai cầu thủ
     typeplayer = Column(EnumSQL(ETyEpePlayer), nullable=False, default=ETyEpePlayer.localplayer)
     #  Tổng số bàn thắng
@@ -209,8 +221,10 @@ class Goal(BaseModel):
     result_id = Column(UUIDType(binary=True), ForeignKey("Result.id"))
     player_id = Column(UUIDType(binary=True), ForeignKey(Player.id), nullable=False)
     type_id = Column(Integer, ForeignKey(TypeGoals.id), nullable=False)
+
     def __str__(self):
         return "goal " + str(time)
+
 
 class Result(BaseModel):
     __tablename__ = "Result"
@@ -253,31 +267,36 @@ if __name__ == '__main__':
     # ==========insert data============#
     inserPosition()
     insertypegoals()
-    prisort = PrioritySort(id =1,name='DHTD', diem=1, hieuSo=2, tongBanThang=3, doiKhang=4)
-    prisort1 = PrioritySort(id = 2,name='DTHD', diem=1, hieuSo=3, tongBanThang=2, doiKhang=4)
+    prisort = PrioritySort(id=1, name='DHTD', diem=1, hieuSo=2, tongBanThang=3, doiKhang=4)
+    prisort1 = PrioritySort(id=2, name='DTHD', diem=1, hieuSo=3, tongBanThang=2, doiKhang=4)
     config = Config(amountForeignPlayer=3, minAgePlayer=18, maxAgePlayer=20, prioritySort_id=prisort.id, loseScore=1,
                     winScore=3,
                     tieScore=2, thoiDiemGhiBanToiDa=96, maxPlayer=18, minPlayer=12)
-    team1 = Team(id= uuid.uuid4(),
+    admin = Team(id=uuid.uuid4(), name="Admin",
+                 email='vutandat29092000@gmail.com',
+                 role=Role.admin,
+                 username='admin',
+                 password='d047de6de9348ed903f6ac3631731f26dc3795e09b07f6d3ac993d5f48045558')
+    team1 = Team(id=uuid.uuid4(),
                  name='TPHCM',
                  username='team1',
-                 password='team1',
+                 password='d047de6de9348ed903f6ac3631731f26dc3795e09b07f6d3ac993d5f48045558',
                  email="vutandat29092000@gmail.com",
                  phonenumber='098765433456',
                  invalid=True,
                  stadium="Phường 3,Phú Nhuận,TPHCM",
 
                  )
-    team2 = Team(id= uuid.uuid4(),
+    team2 = Team(id=uuid.uuid4(),
                  name='HN',
                  username='team2',
-                 password='team2',
+                 password='d047de6de9348ed903f6ac3631731f26dc3795e09b07f6d3ac993d5f48045558',
                  email="vutandat29092000@gmail.com",
                  phonenumber='098765433456',
                  invalid=True,
                  stadium="Phường 3,Phú Nhuận,HN",
                  )
-    player1 = Player(id = uuid.uuid4(),
+    player1 = Player(id=uuid.uuid4(),
                      name="Công Phượng",
                      team_id=team1.id,
                      typeplayer=ETyEpePlayer.localplayer,
@@ -285,7 +304,7 @@ if __name__ == '__main__':
                      gender=EGender.Male,
                      position_id=Position.query.filter(Position.symbol == EPosition.RS._name_).first().id
                      )
-    player2 = Player(id = uuid.uuid4(),
+    player2 = Player(id=uuid.uuid4(),
                      name="Rô béo",
                      team_id=team2.id,
                      typeplayer=ETyEpePlayer.foreignplayer,
@@ -293,29 +312,31 @@ if __name__ == '__main__':
                      gender=EGender.Female,
                      position_id=Position.query.filter(Position.symbol == EPosition.ST.name).first().id
                      )
-    tuket = Round(id = uuid.uuid4(),groupname="Tứ kết", numberofteam=4)
-    chungket = Round(id = uuid.uuid4(),groupname="Chung kết", numberofteam=2)
+    tuket = Round(id=uuid.uuid4(), groupname="Tứ kết", numberofteam=4)
+    chungket = Round(id=uuid.uuid4(), groupname="Chung kết", numberofteam=2)
     teamintuke = TeamsInRound(round_id=tuket.id, team_id=team1.id)
     team1intuke = TeamsInRound(round_id=tuket.id, team_id=team2.id)
     team2intuke = TeamsInRound(round_id=chungket.id, team_id=team1.id)
     team3intuke = TeamsInRound(round_id=chungket.id, team_id=team2.id)
-    match1 = Match(id = uuid.uuid4(),hometeam_id=team1.id, awayteam_id=team2.id, round_id=chungket.id, datetime=datetime.now())
-    match2 = Match(id = uuid.uuid4(),hometeam_id=team2.id, awayteam_id=team1.id, round_id=chungket.id, datetime=datetime.now())
-    resultmatch1 = Result(id = uuid.uuid4(),match_id=match1.id, winnergoals=3, losergoals=2, typeresult=ETypeResult.Win)
-    goal1 = Goal(id = uuid.uuid4(),result_id=resultmatch1.id, player_id=player1.id, time=datetime.now(), type_id=1)
-    goal2 = Goal(id = uuid.uuid4(),result_id=resultmatch1.id, player_id=player2.id, time=datetime.now(), type_id=2)
-    goal3 = Goal(id = uuid.uuid4(),result_id=resultmatch1.id, player_id=player1.id, time=datetime.now(), type_id=3)
+    match1 = Match(id=uuid.uuid4(), hometeam_id=team1.id, awayteam_id=team2.id, round_id=chungket.id,
+                   datetime=datetime.now())
+    match2 = Match(id=uuid.uuid4(), hometeam_id=team2.id, awayteam_id=team1.id, round_id=chungket.id,
+                   datetime=datetime.now())
+    resultmatch1 = Result(id=uuid.uuid4(), match_id=match1.id, winnergoals=3, losergoals=2, typeresult=ETypeResult.Win)
+    goal1 = Goal(id=uuid.uuid4(), result_id=resultmatch1.id, player_id=player1.id, time=datetime.now(), type_id=1)
+    goal2 = Goal(id=uuid.uuid4(), result_id=resultmatch1.id, player_id=player2.id, time=datetime.now(), type_id=2)
+    goal3 = Goal(id=uuid.uuid4(), result_id=resultmatch1.id, player_id=player1.id, time=datetime.now(), type_id=3)
 
     listcommit = [
-        prisort,prisort1,
+        prisort, prisort1,
         config,
-        team1,team2,
-        player1,player2,
-        tuket,chungket,
-        team1intuke,teamintuke,team2intuke,team3intuke,
-        match1,match2,
+        admin,team1, team2,
+        player1, player2,
+        tuket, chungket,
+        team1intuke, teamintuke, team2intuke, team3intuke,
+        match1, match2,
         resultmatch1,
-        goal1,goal2,goal3
+        goal1, goal2, goal3
 
     ]
     db.session.add_all(listcommit)

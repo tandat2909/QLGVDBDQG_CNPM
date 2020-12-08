@@ -10,3 +10,4 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SECRET_KEY = '=xx08_xe2xd6o#$%x0cxadxad'
     FLASK_ADMIN_FLUID_LAYOUT = True
+    KEYPASS = "@blog"
