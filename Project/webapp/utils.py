@@ -148,6 +148,51 @@ def lock_account(current_user, user_id, lock: bool = None):
         return False
     except:
         return False
+def change_config(form):
+    if form:
+        newconfig = models.Config(
+            winScore= form.get('winScore'),
+            tieScore = form.get('tieScore'),
+            loseScore = form.get('loseScore'),
+            maxPlayer = form.get('maxPlayer'),
+            minPlayer = form.get('minPlayer'),
+            amountForeignPlayer = form.get('amountForeignPlayer'),
+            maxAgePlayer = form.get('maxAgePlayer'),
+            minAgePlayer = form.get('minAgePlayer'),
+            thoiDiemGhiBanToiDa = form.get('thoiDiemGhiBanToiDa')
+        )
+        db.session.add(newconfig)
+        db.session.commit()
+        return True
+    else: return False
+
+def find_player_by_name(name: str):
+    players = models.Player.get.all()
+    for i in players:
+        if i.name.find(name) >= 0:
+            return i
+    else: return False
+def create_round_playoff(roundname,numberofteam,teamselected,fomat):
+    if roundname and numberofteam and teamselected :
+        newround = models.Round(roundname = roundname, numberofteam = numberofteam, teamselected = teamselected, format = fomat)
+        db.session.add(newround)
+        db.session.commit()
+        return True
+    else: return False
+def create_round_groups(roundname,numberofteam,teamselected,fomat,groups):
+    if roundname and numberofteam and teamselected :
+        newround = models.Round(roundname = roundname, numberofteam = numberofteam, teamselected = teamselected,groups = groups, fomat = fomat)
+        db.session.add(newround)
+        db.session.commit()
+        return True
+    else: return False
+def create_match(datetime, round_id, hometeam_id, awayteam_id):
+    if datetime and round_id and hometeam_id and awayteam_id :
+        newround = models.Round(roundname = roundname, numberofteam = numberofteam, teamselected = teamselected,groups = groups, fomat = fomat)
+        db.session.add(newround)
+        db.session.commit()
+        return True
+    else: return False
 
 if __name__ == '__main__':
     pw = generate_password("admin@123")

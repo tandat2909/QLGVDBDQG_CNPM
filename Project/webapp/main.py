@@ -132,6 +132,11 @@ def special_exception_handler(error):
 def get_user(id):
     return models.Team.query.get(id)
 
+@app.route("/admin/createround")
+def create_round():
+    pass
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -63,6 +63,9 @@ class EPosition(Enum):
     LS = "Hậu vệ trái"
     LM = "Tiền vệ trái"
     RM = "Tièn vệ phải"
+class EWiner_Team(Enum):
+    hometeam = '1'
+    awayteam = '2'
 
 
 class BaseModel(db.Model):
@@ -89,7 +92,7 @@ class Team(BaseModel, UserMixin):
     invalid = Column(Boolean, default=False)
     # relationship
     players = relationship("Player", backref="team", lazy=True)
-    teamselected = relationship('TeamsInRound', backref=backref('team', lazy=True))
+    team_group = relationship('TeamsInGroup', backref=backref('team', lazy=True))
 
 
 class Position(BaseModel):
@@ -134,28 +137,38 @@ class TypeGoals(BaseModel):
 
     goal_Type = relationship('Goal', backref=backref('typeGoal'), lazy=True)
 
-
 # Bảng đấu
 class Round(BaseModel):
     __tablename__ = "Round"
     name = None
-    groupname = Column(String(10))
-    # Số lượng các dội
-    numberofteam = Column(Integer, nullable=False)
+    roundname = Column(String(10))
+    # Số lượng các đội trong vòng
+    numberteamin = Column(Integer, nullable=False)
+    # Số lượng các đội trong vòng
+    numberteamout = Column(Integer, nullable=False)
     # Thể thức
     format = Column(String(100))
     # relationship
-    round_match = relationship("Match", backref="round", lazy=True)
-    # team đc chọn
-    teamselected = relationship('TeamsInRound', backref=backref('round', lazy=True))
+    groups_round = relationship("Groups", backref="round", lazy=True)
+
 
     def __str__(self):
         return self.groupname
 
+#Bảng đấu trong vòng bảng
+class Groups(BaseModel):
+    __tablename__ = "Groups"
+    # Số lượng các đội trong bảng
+    numberteamin = Column(Integer, nullable=False)
+    # Số lượng các đội trong bảng thắng
+    numberteamout = Column(Integer, nullable=False)
+    round_id = Column(UUIDType(binary=True), ForeignKey(Round.id),nullable=False, primary_key=True)
+    groups_Match = relationship('Match', backref=backref('groups'), lazy=True)
+    group_Team = relationship('TeamsInGroup', backref=backref('groups', lazy=True))
 
-class TeamsInRound(db.Model):
-    __tablename__ = "TeamsInRound"
-    round_id = Column(UUIDType(binary=True), ForeignKey('Round.id'), primary_key=True)
+class TeamsInGroup(db.Model):
+    __tablename__ = "TeamsInGroup"
+    group_id = Column(UUIDType(binary=True), ForeignKey('Groups.id'), primary_key=True)
     team_id = Column(UUIDType(binary=True), ForeignKey('Team.id'), primary_key=True)
     timeJoinRound = Column(DATETIME, default=datetime.now())
 
@@ -169,8 +182,7 @@ class Match(BaseModel):
     # relationship
     match_result = relationship("Result", backref=backref("match", uselist=False), lazy=True)
     # ForeignKey
-
-    round_id = Column(UUIDType(binary=True), ForeignKey(Round.id), nullable=False)
+    group_id = Column(UUIDType(binary=True), ForeignKey(Groups.id), nullable=False)
     # đội nhà
     hometeam_id = Column(UUIDType(binary=True), ForeignKey(Team.id), nullable=False)
     # Đội khách
@@ -239,6 +251,7 @@ class Result(BaseModel):
     # kết quả của trận đấu nào
     match_id = Column(UUIDType(binary=True), ForeignKey(Match.id), nullable=False, primary_key=True)
     # đội thắng
+    winteam = Column(EnumSQL(EWiner_Team), nullable=False)
     # team_id = Column(UUIDType(binary=True), ForeignKey(Team.id), nullable=False)
     # số bàn thắng của đội thắng
     winnergoals = Column(Integer, nullable=False)
@@ -312,17 +325,16 @@ if __name__ == '__main__':
                      gender=EGender.Female,
                      position_id=Position.query.filter(Position.symbol == EPosition.ST.name).first().id
                      )
-    tuket = Round(id=uuid.uuid4(), groupname="Tứ kết", numberofteam=4)
-    chungket = Round(id=uuid.uuid4(), groupname="Chung kết", numberofteam=2)
-    teamintuke = TeamsInRound(round_id=tuket.id, team_id=team1.id)
-    team1intuke = TeamsInRound(round_id=tuket.id, team_id=team2.id)
-    team2intuke = TeamsInRound(round_id=chungket.id, team_id=team1.id)
-    team3intuke = TeamsInRound(round_id=chungket.id, team_id=team2.id)
-    match1 = Match(id=uuid.uuid4(), hometeam_id=team1.id, awayteam_id=team2.id, round_id=chungket.id,
+    tuket = Round(id=uuid.uuid4(), roundname="Tứ kết", numberteamin=4, numberteamout = 2)
+    chungket = Round(id=uuid.uuid4(), roundname="Chung kết", numberteamin=2, numberteamout = 1)
+    tuketGroup = Groups(id=uuid.uuid4(), name = 'Tứ kết',round_id=tuket.id,numberteamin=tuket.numberteamin, numberteamout = tuket.numberteamout)
+    teamintuke = TeamsInGroup(group_id=tuketGroup.id, team_id=team1.id)
+    team1intuke = TeamsInGroup(group_id=tuketGroup.id, team_id=team2.id)
+    match1 = Match(id=uuid.uuid4(), hometeam_id=team1.id, awayteam_id=team2.id, group_id=tuketGroup.id,
                    datetime=datetime.now())
-    match2 = Match(id=uuid.uuid4(), hometeam_id=team2.id, awayteam_id=team1.id, round_id=chungket.id,
+    match2 = Match(id=uuid.uuid4(), hometeam_id=team2.id, awayteam_id=team1.id, group_id=tuketGroup.id,
                    datetime=datetime.now())
-    resultmatch1 = Result(id=uuid.uuid4(), match_id=match1.id, winnergoals=3, losergoals=2, typeresult=ETypeResult.Win)
+    resultmatch1 = Result(id=uuid.uuid4(), match_id=match1.id, winnergoals=3, losergoals=2, typeresult=ETypeResult.Win, winteam=EWiner_Team.hometeam)
     goal1 = Goal(id=uuid.uuid4(), result_id=resultmatch1.id, player_id=player1.id, time=datetime.now(), type_id=1)
     goal2 = Goal(id=uuid.uuid4(), result_id=resultmatch1.id, player_id=player2.id, time=datetime.now(), type_id=2)
     goal3 = Goal(id=uuid.uuid4(), result_id=resultmatch1.id, player_id=player1.id, time=datetime.now(), type_id=3)
@@ -333,7 +345,8 @@ if __name__ == '__main__':
         admin,team1, team2,
         player1, player2,
         tuket, chungket,
-        team1intuke, teamintuke, team2intuke, team3intuke,
+        tuketGroup,
+        team1intuke, teamintuke,
         match1, match2,
         resultmatch1,
         goal1, goal2, goal3
