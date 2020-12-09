@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!--fonts-->
+    <link href='http://fonts.googleapis.com/css?family=Francois+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Cabin:400,500,600,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
+    <!--//fonts-->
+    {% block title %}
+    <title>{{params.get('title','Homes')}}</title>
+    {% endblock %}
+    <link href="{{url_for('static',filename= 'image/logo.png')}}" rel="shortcut icon" type="image/png">
+    {% block head_css %}
+    <link href="{{url_for('static',filename = 'home/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css"
+          media="all"/>
+    <link href="{{url_for('static',filename = 'home/css/style.css')}}" rel="stylesheet" type="text/css" media="all"/>
+
+    {% endblock%}
+    {% block head_script%}
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    } </script>
+    <script src="{{url_for('static',filename = 'home/js/jquery.min.js')}}"></script>
+    {%endblock%}
+    {% endblock %}
+</head>
+<body>
+<!-- header -->
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            <h1><a href="{{url_for('home')}}">SOCCER</a></h1>
+        </div>
+        <div class="top-menu">
+            <span class="menu"></span>
+            <ul>
+                <li class="{{params.get('nav_home','')}}"><a href="{{url_for('home')}}" class="text-uppercase">HOME</a>
+                </li>
+                <li class="{{params.get('nav_result','')}}"><a href="{{url_for('result')}}" class="text-uppercase">Result</a>
+                </li>
+                <li class="{{params.get('nav_match','')}}"><a href="{{url_for('match')}}"
+                                                              class="text-uppercase">Match</a></li>
+                <li class="{{params.get('nav_schedule','')}}"><a href="{{url_for('schedule')}}" class="text-uppercase">SCHEDULE</a>
+                </li>
+
+            </ul>
+        </div>
+        <!-- script-for-menu -->
+        <script>
+            $("span.menu").click(function () {
+                $(".top-menu ul").slideToggle("slow", function () {
+                });
+            });
+        </script>
+        <!-- script-for-menu -->
+
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!-- //header -->
+<!-- banner -->
+<div class="strip">
+    <div class="container">
+        <div class="search">
+            <form>
+                <input type="text" value="" placeholder="Search...">
+                <input type="submit" value="">
+            </form>
+        </div>
+        <div class="social">
+            <a href="#"><i class="facebook"></i></a>
+            <a href="#"><i class="twitter"></i></a>
+            <a href="#"><i class="dribble"></i></a>
+            <a href="#"><i class="google"></i></a>
+            <a href="#"><i class="youtube"></i></a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+{% block body%}
+<!-- banner -->
+{% block banner %}
+
+{% endblock %}
+<!-- conten-->
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8">
+            {% block contentLeft %}{% endblock %}
+        </div>
+        <div class="col-lg-1"></div>
+        <div class="col-lg-3">
+            {% block contentRight %}
+            {% include 'home/contentRight.html' %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+<!-- //conten-->
+
+{% block footer %}
+<!--footer-->
+<div class="footer">
+    <div class="container">
+        <div class="copywrite">
+            <p>© 2015 All Rights Reseverd Design by <a href="http://w3layouts.com/">W3layouts</a></p>
+        </div>
+        <div class="footer-menu">
+            <ul>
+                <li><a href="{{url_for('home')}}" class="text-uppercase">HOME</a></li>
+                <li><a href="{{url_for('result')}}" class="text-uppercase">Result</a></li>
+                <li><a href="{{url_for('match')}}" class="text-uppercase">Match</a></li>
+                <li><a href="{{url_for('schedule')}}" class="text-uppercase">SCHEDULE</a></li>
+
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!-- //footer -->
+{% endblock %}
+{% endblock %}
+</body>
+{% block footer_script %}
+{% endblock %}
+</html>

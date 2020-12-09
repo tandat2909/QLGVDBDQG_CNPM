@@ -1,0 +1,82 @@
+{% extends 'home/base.html' %}
+
+{% block banner %}
+<div class="banner">
+    <script src="{{url_for('static',filename = 'home/js/responsiveslides.min.js')}}"></script>
+    <script>
+        $(function () {
+            $("#slider").responsiveSlides({
+                auto: true,
+                speed: 300,
+                manualControls: '#slider3-pager',
+            });
+        });
+    </script>
+
+    <div class="slider">
+        <div class="callbacks_container">
+            <ul class="rslides" id="slider">
+                <li>
+                    <img src="{{url_for('static',filename='home/images/bnr3.jpg')}}" alt="bnr3.jpg">
+                    <div class="banner-info">
+                        <h3>Sed ultricies elementum.</h3>
+                        <p>Lorem Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec a odio quam. Aenean
+                            ipsum arcu,
+                            luctus vel ultricies ut, commodo sed turpis. Phasellus tristique lorem sit amet tellus
+                            dignissim hendrerit.
+                            In hac habitasse platea dictumst. Sed vehicula volutpat varius elit. consectetur adipiscing
+                            elit.</p>
+                    </div>
+                </li>
+                <li>
+                    <img src="{{url_for('static',filename='home/images/bnr2.jpg')}}" alt="bnr2.jpg">
+                    <div class="banner-info">
+                        <h3>Curabitur turpis posuere rutrum.</h3>
+                        <p>Lorem Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec a odio quam. Aenean
+                            ipsum arcu,
+                            luctus vel ultricies ut, commodo sed turpis. Phasellus tristique lorem sit amet tellus
+                            dignissim hendrerit.
+                            In hac habitasse platea dictumst. Sed vehicula volutpat varius elit. consectetur adipiscing
+                            elit.</p>
+                    </div>
+                </li>
+                <li>
+                    <img src="{{url_for('static',filename='home/images/bnr1.jpg')}}" alt="bnr1">
+                    <div class="banner-info">
+                        <h3>Sed ultricies elementum.</h3>
+                        <p>Lorem Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec a odio quam. Aenean
+                            ipsum arcu,
+                            luctus vel ultricies ut, commodo sed turpis. Phasellus tristique lorem sit amet tellus
+                            dignissim hendrerit.
+                            In hac habitasse platea dictumst. Sed vehicula volutpat varius elit. consectetur adipiscing
+                            elit.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block footer_script %}
+
+{% endblock %}
+
+
+
+
+{% block contentLeft %}
+
+{% endblock %}
+
+
+
+{% block contentRight %}
+    {{super()}}
+{% endblock %}
+
+
+
+
+

@@ -1,0 +1,20 @@
+{% macro lib_dataTables() %}
+
+    <script src="{{url_for('static',filename = 'admin/js/data-tables/jquery.dataTables.js')}}"></script>
+    <script src="{{url_for('static',filename = 'admin/js/data-tables/dataTables.tableTools.js')}}"></script>
+    <script src="{{url_for('static',filename = 'admin/js/data-tables/dataTables.bootstrap.js')}}"></script>
+    <script src="{{url_for('static',filename = 'admin/js/data-tables/dataTables.responsive.js')}}"></script>
+    <script src="{{url_for('static',filename = 'admin/js/waves.min.js')}}"></script>
+    <script src="{{url_for('static',filename = 'admin/js/data-tables/tables-data.js')}}"></script>
+{% endmacro %}
+
+{% macro lib_base() %}
+    <script type="text/javascript" src="{{url_for('static',filename = 'admin/js/jquery.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename = 'admin/bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static',filename = 'admin/js/metisMenu.min.js')}}"></script>
+    <script src="{{url_for('static',filename = 'admin/js/jquery-jvectormap-1.2.2.min.js')}}"></script>
+    <script src="{{url_for('static',filename = 'admin/js/pace.min.js')}}"></script>
+    <script src="{{url_for('static',filename = 'admin/js/waves.min.js')}}"></script>
+    <script src="{{url_for('static',filename = 'admin/js/jquery-jvectormap-world-mill-en.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename = 'admin/js/custom.js')}}"></script>
+{% endmacro %}

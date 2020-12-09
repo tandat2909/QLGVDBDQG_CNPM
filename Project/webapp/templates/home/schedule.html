@@ -1,0 +1,49 @@
+{% extends 'home/base.html' %}
+
+{% block contentLeft %}
+<div class="row">
+    <div class="col-12"><h4 class="st-title">World Cup 2019</h4></div>
+
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="st-table">
+            <table>
+                <tbody>
+                <tr>
+                    <td class="left-team">
+                        <img src="{{url_for('static',filename = 'image/logoTeam/flag-1.jpg')}}" alt="flag-1.jpg">
+                        <h4>Australia</h4>
+                    </td>
+                    <td class="st-option">
+                        <div class="so-text">MetLife Stadium, Rutherford USA</div>
+                        <h4>VS</h4>
+                        <div class="so-text">15 September 2019</div>
+                    </td>
+                    <td class="right-team">
+                        <img src="{{url_for('static',filename = 'image/logoTeam/flag-2.jpg')}}" alt="">
+                        <h4>Qatar</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left-team">
+                        <img src="{{url_for('static',filename = 'image/logoTeam/flag-1.jpg')}}" alt="flag-1.jpg">
+                        <h4>Australia</h4>
+                    </td>
+                    <td class="st-option">
+                        <div class="so-text">MetLife Stadium, Rutherford USA</div>
+                        <h4>vs</h4>
+                        <div class="so-text">15 September 2019</div>
+                    </td>
+                    <td class="right-team">
+                        <img src="{{url_for('static',filename = 'image/logoTeam/flag-2.jpg')}}" alt="">
+                        <h4>Qatar</h4>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
