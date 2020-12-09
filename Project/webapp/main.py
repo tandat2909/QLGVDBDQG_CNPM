@@ -10,7 +10,8 @@ from webapp.routerUser import *
 @app.route('/')
 def home():
     params = {
-        'title': 'Home'
+        'title': 'Home',
+        'nav_home': 'active'
     }
     return render_template("home/index.html", params=params)
 
@@ -18,7 +19,8 @@ def home():
 @app.route('/result')
 def result():
     params = {
-        'title': 'Result'
+        'title': 'Result',
+        'nav_result': 'active'
     }
     return render_template('home/result.html', params=params)
 
@@ -26,10 +28,19 @@ def result():
 @app.route('/match')
 def match():
     params = {
-        'title': 'Match'
+        'title': 'Match',
+        'nav_match': 'active'
     }
     return render_template('home/match.html', params=params)
 
+
+@app.route('/schedule')
+def schedule():
+    params = {
+        'title': 'Schedule',
+        'nav_schedule': 'active'
+    }
+    return render_template('home/schedule.html', params=params)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():

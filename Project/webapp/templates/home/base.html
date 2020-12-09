@@ -41,12 +41,15 @@
         <div class="top-menu">
             <span class="menu"></span>
             <ul>
-                <li class="active"><a href="{{url_for('home')}}" class="text-uppercase">HOME</a></li>
-                <li><a href="{{url_for('result')}}" class="text-uppercase" >Result</a></li>
-                <li><a href="{{url_for('match')}}" class="text-uppercase">Match</a></li>
-                <li><a href="404.html" class="text-uppercase">TRAINING</a></li>
-                <li><a href="event.html" class="text-uppercase">NEWS & EVENTS</a></li>
-                <li><a href="contact.html" class="text-uppercase">CONTACT</a></li>
+                <li class="{{params.get('nav_home','')}}"><a href="{{url_for('home')}}" class="text-uppercase">HOME</a>
+                </li>
+                <li class="{{params.get('nav_result','')}}"><a href="{{url_for('result')}}" class="text-uppercase">Result</a>
+                </li>
+                <li class="{{params.get('nav_match','')}}"><a href="{{url_for('match')}}"
+                                                              class="text-uppercase">Match</a></li>
+                <li class="{{params.get('nav_schedule','')}}"><a href="{{url_for('schedule')}}" class="text-uppercase">SCHEDULE</a>
+                </li>
+
             </ul>
         </div>
         <!-- script-for-menu -->
@@ -87,46 +90,45 @@
 {% block banner %}
 
 {% endblock %}
-    <!-- conten-->
-    {% block content %}
-    <div class="container mt-5">
-		<div class="row">
-			<div class="col-lg-8 bg-danger" >
-				{% block contentLeft %}{% endblock %}
-			</div>
-			<div class="col-lg-1"></div>
-			<div class="col-lg-3 bg-info">
-				{% block contentRight %}
-                    {% include 'home/contentRight.html' %}
-                {% endblock %}
-			</div>
-		</div>
-	</div>
-    {% endblock %}
-    <!-- //conten-->
-
-    {% block footer %}
-    <!--footer-->
-    <div class="footer">
-        <div class="container">
-            <div class="copywrite">
-                <p>© 2015 All Rights Reseverd Design by <a href="http://w3layouts.com/">W3layouts</a></p>
-            </div>
-            <div class="footer-menu">
-                <ul>
-                    <li><a href="{{url_for('home')}}">HOME</a></li>
-                    <li><a href="index.html">ABOUT US</a></li>
-                    <li><a href="index.html">GALLERY</a></li>
-                    <li><a href="index.html">TRAINING</a></li>
-                    <li><a href="index.html">NEWS & EVENTS</a></li>
-                    <li><a href="index.html">CONTACT</a></li>
-                </ul>
-            </div>
-            <div class="clearfix"></div>
+<!-- conten-->
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8">
+            {% block contentLeft %}{% endblock %}
+        </div>
+        <div class="col-lg-1"></div>
+        <div class="col-lg-3">
+            {% block contentRight %}
+            {% include 'home/contentRight.html' %}
+            {% endblock %}
         </div>
     </div>
-    <!-- //footer -->
-    {% endblock %}
+</div>
+{% endblock %}
+<!-- //conten-->
+
+{% block footer %}
+<!--footer-->
+<div class="footer">
+    <div class="container">
+        <div class="copywrite">
+            <p>© 2015 All Rights Reseverd Design by <a href="http://w3layouts.com/">W3layouts</a></p>
+        </div>
+        <div class="footer-menu">
+            <ul>
+                <li><a href="{{url_for('home')}}" class="text-uppercase">HOME</a></li>
+                <li><a href="{{url_for('result')}}" class="text-uppercase">Result</a></li>
+                <li><a href="{{url_for('match')}}" class="text-uppercase">Match</a></li>
+                <li><a href="{{url_for('schedule')}}" class="text-uppercase">SCHEDULE</a></li>
+
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!-- //footer -->
+{% endblock %}
 {% endblock %}
 </body>
 {% block footer_script %}
