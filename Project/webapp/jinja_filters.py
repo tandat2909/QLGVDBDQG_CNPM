@@ -14,7 +14,7 @@ def encodeID(value):
         return ''
 def format_datetime(value):
 
-    return value.strftime("%d-%m-%Y")
+    return value.strftime("%d-%m-%Y %HH:%m ")
 
 
 app.jinja_env.filters['encodeID'] = encodeID

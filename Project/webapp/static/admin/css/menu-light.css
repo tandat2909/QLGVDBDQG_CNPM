@@ -327,7 +327,7 @@ body.mini-navbar .nav>li{
     border-top: 0px;
 }
 .navbar-aside .nav > li > a {
-    color: #848c94;
+    color: #FFFFFF;
     font-weight: 400;
     padding: 7px 20px 7px 25px;
     font-family: 'Roboto', sans-serif;
@@ -577,4 +577,8 @@ body.mini-navbar #wrapper{
     .navbar-brand,.navbar-minimalize,.search-icon {
     margin-right: 0;
     }
+}
+
+span.controls-row button{
+    margin: 2px;
 }
