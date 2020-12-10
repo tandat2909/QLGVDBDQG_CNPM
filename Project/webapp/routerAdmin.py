@@ -6,9 +6,6 @@ from flask_login import logout_user, login_user, current_user
 
 from webapp import models, Forms, utils, app,decorate
 
-
-
-
 @app.route('/admin')
 @app.route('/admin/')
 @decorate.login_required_Admin
@@ -59,7 +56,7 @@ def account_list():
     """
     params = {
         'title': "User List",
-        'nav_profile': 'active',
+        'nav_team': 'active',
 
     }
 
@@ -100,3 +97,28 @@ def lock_user():
             "status": 404,
             "data": "Error"
         })
+
+@app.route('/admin/list/team',methods=['GET','POST'])
+@decorate.login_required_Admin
+def listteam():
+    params = {
+        'title': 'Team',
+        'nav_team': 'active',
+    }
+    #creat Team
+    if request.method == "POST":
+        pass
+    return render_template('admin/models/team/list.html')
+@app.route('/admin/list/match/',methods=['GET','SET'])
+@decorate.login_required_Admin
+def listmatch():
+    params = {
+        'title': 'Match',
+        'nav_match': 'active',
+    }
+    # creat Team
+    if request.method == "POST":
+        pass
+
+    params['listmatch'] = models.Match.query.all()
+    return render_template('admin/models/match/list.html',params=params)
