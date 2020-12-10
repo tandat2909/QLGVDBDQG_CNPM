@@ -12,6 +12,7 @@
                 <div id="listmatch" class="tab-pane active">
                     <div class="panel-body">
                         <table id="basic-datatables" class="table table-bordered table-hover">
+
                             <thead>
                             <tr>
                                 <th>STT</th>
@@ -31,13 +32,11 @@
                                     {{loop.index}}
                                 </td>
 
-                                <td>{{i.round.groupname}}</td>
+                                <td>{{i.groups.round}}</td>
                                 <td>{{i.datetime |format_datetime}}</td>
                                 <td>{{i.hometeams.name}}</td>
                                 <td>{{i.awayteams.name}}</td>
-                                <td>
-
-                                </td>
+                                <td>{{i.stadiumofteam.stadium}}</td>
                                 <td width="20%">
 
                                     <span class="controls-row">

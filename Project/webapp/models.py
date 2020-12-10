@@ -153,7 +153,7 @@ class Round(BaseModel):
 
 
     def __str__(self):
-        return self.groupname
+        return self.roundname
 
 #Bảng đấu trong vòng bảng
 class Groups(BaseModel):
@@ -187,9 +187,12 @@ class Match(BaseModel):
     hometeam_id = Column(UUIDType(binary=True), ForeignKey(Team.id), nullable=False)
     # Đội khách
     awayteam_id = Column(UUIDType(binary=True), ForeignKey(Team.id), nullable=False)
+    #Sân
+    stadium_id = Column(UUIDType(binary=True),ForeignKey(Team.id),nullable=False)
 
-    hometeams = relationship('Team', foreign_keys=[hometeam_id], backref=backref('hometeam'))
-    awayteams = relationship('Team', foreign_keys=[awayteam_id], backref=backref('awayteam'))
+    hometeams = relationship('Team', foreign_keys=[hometeam_id], backref=backref('homematch'))
+    awayteams = relationship('Team', foreign_keys=[awayteam_id], backref=backref('awaymatch'))
+    stadiumofteam = relationship('Team',foreign_keys=[stadium_id],backref=backref('stadiummatch'))
 
     def __str__(self):
         return self.hometeams.name + " - " + self.awayteams.name
@@ -331,9 +334,9 @@ if __name__ == '__main__':
     teamintuke = TeamsInGroup(group_id=tuketGroup.id, team_id=team1.id)
     team1intuke = TeamsInGroup(group_id=tuketGroup.id, team_id=team2.id)
     match1 = Match(id=uuid.uuid4(), hometeam_id=team1.id, awayteam_id=team2.id, group_id=tuketGroup.id,
-                   datetime=datetime.now())
+                   datetime=datetime.now(),stadium_id=team1.id)
     match2 = Match(id=uuid.uuid4(), hometeam_id=team2.id, awayteam_id=team1.id, group_id=tuketGroup.id,
-                   datetime=datetime.now())
+                   datetime=datetime.now(),stadium_id=team2.id)
     resultmatch1 = Result(id=uuid.uuid4(), match_id=match1.id, winnergoals=3, losergoals=2, typeresult=ETypeResult.Win, winteam=EWiner_Team.hometeam)
     goal1 = Goal(id=uuid.uuid4(), result_id=resultmatch1.id, player_id=player1.id, time=datetime.now(), type_id=1)
     goal2 = Goal(id=uuid.uuid4(), result_id=resultmatch1.id, player_id=player2.id, time=datetime.now(), type_id=2)

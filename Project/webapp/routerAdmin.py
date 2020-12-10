@@ -118,7 +118,16 @@ def listmatch():
     }
     # creat Team
     if request.method == "POST":
-        pass
+        return jsonify({
+            'mac':"áđá",
+            'áđá':"ádấd"
+        })
 
     params['listmatch'] = models.Match.query.all()
     return render_template('admin/models/match/list.html',params=params)
+@app.route('/admin/listmatch')
+def lissss():
+    return jsonify({
+        'mac': "áđá",
+        'sss': "ádấd"
+    })
