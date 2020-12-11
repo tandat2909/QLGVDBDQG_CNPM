@@ -125,6 +125,41 @@ def listmatch():
 
     params['listmatch'] = models.Match.query.all()
     return render_template('admin/models/match/list.html',params=params)
+
+@app.route('/admin/list/round/',methods=['GET','SET'])
+@decorate.login_required_Admin
+def listround():
+    params = {
+        'title': 'Round',
+        'nav_round': 'active',
+    }
+    # creat Team
+    if request.method == "POST":
+        return jsonify({
+            'mac':"áđá",
+            'áđá':"ádấd"
+        })
+
+    params['listround'] = models.Round.query.all()
+    return render_template('admin/models/round/list.html',params=params)
+
+@app.route('/admin/list/group/',methods=['GET','SET'])
+@decorate.login_required_Admin
+def listgroup():
+    params = {
+        'title': 'Group',
+        'nav_match': 'active',
+    }
+    # creat Team
+    if request.method == "POST":
+        return jsonify({
+            'mac':"áđá",
+            'áđá':"ádấd"
+        })
+
+    params['listgroup'] = models.Groups.query.all()
+    return render_template('admin/models/group/list.html',params=params)
+
 @app.route('/admin/listmatch')
 def lissss():
     return jsonify({

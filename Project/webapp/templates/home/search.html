@@ -1,0 +1,18 @@
+{% extends "home/index.html" %}
+{% block contentLeft %}
+
+{% for items in params.get('players') %}
+<h1>Player
+    {{items.id}}
+    {{items.name}}
+</h1>
+
+{% endfor %}
+{% for items in params.get('teams')  %}
+<h1>Teams
+    {{items.id}}
+    {{items.name}}
+</h1>
+{% endfor %}
+{% endblock %}
+

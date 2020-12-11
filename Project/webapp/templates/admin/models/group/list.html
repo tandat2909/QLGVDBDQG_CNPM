@@ -1,0 +1,77 @@
+{% extends 'admin/base.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="col">
+        <div class="tabs-container ">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#listmatch" aria-expanded="true"> List </a></li>
+                <li class=""><a data-toggle="tab" href="#create" aria-expanded="false">Create</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="listmatch" class="tab-pane active">
+                    <div class="panel-body">
+                        <table id="basic-datatables" class="table table-bordered table-hover">
+
+                            <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên Bảng</th>
+                                <th>Số đội tham gia</th>
+                                <th>Số đội được chọn</th>
+                                <th>Vòng đấu</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in params.get('listgroup') %}
+
+                            <tr>
+                                <td>
+                                    {{loop.index}}
+                                </td>
+
+                                <td>{{i.name}}</td>
+                                <td>{{i.numberteamin}}</td>
+                                <td>{{i.numberteamout}}</td>
+                                <td>{{i.round_id}}</td>
+                                <td width="20%">
+
+                                    <span class="controls-row">
+
+                                        <button class="btn btn-danger">Edit</button>
+                                        <button class="btn btn-danger">Write Result</button>
+                                    </span>
+
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="create" class="tab-pane">
+                    <div class="panel-body">
+                        <strong>Donec quam felis</strong>
+
+                        <p>Thousand unknown plants are noticed by me: when I hear the buzz of the little world among the
+                            stalks, and grow familiar with the countless indescribable forms of the insects
+                            and flies, then I feel the presence of the Almighty, who formed us in his own image, and the
+                            breath </p>
+
+                        <p>I am alone, and feel the charm of existence in this spot, which was created for the bliss of
+                            souls like mine. I am so happy, my dear friend, so absorbed in the exquisite
+                            sense of mere tranquil existence, that I neglect my talents. I should be incapable of
+                            drawing a single stroke at the present moment; and yet.</p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

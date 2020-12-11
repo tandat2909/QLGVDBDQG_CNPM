@@ -167,11 +167,11 @@ def change_config(form):
     else: return False
 
 def find_player_by_name(name: str):
-    players = models.Player.get.all()
-    for i in players:
-        if i.name.find(name) >= 0:
-            return i
-    else: return False
+    players = models.Player.query.filter(models.Player.name.contains(name)).all()
+    return players
+def find_team_by_name(name: str):
+    teams = models.Team.query.filter(models.Team.name.contains(name)).all()
+    return teams
 def create_round_playoff(roundname,numberofteam,teamselected,fomat):
     if roundname and numberofteam and teamselected :
         newround = models.Round(roundname = roundname, numberofteam = numberofteam, teamselected = teamselected, format = fomat)
@@ -179,7 +179,7 @@ def create_round_playoff(roundname,numberofteam,teamselected,fomat):
         db.session.commit()
         return True
     else: return False
-def create_round_groups(roundname,numberofteam,teamselected,fomat,groups):
+def create_round(roundname,numberofteam,teamselected,fomat,groups):
     if roundname and numberofteam and teamselected :
         newround = models.Round(roundname = roundname, numberofteam = numberofteam, teamselected = teamselected,groups = groups, fomat = fomat)
         db.session.add(newround)
@@ -198,6 +198,4 @@ if __name__ == '__main__':
     pw = generate_password("admin@123")
     print(pw)
 
-
-def get_team_by_ID(id):
-    return None
+    print(find_team_by_name("H"))

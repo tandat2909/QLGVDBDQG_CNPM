@@ -9,12 +9,25 @@ from webapp.routerUser import *
 
 @app.route('/')
 def home():
+
     params = {
         'title': 'Home',
-        'nav_home': 'active'
+        'nav_home': 'active',
     }
     return render_template("home/index.html", params=params)
-
+@app.route('/search')
+def find():
+    kw = request.args.get("kw")
+    players = utils.find_player_by_name(kw)
+    teams = utils.find_team_by_name(kw)
+    print(kw,players,teams)
+    params = {
+        'title': 'Home',
+        'nav_home': 'active',
+        'players': players,
+        'teams': teams
+    }
+    return render_template("home/search.html", params=params)
 
 @app.route('/result')
 def result():

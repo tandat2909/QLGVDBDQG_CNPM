@@ -57,7 +57,7 @@
                             class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{#{ url_for('blog_list') }#}">Create Round</a></li>
-                        <li><a href="{#{ url_for('blog_list') }#}">List Round</a></li>
+                        <li><a href="{{ url_for('listround') }}">List Round</a></li>
                     </ul>
                 </li>
                 <li class=" {{params.get('nav_group')}}">
@@ -65,7 +65,7 @@
                             class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{#{ url_for('blog_list') }#}">Create Group</a></li>
-                        <li><a href="{#{ url_for('blog_list') }#}">List Group</a></li>
+                        <li><a href="{{ url_for('listgroup') }}">List Group</a></li>
                     </ul>
                 </li>
                 <li class=" {{params.get('nav_result')}}">
