@@ -1,11 +1,12 @@
-from webapp import app, login, models, jinja_filters
-from flask import request, render_template, redirect, url_for, abort, current_app, flash
+from webapp import app, login, models, jinja_filters,config_main
+from flask import request,g, render_template, redirect, url_for, abort, current_app, flash
 from flask_login import current_user, login_user, logout_user, login_required, login_url, AnonymousUserMixin, \
     fresh_login_required
 # from webapp.admin import *
 from webapp.routerAdmin import *
 from webapp.routerUser import *
 
+config_main = models.Config.query.one()
 
 @app.route('/')
 def home():

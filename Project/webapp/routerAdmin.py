@@ -4,7 +4,7 @@ import datetime
 from flask import request, flash, redirect, url_for, render_template, jsonify
 from flask_login import logout_user, login_user, current_user
 
-from webapp import models, Forms, utils, app,decorate
+from webapp import models, Forms, utils, app, decorate,config_main
 
 @app.route('/admin')
 @app.route('/admin/')
@@ -15,10 +15,12 @@ def index_admin():
     }
     return render_template('admin/index.html', params=pargams)
 
+
 @app.route('/admin/logout')
 def logout_admin():
     logout_user()
     return redirect('/admin')
+
 
 @app.route("/admin/login", methods=["GET", "POST"])
 def login_admin():
@@ -32,7 +34,7 @@ def login_admin():
         user = form.get_user()
         next_url = request.args.get('next')
         login_info = json.loads(request.form.get("info_connect"))
-        #flash('login admin: ' + user.password +str(user.active) + "-"+ str(models.EActive.Active.value) + "-"+ str(user.role)+"-"+ str(models.Role.admin))
+        # flash('login admin: ' + user.password +str(user.active) + "-"+ str(models.EActive.Active.value) + "-"+ str(user.role)+"-"+ str(models.Role.admin))
         if user and user.active == models.EActive.Active.value and user.role == models.Role.admin:
             login_user(user=user, remember=True, duration=datetime.timedelta(hours=1))
             utils.sent_mail_login(current_user, login_info)
@@ -47,6 +49,7 @@ def login_admin():
 
     return render_template('login.html', form=form, title='Login Admin', action='login_admin')
 
+
 @app.route('/admin/accountlist')
 @decorate.login_required_Admin
 def account_list():
@@ -55,7 +58,7 @@ def account_list():
     :return:
     """
     params = {
-        'title': "User List",
+        'title': "Accounts",
         'nav_team': 'active',
 
     }
@@ -63,6 +66,7 @@ def account_list():
     listuser = models.Team.query.filter(models.Team.id != current_user.id)
     params['listuser'] = listuser
     return render_template('admin/UserList.html', params=params)
+
 
 @app.route('/admin/lock/user', methods=["POST"])
 @decorate.login_required_Admin
@@ -98,36 +102,37 @@ def lock_user():
             "data": "Error"
         })
 
-@app.route('/admin/list/team',methods=['GET','POST'])
+
+@app.route('/admin/list/team', methods=['GET', 'POST'])
 @decorate.login_required_Admin
 def listteam():
     params = {
         'title': 'Team',
         'nav_team': 'active',
     }
-    #creat Team
+    # creat Team
     if request.method == "POST":
         pass
     return render_template('admin/models/team/list.html')
-@app.route('/admin/list/match/',methods=['GET','SET'])
+
+
+@app.route('/admin/list/match/', methods=['GET', 'POST'])
 @decorate.login_required_Admin
-def listmatch():
+def match_admin():
     params = {
         'title': 'Match',
         'nav_match': 'active',
     }
     # creat Team
     if request.method == "POST":
-        return jsonify({
-            'mac':"áđá",
-            'áđá':"ádấd"
-        })
+        pass
 
     params['listmatch'] = models.Match.query.all()
-    return render_template('admin/models/match/list.html',params=params)
-@app.route('/admin/listmatch')
-def lissss():
-    return jsonify({
-        'mac': "áđá",
-        'sss': "ádấd"
-    })
+    return render_template('admin/models/match/list.html', params=params)
+
+@app.route('/admin/create/account',methods=['POST'])
+@decorate.login_required_Admin
+def createaccount():
+    form = request.form
+    s = models.Team()
+    return redirect(url_for('account_list'))
