@@ -1,8 +1,7 @@
-import base64,hashlib,os,random,yagmail
+import base64, hashlib, os, random, yagmail
 import datetime
 
-
-from webapp import Config, db, models
+from webapp import Config, db, models, config_main
 
 
 def check_password(pw_hash='', pw_check=''):
@@ -15,6 +14,7 @@ def check_password(pw_hash='', pw_check=''):
 def generate_password(pw):
     pw_hash = hashlib.sha256((pw + str(Config.KEYPASS)).encode("utf-8")).hexdigest()
     return pw_hash
+
 
 def encodeID(input="-"):
     """
@@ -56,7 +56,7 @@ def encodeID(input="-"):
         return output
 
     except Exception as ex:
-        print("Error EncodeID:",ex)
+        print("Error EncodeID:", ex)
         raise ex
 
 
@@ -91,8 +91,9 @@ def decodeID(input):
         return result
 
     except Exception as ex:
-        print('Error decodeID:',ex)
+        print('Error decodeID:', ex)
         raise ex
+
 
 def change_password(user=None, pwold: str = None, pwnew: str = None):
     try:
@@ -107,8 +108,9 @@ def change_password(user=None, pwold: str = None, pwnew: str = None):
     except:
         return False
 
+
 def sent_mail_login(team, data):
-    print(team.__dict__,data)
+    print(team.__dict__, data)
     try:
         if team and data:
             data["time"] = str(datetime.datetime.now().strftime("%X %p - %d %B %Y"))
@@ -133,8 +135,9 @@ def sent_mail_login(team, data):
             return False if status == False else True
         return False
     except Exception as e:
-        print('Error Sent_mail_login:',e)
+        print('Error Sent_mail_login:', e)
         return False
+
 
 def lock_account(current_user, user_id, lock: bool = None):
     try:
@@ -148,54 +151,102 @@ def lock_account(current_user, user_id, lock: bool = None):
         return False
     except:
         return False
+
+
 def change_config(form):
-    if form:
-        newconfig = models.Config(
-            winScore= form.get('winScore'),
-            tieScore = form.get('tieScore'),
-            loseScore = form.get('loseScore'),
-            maxPlayer = form.get('maxPlayer'),
-            minPlayer = form.get('minPlayer'),
-            amountForeignPlayer = form.get('amountForeignPlayer'),
-            maxAgePlayer = form.get('maxAgePlayer'),
-            minAgePlayer = form.get('minAgePlayer'),
-            thoiDiemGhiBanToiDa = form.get('thoiDiemGhiBanToiDa')
-        )
-        db.session.add(newconfig)
-        db.session.commit()
-        return True
-    else: return False
+    try:
+        if form and config_main:
+            config_main.winScore = form.get('winScore'),
+            config_main.tieScore = form.get('tieScore'),
+            config_main.loseScore = form.get('loseScore'),
+            config_main.maxPlayer = form.get('maxPlayer'),
+            config_main.minPlayer = form.get('minPlayer'),
+            config_main.amountForeignPlayer = form.get('amountForeignPlayer'),
+            config_main.maxAgePlayer = form.get('maxAgePlayer'),
+            config_main.minAgePlayer = form.get('minAgePlayer'),
+            config_main.thoiDiemGhiBanToiDa = form.get('thoiDiemGhiBanToiDa')
+            prioritySort = models.PrioritySort(name=form.get('PriorityName'),diem=form.get('diem'), hieuSo=form.get('hieuso'),
+                                               tongBanThang=form.get('tongbanthang'),doiKhang=form.get('doikhang'))
+            config_main.prioritySort_id=prioritySort.id
+
+            db.session.add(config_main)
+            db.session.commit()
+            return True
+        return False
+    except Exception as e:
+        print('Error change_config', e)
+        return False
+
 
 def find_player_by_name(name: str):
     players = models.Player.query.filter(models.Player.name.contains(name)).all()
     return players
+
 def find_team_by_name(name: str):
     teams = models.Team.query.filter(models.Team.name.contains(name)).all()
     return teams
-def create_round_playoff(roundname,numberofteam,teamselected,fomat):
-    if roundname and numberofteam and teamselected :
-        newround = models.Round(roundname = roundname, numberofteam = numberofteam, teamselected = teamselected, format = fomat)
-        db.session.add(newround)
+
+def create_group(groupname: str = None, numberteamin: int = 0, numberteamout: int = 0, round_id=None):
+    """
+
+    :param groupname:
+    :param numberteamin:
+    :param numberteamout:
+    :param round_id:
+    :return: type bool
+    """
+    try:
+        if groupname and numberteamin > numberteamout and round_id:
+            newround = models.Groups(round_id=round_id, name=groupname, numberteamin=numberteamin,
+                                     numberteamout=numberteamout)
+            db.session.add(newround)
+            db.session.commit()
+            return True
+        return False
+    except Exception as e:
+        print('Error create_group: ', e)
+        return False
+
+
+def create_round(roundname: str = None, numberteamin: int = None, numberteamout: int = None, format=None):
+    """
+    :param roundname:
+    :param numberteamin:
+    :param numberteamout:
+    :param format:
+    :return: type bool
+    """
+    try:
+        if roundname and numberteamin and numberteamout and format and numberteamin > numberteamout:
+            newRound = models.Round(roundname=roundname, numberteamin=numberteamin, numberteamout=numberteamout,
+                                    format=format)
+            db.session.add(newRound)
+            db.session.commit()
+            return True
+        return False
+    except Exception as e:
+        print('Error create_round:', e)
+        return False
+
+
+def create_match(datetime=None, group_id=None, hometeam_id=None, awayteam_id=None, stadium_id=None):
+    """
+    :param datetime:
+    :param group_id:
+    :param hometeam_id:
+    :param awayteam_id:
+    :param stadium_id:
+    :return: type Bool
+    """
+    if datetime and group_id and hometeam_id and awayteam_id and stadium_id:
+        newMatch = models.Match(datetime=datetime, group_id=group_id, hometeam_id=hometeam_id, awayteam_id=awayteam_id,
+                                stadium_id=stadium_id)
+        db.session.add(newMatch)
         db.session.commit()
         return True
-    else: return False
-def create_round(roundname,numberofteam,teamselected,fomat,groups):
-    if roundname and numberofteam and teamselected :
-        newround = models.Round(roundname = roundname, numberofteam = numberofteam, teamselected = teamselected,groups = groups, fomat = fomat)
-        db.session.add(newround)
-        db.session.commit()
-        return True
-    else: return False
-def create_match(datetime, round_id, hometeam_id, awayteam_id):
-    if datetime and round_id and hometeam_id and awayteam_id :
-        newround = models.Round(roundname = roundname, numberofteam = numberofteam, teamselected = teamselected,groups = groups, fomat = fomat)
-        db.session.add(newround)
-        db.session.commit()
-        return True
-    else: return False
+    else:
+        return False
+
 
 if __name__ == '__main__':
-    pw = generate_password("admin@123")
-    print(pw)
-
-    print(find_team_by_name("H"))
+    print(find_player_by_name('Rô')[0].name)

@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm, form
 from flask import flash, current_app
 from werkzeug.security import check_password_hash, generate_password_hash
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, HiddenField, fields, validators
+from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, ValidationError
 import hashlib
 from webapp.models import Team,EActive
@@ -44,3 +45,4 @@ class FormChangePassword(FlaskForm):
     password_Old = PasswordField('Current Password', validators=[DataRequired()])
     password_New = PasswordField('New Password', validators=[DataRequired()])
     password_Comfirm = PasswordField('Confirm Password ', validators=[DataRequired()])
+
