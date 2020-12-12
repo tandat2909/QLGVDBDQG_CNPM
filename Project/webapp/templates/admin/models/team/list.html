@@ -36,14 +36,14 @@
                                         </button>
                                     </a>
                                 </div><!-- btn-group -->
+                                {% if item.invalid == False %}
                                 <div class="btn-group">
-                                    <a href="mailto:{{ item.email }}">
-                                        <button class="btn btn-info btn-3d btn-sm"><i
-                                                class="fa fa-envelope-o"></i> Send
-                                            Message
-                                        </button>
-                                    </a>
+                                    <button onclick="sent_account('{{item.id}}')" class="btn btn-info btn-3d btn-sm"><i
+                                            class="fa fa-envelope-o"></i> Send
+                                        Account
+                                    </button>
                                 </div><!-- btn-group -->
+                                {% endif%}
                                 <style>
                                     .btn {
                                         margin: 2px;

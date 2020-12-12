@@ -16,6 +16,7 @@ def index_user():
     }
     return render_template('user/index.html')
 @app.route('/user/logout')
+@decorate.login_required_user
 def logout_user():
     logout_user()
     return redirect('/user')

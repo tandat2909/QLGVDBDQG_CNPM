@@ -21,3 +21,15 @@ function delUser(idu, btn) {
     })
 }
 
+function sent_account(idt){
+    fetch('/admin/accounts?action=sent_account', {
+        method: 'POST',
+        headers: {"Content-Type": 'application/json'},
+        body: JSON.stringify({
+            "idt": idt,
+
+        })
+    }).then(res => res.json()).then(data => {
+        alert((data.status == 200?"Success":"Error")+' Sent Account' )
+    })
+}
