@@ -1,5 +1,8 @@
 import base64, hashlib, os, random, yagmail
 import datetime
+import uuid
+
+from sqlalchemy import or_
 
 from webapp import Config, db, models, config_main
 
@@ -109,36 +112,6 @@ def change_password(user=None, pwold: str = None, pwnew: str = None):
         return False
 
 
-def sent_mail_login(team, data):
-    print(team.__dict__, data)
-    try:
-        if team and data:
-            data["time"] = str(datetime.datetime.now().strftime("%X %p - %d %B %Y"))
-            sender_email = "antoanhethongthongtin13@gmail.com"
-            receiver_email = team.email
-            password = decodeID("ETUXVUUXVUMyMDQtgjRwMEMClTL8F0C")[0:-1].capitalize()
-            subject = f'[Blog] Successful Login From New IP  {data["ip"]} - {data["time"]}'
-
-            prettify_html = f'<h1><strong>Successful Login <span style ="color:#0bff00"> {team.name} </span> From New IP</strong></h1>\
-                            <h3><strong>We&#39;ve noticed that you accessed your account from IP address new</strong></h3>\
-                            <p>Time: <strong style="color:red">' + data['time'] + '</strong></p>\
-                            <p>IP Address: <strong style="color:red">' + data['ip'] + ' - ' + data['location'] + '</strong></p>\
-                            <p>Application: <strong style="color:red">' + data[
-                'user_agent'].lower().capitalize() + ' - ' + data['os'] + '</strong></p>\
-                            '
-            yag = yagmail.SMTP(user=sender_email, password=password)
-            status = yag.send(
-                to=receiver_email,
-                subject=subject,
-                contents=prettify_html
-            )
-            return False if status == False else True
-        return False
-    except Exception as e:
-        print('Error Sent_mail_login:', e)
-        return False
-
-
 def lock_account(current_user, user_id, lock: bool = None):
     try:
         if current_user.role == models.Role.admin and user_id and lock is not None:
@@ -165,9 +138,10 @@ def change_config(form):
             config_main.maxAgePlayer = form.get('maxAgePlayer'),
             config_main.minAgePlayer = form.get('minAgePlayer'),
             config_main.thoiDiemGhiBanToiDa = form.get('thoiDiemGhiBanToiDa')
-            prioritySort = models.PrioritySort(name=form.get('PriorityName'),diem=form.get('diem'), hieuSo=form.get('hieuso'),
-                                               tongBanThang=form.get('tongbanthang'),doiKhang=form.get('doikhang'))
-            config_main.prioritySort_id=prioritySort.id
+            prioritySort = models.PrioritySort(name=form.get('PriorityName'), diem=form.get('diem'),
+                                               hieuSo=form.get('hieuso'),
+                                               tongBanThang=form.get('tongbanthang'), doiKhang=form.get('doikhang'))
+            config_main.prioritySort_id = prioritySort.id
 
             db.session.add(config_main)
             db.session.commit()
@@ -245,5 +219,60 @@ def create_match(datetime=None, group_id=None, hometeam_id=None, awayteam_id=Non
         return False
 
 
+def check_form_register_account(form):
+    """
+     kiểm tra đầu vào form
+    :param form:
+    :return:
+    :exception ValueError
+    """
+    if form:
+        user = models.Team.query.filter(
+            or_(models.Team.username == form.get('username'),
+                models.Team.name == form.get('teamname'),
+                models.Team.email == form.get('email'))
+        ).first()
+        # validate email, user
+        if user:
+            if user.username == form.get('username'):
+                raise ValueError("Invalid Username")
+            if user.email == form.get('email'):
+                raise ValueError("Invalid Email")
+            if user.name == form.get('teamname'):
+                raise ValueError("Invalid team name")
+        return True
+    raise ValueError("Error Form")
+
+
+def create_account(form):
+    """
+    :param form: type dict()
+    :return: Return True if it commit to database success else False which commit or password hashing failde
+    """
+
+    try:
+        if form and form.get('email'):
+            password = base64.standard_b64encode(os.urandom(8))[:8]
+            usernew = models.Team(username=form.get('username', None),
+                                  password=base64.urlsafe_b64encode(password).decode('utf-8'),
+                                  email=form.get('email', None),
+                                  name=form.get('teamname', None),
+                                  phonenumber=form.get('phone_number', None),
+                                  invalid=False,
+                                  )
+            db.session.add(usernew)
+            db.session.commit()
+            return True
+        raise Exception('email or form is empty')
+    except Exception as e:
+        print("Error create_account:", e)
+        return False
+
+
+
 if __name__ == '__main__':
-    print(find_player_by_name('Rô')[0].name)
+    x = base64.standard_b64encode(os.urandom(8))[:8]
+    print(x)
+    xencode = base64.urlsafe_b64encode(x).decode('utf-8')
+    xdecode = base64.urlsafe_b64decode(xencode).decode('utf-8')
+    print(xdecode, xencode)

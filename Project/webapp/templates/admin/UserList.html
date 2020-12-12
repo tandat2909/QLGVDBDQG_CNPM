@@ -14,8 +14,8 @@
     <div class="col">
         <div class="tabs-container ">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#listaccount" aria-expanded="true"> List </a></li>
-                <li class=""><a data-toggle="tab" href="#createaccount" aria-expanded="false">Create</a></li>
+                <li class="{{params.get('tabs_list')[0]}}"><a data-toggle="tab" href="#listaccount" aria-expanded="{{params.get('tabs_list')[1]}}"> List </a></li>
+                <li class="{{params.get('tabs_create')[0]}}"><a data-toggle="tab" href="#createaccount" aria-expanded="{{params.get('tabs_create')[1]}}">Create</a></li>
             </ul>
             <div class="tab-content">
                 {% include 'admin/models/team/list.html' %}

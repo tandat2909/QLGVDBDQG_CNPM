@@ -1,4 +1,4 @@
-from webapp import app, login, models, jinja_filters,config_main
+from webapp import app, login, models, jinja_filters,config_main,SentEmail
 from flask import request,g, render_template, redirect, url_for, abort, current_app, flash
 from flask_login import current_user, login_user, logout_user, login_required, login_url, AnonymousUserMixin, \
     fresh_login_required
@@ -123,6 +123,9 @@ def logout():
 def page_not_found(error):
     return render_template('error.html', code=404, ms='Error Page'), 404
 
+@app.errorhandler(405)
+def page_not_found(error):
+    return render_template('error.html', code=405, ms='Error Page'), 405
 
 @app.errorhandler(500)
 def special_exception_handler(error):

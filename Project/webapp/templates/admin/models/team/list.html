@@ -1,4 +1,4 @@
-<div id="listaccount" class="tab-pane active">
+<div id="listaccount" class="tab-pane {{params.get('tabs_list')[0]}}">
     <div class="panel-body">
         <div class="row users-row">
 
@@ -20,6 +20,10 @@
                                       style="margin-left: 2em">{{ item.role.name }}</span>
                                 <span class="label label-sm label-info"
                                       style="margin-left: 0,5em">{{ 'Active' if item.active == True else 'InActive'}}</span>
+                                {% if item.invalid == False  %}
+                                <span class="label label-sm label-danger"
+                                      style="margin-left: 0,5em">Account Empty</span>
+                                {% endif %}
                             </h3>
 
                             <div><i class="fa fa-map-marker"></i> {{ item.stadium }}</div>

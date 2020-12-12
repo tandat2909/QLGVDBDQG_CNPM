@@ -1,3 +1,5 @@
+from enum import Enum
+
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -11,3 +13,7 @@ login = LoginManager(app)
 login.login_view='login_us'
 config_main = None
 #admin = Admin(app,name='Quản lý giải vô địch bóng đá quốc gia',template_mode='bootstrap4')
+class EMethods(Enum):
+    create = 'CREATE'
+    delete = 'DELETE'
+    edit = 'EDIT'

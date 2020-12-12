@@ -4,8 +4,7 @@ import datetime
 from flask import request, flash, redirect, url_for, render_template
 from flask_login import logout_user, login_user, current_user
 
-from webapp import models, Forms, utils, app,decorate
-
+from webapp import models, Forms, utils, app, decorate, SentEmail
 
 
 @app.route('/user/')
@@ -35,7 +34,7 @@ def login_us():
         if user and user.active == models.EActive.Active.value and user.role == models.Role.manager:
             flash("Login Success", category='success')
             login_user(user=user, duration=datetime.timedelta(hours=1), remember=True)
-            utils.sent_mail_login(current_user, login_info)
+            SentEmail.sent_mail_login(current_user, login_info)
             if next_url:
                 return redirect(next_url)
             return redirect(url_for('index_user'))

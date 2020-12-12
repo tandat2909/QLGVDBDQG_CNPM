@@ -4,7 +4,9 @@ import datetime
 from flask import request, flash, redirect, url_for, render_template, jsonify
 from flask_login import logout_user, login_user, current_user
 
-from webapp import models, Forms, utils, app, decorate,config_main
+from webapp import models, Forms, utils, app, decorate, config_main, SentEmail,EMethods
+
+
 
 @app.route('/admin')
 @app.route('/admin/')
@@ -37,7 +39,7 @@ def login_admin():
         # flash('login admin: ' + user.password +str(user.active) + "-"+ str(models.EActive.Active.value) + "-"+ str(user.role)+"-"+ str(models.Role.admin))
         if user and user.active == models.EActive.Active.value and user.role == models.Role.admin:
             login_user(user=user, remember=True, duration=datetime.timedelta(hours=1))
-            utils.sent_mail_login(current_user, login_info)
+            SentEmail.sent_mail_login(current_user, login_info)
             flash("Login Success", category='success')
             if next_url:
                 return redirect(next_url)
@@ -50,9 +52,9 @@ def login_admin():
     return render_template('login.html', form=form, title='Login Admin', action='login_admin')
 
 
-@app.route('/admin/accountlist')
+@app.route('/admin/accounts', methods=['POST', 'GET'])
 @decorate.login_required_Admin
-def account_list():
+def accounts():
     """
     hiển thị tất cả user trừ tài khoản admin hiện tại
     :return:
@@ -60,13 +62,40 @@ def account_list():
     params = {
         'title': "Accounts",
         'nav_team': 'active',
-
+        'tabs_list': ['active', 'true'],
+        'tabs_create': ['', 'false'],
     }
+    if request.method == 'POST':
+        if request.args.get('action').upper() == EMethods.create.value:
+            form = request.form
+            try:
+                if utils.check_form_register_account(form):
+                    if utils.create_account(form=form):
+                        flash('Success Create account ', category='success')
+                        return redirect(url_for('account_list'))
+                    else:
+                        flash('Error Create Account ', category='error')
+            except ValueError as e:
+                flash(str(e), category='error')
+                params['form'] = form
+                params['tabs_list'] = ['', 'false']
+                params['tabs_create'] = ['active', 'true']
+            except Exception as e:
+                print('register error:', e)
 
+        if request.args.get('action') == 'sent_account':
+            idteam = request.json.get('idt')
+            print(idteam)
+            if idteam and SentEmail.sent_account_to_mail(idteam):
+                return jsonify({
+                    'status':200
+                })
+            return jsonify({
+                'status':400
+            })
     listuser = models.Team.query.filter(models.Team.id != current_user.id)
     params['listuser'] = listuser
     return render_template('admin/UserList.html', params=params)
-
 
 @app.route('/admin/lock/user', methods=["POST"])
 @decorate.login_required_Admin
@@ -129,10 +158,3 @@ def match_admin():
 
     params['listmatch'] = models.Match.query.all()
     return render_template('admin/models/match/list.html', params=params)
-
-@app.route('/admin/create/account',methods=['POST'])
-@decorate.login_required_Admin
-def createaccount():
-    form = request.form
-    s = models.Team()
-    return redirect(url_for('account_list'))
