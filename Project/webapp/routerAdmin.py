@@ -4,7 +4,8 @@ import datetime
 from flask import request, flash, redirect, url_for, render_template, jsonify
 from flask_login import logout_user, login_user, current_user
 
-from webapp import models, Forms, utils, app, decorate,config_main
+from webapp import models, Forms, utils, app, decorate, config_main
+
 
 @app.route('/admin')
 @app.route('/admin/')
@@ -15,10 +16,12 @@ def index_admin():
     }
     return render_template('admin/index.html', params=pargams)
 
+
 @app.route('/admin/logout')
 def logout_admin():
     logout_user()
     return redirect('/admin')
+
 
 @app.route("/admin/login", methods=["GET", "POST"])
 def login_admin():
@@ -46,6 +49,7 @@ def login_admin():
             user = None
 
     return render_template('login.html', form=form, title='Login Admin', action='login_admin')
+
 
 @app.route('/admin/accountlist')
 @decorate.login_required_Admin
@@ -113,21 +117,55 @@ def listteam():
     return render_template('admin/models/team/list.html')
 
 
-@app.route('/admin/list/match/', methods=['GET', 'POST'])
+@app.route('/admin/match/list/', methods=['GET', 'POST'])
 @decorate.login_required_Admin
 def match_admin():
     params = {
         'title': 'Match',
         'nav_match': 'active',
     }
-    # creat Team
     if request.method == "POST":
-        pass
-
+        datetime = request.form.get('datetime')
+        group_id = request.form.get('group_id')
+        hometeam = request.form.get('hometeam')
+        awayteam = request.form.get('awayteam')
+        stadium = request.form.get('stadium')
+        if utils.create_match(datetime=datetime, group_id=group_id,hometeam_id=hometeam, awayteam_id=awayteam,stadium_id=stadium):
+            flash("Tạo vòng đấu thành công!", category="success")
+        else:
+            flash("Tạo vòng đấu không thành công!", category="error")
+    params['listgroup'] = models.Groups.query.all()
     params['listmatch'] = models.Match.query.all()
+    params['listround'] = models.Round.query.all()
+    params['listteam'] = models.Team.query.all()
     return render_template('admin/models/match/list.html', params=params)
 
-@app.route('/admin/create/account',methods=['POST'])
+
+@app.route('/admin/match/get_stadium', methods=['GET', 'POST'])
+@decorate.login_required_Admin
+def get_stadium():
+    data = request.json
+    hometeam = awayteam = None
+    try:
+        if data:
+            hometeam = models.Team.query.get(data.get('hometeam'))
+            awayteam = models.Team.query.get(data.get('awayteam'))
+    except Exception as e:
+        print('Error get_stadium', e)
+
+    return jsonify({
+        "hometeam": {
+            "id": str(hometeam.id) or None,
+            "stadium": " - ".join([hometeam.name ,hometeam.stadium or ""]) or None
+        },
+        "awayteam": {
+            "id": str(awayteam.id) or None,
+            "stadium": " - ".join([awayteam.name ,awayteam.stadium or ""]) or None
+        }
+    })
+
+
+@app.route('/admin/create/account', methods=['POST'])
 @decorate.login_required_Admin
 def createaccount():
     form = request.form
@@ -135,37 +173,45 @@ def createaccount():
     return redirect(url_for('account_list'))
 
 
-@app.route('/admin/list/round/',methods=['GET','SET'])
+@app.route('/admin/list/round/', methods=['GET', 'POST'])
 @decorate.login_required_Admin
 def listround():
     params = {
         'title': 'Round',
         'nav_round': 'active',
     }
-    # creat Team
     if request.method == "POST":
-        return jsonify({
-            'mac':"áđá",
-            'áđá':"ádấd"
-        })
+        roundname = request.form.get('roundname')
+        numberteamin = request.form.get('numberteamin')
+        numberteamout = request.form.get('numberteamout')
+        format = request.form.get('format')
+        if utils.create_round(roundname=roundname, numberteamin=int(numberteamin), numberteamout=int(numberteamout),
+                              format=format):
+            flash("Tạo vòng đấu thành công!", category="success")
 
     params['listround'] = models.Round.query.all()
-    return render_template('admin/models/round/list.html',params=params)
+    return render_template('admin/models/round/list.html', params=params)
 
-@app.route('/admin/list/group/',methods=['GET','SET'])
+
+@app.route('/admin/list/group/', methods=['GET', 'POST'])
 @decorate.login_required_Admin
 def listgroup():
     params = {
         'title': 'Group',
-        'nav_match': 'active',
+        'nav_group': 'active',
     }
-    # creat Team
     if request.method == "POST":
-        return jsonify({
-            'mac':"áđá",
-            'áđá':"ádấd"
-        })
+        groupname = request.form.get('groupname')
+        numberteamin = request.form.get('numberteamin')
+        numberteamout = request.form.get('numberteamout')
+        round_id = request.form.get('round_id')
+
+        if utils.create_group(groupname=groupname, numberteamin=int(numberteamin), numberteamout=int(numberteamout),
+                              round_id=round_id):
+            flash("Tạo bảng đấu thành công!", category="success")
+        else:
+            flash("Tạo bảng đấu không thành công!", category="error")
 
     params['listgroup'] = models.Groups.query.all()
-    return render_template('admin/models/group/list.html',params=params)
-
+    params['listround'] = models.Round.query.all()
+    return render_template('admin/models/group/list.html', params=params)

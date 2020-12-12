@@ -730,6 +730,7 @@ select.form-control option:hover{
 }
 select.form-control{
     cursor: pointer;
+    width:45%;
 }
 
 .btn-primary{
@@ -1451,3 +1452,4 @@ hr{
         margin-bottom: 10px;
     }
 }
+

@@ -21,3 +21,33 @@ function delUser(idu, btn) {
     })
 }
 
+function get_stadium(home,away)
+{
+    fetch('/admin/match/get_stadium',{
+        method: 'POST',
+        headers: {"Content-Type": 'application/json'},
+        body: JSON.stringify({
+        "hometeam": home,
+        "awayteam": away
+        })
+    }).then(res => res.json()).then(data => {
+            let dochtml = "<option value = '"+data.hometeam.id +"'>"+data.hometeam.stadium+" </option> <option value = '"+data.awayteam.id+"' > "+data.awayteam.stadium+"</option>"
+            $("#stadium").removeAttr('disabled').empty().prepend(dochtml)
+        })
+}
+
+function team_ready()
+{
+   let home= $("#hometeam").children("option:selected").val()
+   let away = $("#awayteam").children("option:selected").val()
+   if (home.length > 0 && away.length > 0 ) {
+        if ( away !== home)
+            get_stadium(home,away)
+        else  $("#stadium").empty().prepend("<option value='' >Yêu cầu chọn hai đội khác nhau</option>").attr('disabled','')
+   }
+   else {
+        $("#stadium").empty().prepend("<option value='' >Yêu cầu chọn đội</option>").attr('disabled','')
+
+   }
+}
+

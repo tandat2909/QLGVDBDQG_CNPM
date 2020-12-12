@@ -34,7 +34,7 @@
                                 <td>{{i.name}}</td>
                                 <td>{{i.numberteamin}}</td>
                                 <td>{{i.numberteamout}}</td>
-                                <td>{{i.round_id}}</td>
+                                <td>{{i.round}}</td>
                                 <td width="20%">
 
                                     <span class="controls-row">
@@ -52,19 +52,26 @@
                     </div>
                 </div>
                 <div id="create" class="tab-pane">
-                    <div class="panel-body">
-                        <strong>Donec quam felis</strong>
-
-                        <p>Thousand unknown plants are noticed by me: when I hear the buzz of the little world among the
-                            stalks, and grow familiar with the countless indescribable forms of the insects
-                            and flies, then I feel the presence of the Almighty, who formed us in his own image, and the
-                            breath </p>
-
-                        <p>I am alone, and feel the charm of existence in this spot, which was created for the bliss of
-                            souls like mine. I am so happy, my dear friend, so absorbed in the exquisite
-                            sense of mere tranquil existence, that I neglect my talents. I should be incapable of
-                            drawing a single stroke at the present moment; and yet.</p>
-                    </div>
+                    <form action="{{ url_for('listgroup') }}" method="post">
+                        <div class="form-group">
+                            <p>Tên bảng </p>
+                            <input type="text" name="groupname" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <p>Đội nhà</p>
+                            <input type="text" name="numberteamin" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <p>Số lượng đội được chọn</p>
+                            <input type="text" name="numberteamout" class="form-control">
+                        </div>
+                        <select class="form-control" name="round_id">
+                            {% for items in params.get('listround') %}
+                            <option value="{{items.id}}">{{items}}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-success" name="submit"> Tạo</button>
+                    </form>
                 </div>
             </div>
 

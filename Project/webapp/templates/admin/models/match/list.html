@@ -1,5 +1,6 @@
 {% extends 'admin/base.html' %}
 
+
 {% block body %}
 <div class="row">
     <div class="col">
@@ -16,11 +17,12 @@
                             <thead>
                             <tr>
                                 <th>STT</th>
-                                <th>Round</th>
-                                <th>Home</th>
-                                <th>Away</th>
-                                <th>Time</th>
-                                <th>Stadium</th>
+                                <th>Vòng</th>
+                                <th>Bảng</th>
+                                <th>Đội nhà</th>
+                                <th>Đội khách</th>
+                                <th>Thời gian</th>
+                                <th>Sân vận động</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -33,7 +35,7 @@
                                 </td>
 
                                 <td>{{i.groups.round}}</td>
-
+                                <td>{{i.groups}}</td>
                                 <td>{{i.hometeams.name}}</td>
                                 <td>{{i.awayteams.name}}</td>
                                 <td>{{i.datetime |format_datetime}}</td>
@@ -55,6 +57,48 @@
                     </div>
                 </div>
                 <div id="create" class="tab-pane">
+                    <form action="{{ url_for('match_admin') }}" method="post">
+                        <div class="form-group">
+                            <label>Bảng</label>
+                            <select class="form-control" required name="group_id">
+
+                                {% for items in params.get('listgroup') %}
+                                <option value="{{items.id}}">{{items}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Thời gian</label>
+                            <input type="datetime-local" style="width:17em" value="{{'min'|set_time_match}}" min="{{'min'|set_time_match}}" max="{{'max'|set_time_match}}" name="datetime" required class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Đội Nhà</label>
+
+                            <select class="form-control" required name="hometeam" id="hometeam" onchange="team_ready()">
+                                <option disabled value="" selected>Chọn đội chủ nhà</option>
+                                {% for items in params.get('listteam') %}
+                                <option value="{{items.id}}">{{items}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Đội Khách</label>
+                            <select class="form-control" required name="awayteam" id="awayteam" onchange="team_ready()">
+                                <option disabled value="" selected>Chọn đội chủ nhà</option>
+                                {% for items in params.get('listteam') %}
+                                <option value="{{items.id}}">{{items}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label > Sân </label>
+                            <select class="form-control" disabled required name="stadium" id="stadium">
+                                <option value="" >Yêu cầu chọn đội</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success" name="submit"> Tạo</button>
+                    </form>
 
                 </div>
             </div>

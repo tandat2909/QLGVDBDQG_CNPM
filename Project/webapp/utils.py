@@ -197,7 +197,8 @@ def create_group(groupname: str = None, numberteamin: int = 0, numberteamout: in
     """
     try:
         if groupname and numberteamin > numberteamout and round_id:
-            newround = models.Groups(round_id=round_id, name=groupname, numberteamin=numberteamin,
+            rd = models.Round.query.get(round_id).id
+            newround = models.Groups(round_id=rd, name=groupname, numberteamin=numberteamin,
                                      numberteamout=numberteamout)
             db.session.add(newround)
             db.session.commit()
@@ -246,7 +247,6 @@ def create_match(datetime=None, group_id=None, hometeam_id=None, awayteam_id=Non
         return True
     else:
         return False
-
 
 if __name__ == '__main__':
     print(find_player_by_name('Rô')[0].name)

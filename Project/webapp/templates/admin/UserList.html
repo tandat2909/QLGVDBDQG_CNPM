@@ -28,10 +28,3 @@
 
 
     {% endblock %}
-
-
-    {% block script %}
-    {{ super() }}
-
-    <script src="{{ url_for('static',filename = 'admin/js/main.js') }}"></script>
-    {% endblock %}

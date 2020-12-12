@@ -68,6 +68,7 @@
 {% import 'admin/lib.html' as lib with context -%}
 {{ lib.lib_base() }}
 {{ lib.lib_dataTables() }}
+ <script src="{{ url_for('static',filename = 'admin/js/main.js') }}"></script>
 {% endblock %}
 </body>
 
