@@ -35,19 +35,18 @@
                                 </td>
 
                                 <td>{{i.groups.round}}</td>
-                                <td>{{i.groups}}</td>
+                                <td>{{i.groups }}</td>
                                 <td>{{i.hometeams.name}}</td>
                                 <td>{{i.awayteams.name}}</td>
                                 <td>{{i.datetime |format_datetime}}</td>
                                 <td>{{i.stadiumofteam.stadium}}</td>
                                 <td width="20%">
-
                                     <span class="controls-row">
-
-                                        <button class="btn btn-danger">Edit</button>
+                                        {% if params.get('result').query.filter(params.get('result').match_id == i.id).first() == None %}
+                                        <button class="btn btn-danger" onclick="delmatch('{{i.id}}')">Delete</button>
+                                        {% endif %}
                                         <button class="btn btn-danger">Write Result</button>
                                     </span>
-
                                 </td>
 
                             </tr>
@@ -57,7 +56,7 @@
                     </div>
                 </div>
                 <div id="create" class="tab-pane">
-                    <form action="{{ url_for('match_admin') }}" method="post">
+                    <form action="{{ url_for('match_admin') }}" method="post" >
                         <div class="form-group">
                             <label>Bảng</label>
                             <select class="form-control" required name="group_id">
@@ -70,7 +69,9 @@
 
                         <div class="form-group">
                             <label>Thời gian</label>
-                            <input type="datetime-local" style="width:17em" value="{{'min'|set_time_match}}" min="{{'min'|set_time_match}}" max="{{'max'|set_time_match}}" name="datetime" required class="form-control">
+                            <input type="datetime-local" style="width:17em" value="{{'min'|set_time_match}}"
+                                   min="{{'min'|set_time_match}}" max="{{'max'|set_time_match}}" name="datetime"
+                                   required class="form-control">
                         </div>
                         <div class="form-group">
                             <label>Đội Nhà</label>
@@ -92,15 +93,16 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label > Sân </label>
+                            <label> Sân </label>
                             <select class="form-control" disabled required name="stadium" id="stadium">
-                                <option value="" >Yêu cầu chọn đội</option>
+                                <option value="">Yêu cầu chọn đội</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-success" name="submit"> Tạo</button>
+                        <button type="submit" class="btn btn-success" onsubmit="clearForm()" name="submit"> Tạo</button>
                     </form>
 
                 </div>
+
             </div>
 
 
@@ -109,4 +111,13 @@
     </div>
 
 </div>
+{% endblock %}
+
+{% block script %}
+    {{super()}}
+    <script>
+        function clearForm(form){
+            form.reset()
+        }
+    </script>
 {% endblock %}

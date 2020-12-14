@@ -36,13 +36,12 @@
                                 <td>{{i.numberteamout}}</td>
                                 <td>{{i.round}}</td>
                                 <td width="20%">
-
                                     <span class="controls-row">
-
-                                        <button class="btn btn-danger">Edit</button>
+                                        {% if params.get('listmatch').query.filter(params.get('listmatch').group_id == i.id).first() == None %}
+                                        <button class="btn btn-danger" onclick="delgroup('{{i.id}}')">Delete</button>
+                                        {% endif %}
                                         <button class="btn btn-danger">Write Result</button>
                                     </span>
-
                                 </td>
 
                             </tr>
@@ -54,22 +53,26 @@
                 <div id="create" class="tab-pane">
                     <form action="{{ url_for('listgroup') }}" method="post">
                         <div class="form-group">
-                            <p>Tên bảng </p>
+                            <label>Tên bảng </label>
                             <input type="text" name="groupname" class="form-control">
                         </div>
                         <div class="form-group">
-                            <p>Đội nhà</p>
+                            <label>Số lượng đội tham gia</label>
                             <input type="text" name="numberteamin" class="form-control">
                         </div>
                         <div class="form-group">
-                            <p>Số lượng đội được chọn</p>
+                            <label>Số lượng đội được chọn</label>
                             <input type="text" name="numberteamout" class="form-control">
                         </div>
-                        <select class="form-control" name="round_id">
-                            {% for items in params.get('listround') %}
-                            <option value="{{items.id}}">{{items}}</option>
-                            {% endfor %}
-                        </select>
+                            <div class="form_group">
+                                <p>Vòng</p>
+                                <select class="form-control" name="round_id">
+                                    {% for items in params.get('listround') %}
+                                    <option value="{{items.id}}">{{items}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
                         <button type="submit" class="btn btn-success" name="submit"> Tạo</button>
                     </form>
                 </div>

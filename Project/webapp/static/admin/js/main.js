@@ -16,8 +16,6 @@ function delUser(idu, btn) {
 
             alert((data.data.toLowerCase() == "lock" ? 'UnLock' : 'Lock') + " Success");
         }
-
-
     })
 }
 
@@ -49,5 +47,56 @@ function team_ready()
         $("#stadium").empty().prepend("<option value='' >Yêu cầu chọn đội</option>").attr('disabled','')
 
    }
+}
+
+function delmatch(idmatch) {
+    let url = '/admin/match/delete'
+    fetch(url, {
+        method: 'POST',
+        headers: {"Content-Type": 'application/json'},
+        body: JSON.stringify({
+            "idmatch": idmatch,
+        })
+    }).then(res => res.json()).then(data => {
+        if (data.statuss == 400)
+            alert("Xóa không thành công!!")
+        else{
+
+         location.reload()
+        }
+
+
+    })
+}
+function delgroup(idgroup) {
+    let url = '/admin/group/delete'
+    fetch(url, {
+        method: 'POST',
+        headers: {"Content-Type": 'application/json'},
+        body: JSON.stringify({
+            "idgroup": idgroup,
+        })
+    }).then(res => res.json()).then(data => {
+        if (data.statuss == 400)
+            alert("Xóa không thành công!!")
+        else
+           location.reload()
+    })
+}
+function delround(idround) {
+    let url = '/admin/round/delete'
+    fetch(url, {
+        method: 'POST',
+        headers: {"Content-Type": 'application/json'},
+        body: JSON.stringify({
+            "idround": idround,
+        })
+    }).then(res => res.json()).then(data => {
+        if (data.statuss == 400)
+            alert("Xóa không thành công!!")
+        else
+
+           location.reload()
+    })
 }
 

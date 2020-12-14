@@ -38,8 +38,9 @@
                                 <td width="20%">
 
                                     <span class="controls-row">
-
-                                        <button class="btn btn-danger">Edit</button>
+                                        {% if params.get('listgroup').query.filter(params.get('listgroup').round_id == i.id).first() == None %}
+                                        <button class="btn btn-danger" onclick="delround('{{i.id}}')">Delete</button>
+                                        {% endif %}
                                         <button class="btn btn-danger">Write Result</button>
                                     </span>
 

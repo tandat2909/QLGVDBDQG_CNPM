@@ -1,7 +1,7 @@
 import json
 import datetime
 
-from flask import request, flash, redirect, url_for, render_template, jsonify
+from flask import request, flash, redirect, url_for, render_template, jsonify, session
 from flask_login import logout_user, login_user, current_user
 
 from webapp import models, Forms, utils, app, decorate, config_main
@@ -130,16 +130,31 @@ def match_admin():
         hometeam = request.form.get('hometeam')
         awayteam = request.form.get('awayteam')
         stadium = request.form.get('stadium')
-        if utils.create_match(datetime=datetime, group_id=group_id,hometeam_id=hometeam, awayteam_id=awayteam,stadium_id=stadium):
+        if utils.create_match(datetime=datetime, group_id=group_id, hometeam_id=hometeam, awayteam_id=awayteam,
+                              stadium_id=stadium):
             flash("Tạo vòng đấu thành công!", category="success")
         else:
             flash("Tạo vòng đấu không thành công!", category="error")
+        return redirect(url_for('match_admin'))
     params['listgroup'] = models.Groups.query.all()
     params['listmatch'] = models.Match.query.all()
     params['listround'] = models.Round.query.all()
     params['listteam'] = models.Team.query.all()
+    params['result'] = models.Result
     return render_template('admin/models/match/list.html', params=params)
 
+@app.route('/admin/match/delete', methods=['POST'])
+def delete_match():
+    match_id = request.json.get('idmatch')
+    print(session)
+    if match_id and utils.delete_match(match_id):
+         flash('Xóa match thành công')
+         return jsonify({
+             'statuss': 200,
+         })
+    return jsonify({
+        'statuss': 400,
+    })
 
 @app.route('/admin/match/get_stadium', methods=['GET', 'POST'])
 @decorate.login_required_Admin
@@ -156,11 +171,11 @@ def get_stadium():
     return jsonify({
         "hometeam": {
             "id": str(hometeam.id) or None,
-            "stadium": " - ".join([hometeam.name ,hometeam.stadium or ""]) or None
+            "stadium": " - ".join([hometeam.name, hometeam.stadium or ""]) or None
         },
         "awayteam": {
             "id": str(awayteam.id) or None,
-            "stadium": " - ".join([awayteam.name ,awayteam.stadium or ""]) or None
+            "stadium": " - ".join([awayteam.name, awayteam.stadium or ""]) or None
         }
     })
 
@@ -185,12 +200,29 @@ def listround():
         numberteamin = request.form.get('numberteamin')
         numberteamout = request.form.get('numberteamout')
         format = request.form.get('format')
+        flash(roundname + numberteamin + '     ' + numberteamout)
         if utils.create_round(roundname=roundname, numberteamin=int(numberteamin), numberteamout=int(numberteamout),
                               format=format):
             flash("Tạo vòng đấu thành công!", category="success")
+        else:
+            flash("Tạo vòng đấu không thành công!", category="error")
 
     params['listround'] = models.Round.query.all()
+    params['listgroup'] = models.Groups
     return render_template('admin/models/round/list.html', params=params)
+
+@app.route('/admin/round/delete', methods=['POST'])
+def delete_round():
+    round_id = request.json.get('idround')
+    print(round_id)
+    if round_id and utils.delete_round(round_id):
+         flash('Xóa group thành công')
+         return jsonify({
+             'statuss': 200,
+         })
+    return jsonify({
+        'statuss': 400,
+    })
 
 
 @app.route('/admin/list/group/', methods=['GET', 'POST'])
@@ -214,4 +246,18 @@ def listgroup():
 
     params['listgroup'] = models.Groups.query.all()
     params['listround'] = models.Round.query.all()
+    params['listmatch'] = models.Match
     return render_template('admin/models/group/list.html', params=params)
+
+@app.route('/admin/group/delete', methods=['POST'])
+def delete_group():
+    group_id = request.json.get('idgroup')
+    print(group_id)
+    if group_id and utils.delete_group(group_id):
+         flash('Xóa group thành công')
+         return jsonify({
+             'statuss': 200,
+         })
+    return jsonify({
+        'statuss': 400,
+    })

@@ -218,7 +218,7 @@ def create_round(roundname: str = None, numberteamin: int = None, numberteamout:
     :return: type bool
     """
     try:
-        if roundname and numberteamin and numberteamout and format and numberteamin > numberteamout:
+        if roundname and numberteamin and numberteamout and numberteamin > numberteamout:
             newRound = models.Round(roundname=roundname, numberteamin=numberteamin, numberteamout=numberteamout,
                                     format=format)
             db.session.add(newRound)
@@ -247,6 +247,35 @@ def create_match(datetime=None, group_id=None, hometeam_id=None, awayteam_id=Non
         return True
     else:
         return False
+def delete_match(match_id):
+    try:
+        match = models.Match.query.get(match_id)
+        db.session.delete(match)
+        db.session.commit()
+        return True
+    except Exception as e:
+        print('Error delete_match:', e)
+        return False
+def delete_group(group_id):
+    try:
+        group = models.Groups.query.filter(models.Groups.id ==group_id).first()
+        db.session.delete(group)
+        db.session.commit()
+        return True
+    except Exception as e:
+        print('Error delete_group:', e)
+        return False
+def delete_round(round_id):
+    try:
+        round = models.Round.query.filter(models.Round.id ==round_id).first()
+        db.session.delete(round)
+        db.session.commit()
+        return True
+    except Exception as e:
+        print('Error delete_round:', e)
+        return False
 
 if __name__ == '__main__':
+    delete_match('29625f47-2238-4899-81b4-adce25dfd23b')
+
     print(find_player_by_name('Rô')[0].name)
