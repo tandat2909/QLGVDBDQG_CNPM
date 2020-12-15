@@ -119,7 +119,7 @@ class Player(BaseModel):
 
     # relationship
 
-    player_goal = relationship("Goal", backref="player", lazy=True)
+    goals = relationship("Goal", backref="player", lazy=True)
 
     # ForeignKey
     # Vị trí thi đấu(Tiền vệ trái, hậu vệ phải...) Có thể để dạng Enum
@@ -133,7 +133,7 @@ class TypeGoals(BaseModel):
     name = Column(String(100), nullable=False)
     value = Column(String(500), nullable=False)
 
-    goal_Type = relationship('Goal', backref=backref('typeGoal'), lazy=True)
+    goals = relationship('Goal', backref=backref('typeGoal'), lazy=True)
 
 # Bảng đấu
 class Round(BaseModel):
@@ -147,7 +147,7 @@ class Round(BaseModel):
     # Thể thức
     format = Column(String(100))
     # relationship
-    groups_round = relationship("Groups", backref="round", lazy=True)
+    groups = relationship("Groups", backref="round", lazy=True)
 
 
     def __str__(self):
@@ -161,8 +161,8 @@ class Groups(BaseModel):
     # Số lượng các đội trong bảng thắng
     numberteamout = Column(Integer, nullable=False)
     round_id = Column(UUIDType(binary=True), ForeignKey(Round.id),nullable=False, primary_key=True)
-    groups_Match = relationship('Match', backref=backref('groups'), lazy=True)
-    group_Team = relationship('TeamsInGroup', backref=backref('groups', lazy=True))
+    matchs = relationship('Match', backref=backref('groups'), lazy=True)
+    teams = relationship('TeamsInGroup', backref=backref('groups', lazy=True))
 
 class TeamsInGroup(db.Model):
     __tablename__ = "TeamsInGroup"
@@ -178,7 +178,7 @@ class Match(BaseModel):
     name = None
     datetime = Column(DATETIME, nullable=False)
     # relationship
-    match_result = relationship("Result", backref=backref("match", uselist=False), lazy=True)
+    results = relationship("Result", backref=backref("match", uselist=False), lazy=True)
     # ForeignKey
     group_id = Column(UUIDType(binary=True), ForeignKey(Groups.id), nullable=False)
     # đội nhà
@@ -221,7 +221,7 @@ class PrioritySort(BaseModel):
     hieuSo = Column(Integer, nullable=False, default=2)
     tongBanThang = Column(Integer, nullable=False, default=3)
     doiKhang = Column(Integer, nullable=False, default=4)
-    prioritySort_Config = relationship('Config', backref=backref('prioritySort'), lazy=True)
+    configs = relationship('Config', backref=backref('prioritySort'), lazy=True)
 
 
 # Bán thắng
@@ -246,7 +246,7 @@ class Result(BaseModel):
     typeresult = Column(EnumSQL(ETypeResult), nullable=False)
 
     # relationship
-    result_goal = relationship('Goal', backref=backref('result'), lazy=True)
+    goals = relationship('Goal', backref=backref('result'), lazy=True)
 
     # ForeignKey
     # kết quả của trận đấu nào

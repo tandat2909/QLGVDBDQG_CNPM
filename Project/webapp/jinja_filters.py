@@ -1,6 +1,4 @@
 import os
-import datetime
-
 from webapp import utils
 from webapp import app
 import datetime
@@ -13,10 +11,9 @@ def encodeID(value):
         return en
     except:
         return ''
+def format_datetime(value,format = '%d-%m-%Y'):
 
-
-def format_datetime(value):
-    return value.strftime("%d-%m-%Y %HH:%m ")
+    return value.strftime(format)
 
 
 def set_time_match(value):

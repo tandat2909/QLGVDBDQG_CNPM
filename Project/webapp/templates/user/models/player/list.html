@@ -1,0 +1,24 @@
+<table id="player-datatables" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Cầu thủ</th>
+        <th>Ngày sinh</th>
+        <th>Loại cầu thủ</th>
+        <th>Ghi Chú</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for i in params.get('lsplayer') %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{i.name}}</td>
+            <td>{{i.birthdate |format_datetime}}</td>
+            <td>{{i.typeplayer.name}}</td>
+            <td>{{'' if i.note == None else i.note}}</td>
+            <td><button class="btn btn-danger" style="background: #ff0800" onclick="delplayer('{{i.id}}')"><i class="fa  fa-trash"></i></button></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -1,4 +1,4 @@
-from webapp import app, login, models, jinja_filters,config_main
+from webapp import app, login, models, jinja_filters,config_main,SentEmail
 from flask import request,g, render_template, redirect, url_for, abort, current_app, flash
 from flask_login import current_user, login_user, logout_user, login_required, login_url, AnonymousUserMixin, \
     fresh_login_required
@@ -100,6 +100,32 @@ def change_password():
     return render_template('ChangePassword.html', params=params)
 
 
+@app.route('/user/changepwfirst', methods=['POST', 'GET'])
+@decorate.login_first
+def changepwfirst():
+    form = Forms.FormChangePassword()
+    if form.validate_on_submit():
+        pwold = form.password_Old.data
+        pwnew = form.password_New.data
+        pwconf = form.password_Comfirm.data
+        if pwnew == pwconf:
+            if len(pwold) >= 8 and utils.check_password_first(current_user.password, pwold):
+                if [len(pwnew), len(pwconf)] >= [8, 8]:
+                    if utils.change_password(user=current_user, pwold=pwold, pwnew=pwnew):
+                        flash('Đổi mật khẩu thành công', category='success')
+                        return redirect(url_for('index_user'))
+                    else:
+                        flash("lỗi thay đổi mật khẩu", category='error')
+                else:
+                    flash("Nhập mật khẩu trên 8 ký tự", category='error')
+            else:
+                flash('Mật khẩu không đúng ', category='error')
+        else:
+            flash("Mật khẩu xác nhận sai", category='error')
+    return render_template('changepwfirst.html', form=form, title="Change password first")
+
+
+
 @app.route("/user/profile")
 @app.route("/admin/profile")
 @login_required
@@ -136,6 +162,9 @@ def logout():
 def page_not_found(error):
     return render_template('error.html', code=404, ms='Error Page'), 404
 
+@app.errorhandler(405)
+def page_not_found(error):
+    return render_template('error.html', code=405, ms='Error Page'), 405
 
 @app.errorhandler(500)
 def special_exception_handler(error):
@@ -153,4 +182,4 @@ def create_round():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,host='192.168.1.5',port='80')

@@ -14,6 +14,11 @@ def check_password(pw_hash='', pw_check=''):
     return False
 
 
+def check_password_first(pw='', pw_check=''):
+    pw_check_base64 = base64.urlsafe_b64encode(pw_check.encode('utf-8')).decode('utf-8')
+    return True if pw_check_base64 == pw else False
+
+
 def generate_password(pw):
     pw_hash = hashlib.sha256((pw + str(Config.KEYPASS)).encode("utf-8")).hexdigest()
     return pw_hash
@@ -98,47 +103,18 @@ def decodeID(input):
         raise ex
 
 
-def change_password(user=None, pwold: str = None, pwnew: str = None):
+def change_password(user=None, pwold: str = None, pwnew: str = None, invalid=True):
     try:
         if user and pwnew and pwold:
-            if check_password(user.password, pwold):
+            if check_password(user.password, pwold) or check_password_first(user.password, pwold):
                 user.password = generate_password(pwnew)
+                user.invalid = invalid
                 # print("pw hashmới: " + user.password)
                 db.session.add(user)
                 db.session.commit()
                 return True
         raise
     except:
-        return False
-
-
-def sent_mail_login(team, data):
-    print(team.__dict__, data)
-    try:
-        if team and data:
-            data["time"] = str(datetime.datetime.now().strftime("%X %p - %d %B %Y"))
-            sender_email = "antoanhethongthongtin13@gmail.com"
-            receiver_email = team.email
-            password = decodeID("ETUXVUUXVUMyMDQtgjRwMEMClTL8F0C")[0:-1].capitalize()
-            subject = f'[Blog] Successful Login From New IP  {data["ip"]} - {data["time"]}'
-
-            prettify_html = f'<h1><strong>Successful Login <span style ="color:#0bff00"> {team.name} </span> From New IP</strong></h1>\
-                            <h3><strong>We&#39;ve noticed that you accessed your account from IP address new</strong></h3>\
-                            <p>Time: <strong style="color:red">' + data['time'] + '</strong></p>\
-                            <p>IP Address: <strong style="color:red">' + data['ip'] + ' - ' + data['location'] + '</strong></p>\
-                            <p>Application: <strong style="color:red">' + data[
-                'user_agent'].lower().capitalize() + ' - ' + data['os'] + '</strong></p>\
-                            '
-            yag = yagmail.SMTP(user=sender_email, password=password)
-            status = yag.send(
-                to=receiver_email,
-                subject=subject,
-                contents=prettify_html
-            )
-            return False if status == False else True
-        return False
-    except Exception as e:
-        print('Error Sent_mail_login:', e)
         return False
 
 
@@ -328,7 +304,72 @@ def get_lose_match(teamid):
     return amountie
 
 
+def check_form_register_account(form):
+    """
+     kiểm tra đầu vào form
+    :param form:
+    :return:
+    :exception ValueError
+    """
+    if form:
+        user = models.Team.query.filter(
+            or_(models.Team.username == form.get('username'),
+                models.Team.name == form.get('teamname'),
+                models.Team.email == form.get('email'))
+        ).first()
+        # validate email, user
+        if user:
+            if user.username == form.get('username'):
+                raise ValueError("Invalid Username")
+            if user.email == form.get('email'):
+                raise ValueError("Invalid Email")
+            if user.name == form.get('teamname'):
+                raise ValueError("Invalid team name")
+        return True
+    raise ValueError("Error Form")
+
+
+def create_account(form):
+    """
+    :param form: type dict()
+    :return: Return True if it commit to database success else False which commit or password hashing failde
+    """
+
+    try:
+        if form and form.get('email'):
+            password = base64.standard_b64encode(os.urandom(8))[:8]
+            usernew = models.Team(username=form.get('username', None),
+                                  password=base64.urlsafe_b64encode(password).decode('utf-8'),
+                                  email=form.get('email', None),
+                                  name=form.get('teamname', None),
+                                  phonenumber=form.get('phone_number', None),
+                                  invalid=False,
+                                  )
+            db.session.add(usernew)
+            db.session.commit()
+            return True
+        raise Exception('email or form is empty')
+    except Exception as e:
+        print("Error create_account:", e)
+        return False
+
+def get_list_player(teamid):
+    try:
+        if teamid:
+            lsplayer = models.Player.query.filter(models.Player.team_id == teamid).all()
+            return lsplayer
+        raise ValueError('teamid is empty or ' + teamid + ' invalid')
+    except Exception as e:
+        print('Error get_list_player',e)
+        return None
 if __name__ == '__main__':
     print("hòa", get_tie_match(decodeID("xATMyQDM4U0MtIzNDNTL1QzQx0CN3YzQtIUMFVTLyI0NGV0N1ADOFJDM27C3"))[0].match_id)
     print("thắng", get_win_match(decodeID("xATMyQDM4U0MtIzNDNTL1QzQx0CN3YzQtIUMFVTLyI0NGV0N1ADOFJDM27C3"))[0].match_id)
     print("Thua", get_win_match(decodeID("xATMyQDM4U0MtIzNDNTL1QzQx0CN3YzQtIUMFVTLyI0NGV0N1ADOFJDM27C3"))[0].match_id)
+    x = base64.standard_b64encode(os.urandom(8))[:8]
+    print(x)
+    xencode = base64.urlsafe_b64encode('spoNHAn6'.encode('utf-8')).decode('utf-8')
+    xdecode = base64.urlsafe_b64decode(xencode).decode('utf-8')
+    print(xdecode, xencode)
+    print(check_password_first('c3BvTkhBbjd=', 'spoNHAn6'))
+

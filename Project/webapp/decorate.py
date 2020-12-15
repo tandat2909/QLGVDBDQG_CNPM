@@ -39,3 +39,23 @@ def login_required_user(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
+def login_accoun_new(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if current_user.is_anonymous or not current_user.is_authenticated or current_user.role != models.Role.manager:
+            flash('Please login to access this page.')
+            return redirect(url_for('login_us', next=request.url_rule))
+        return f(*args, **kwargs)
+
+    return decorated_function
+def login_first(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if current_user.is_anonymous or not current_user.is_authenticated or current_user.role != models.Role.manager:
+            flash('Please login to access this page.')
+            return redirect(url_for('login_us', next=request.url_rule))
+        if not current_user.invalid:
+            return f(*args, **kwargs)
+        return redirect(url_for('index_user'))
+    return decorated_function
