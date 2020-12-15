@@ -20,7 +20,7 @@
                 <a href="#" class="dropdown-toggle button-wave" data-toggle="dropdown">
                      <span>
                         <img alt="image" class="img-circle"
-                             src="{{ url_for('static',filename = current_user.avatar or "admin2/images/avatar2.jpg") }}"
+                             src="{{url_for('static',filename = current_user.avatar or 'admin/images/avatar2.jpg')}}"
                              width="50">
                          {{ current_user.name }}
                          <b class="caret"></b>
@@ -34,11 +34,11 @@
                     }
                 </style>
                 <ul class="dropdown-menu  style-dropdown-menu-right dropdown-lg animated fadeInRight ">
-                    <li><a href="{{ url_for('profile', id = current_user.id|encodeID).replace("/admin/","/user/",1) }}"><i class="fa fa-user"></i>My Profile</a></li>
+                    <li><a href="{#{ url_for('profile', id = current_user.id|encodeID).replace("/admin/","/user/",1) }#}"><i class="fa fa-user"></i>My Profile</a></li>
                     <li><a href="{{ url_for('change_password') }}">Change password</a></li>
                     <li class="divider"></li>
                     <li><a href="#"><i class="fa fa-lock"></i>Screen lock</a></li>
-                    <li><a href="{{ url_for('logout').replace("/admin/","/user/",1) }}"><i class="fa fa-key"></i>Logout</a></li>
+                    <li><a href="{{ url_for('logout_user')}}"><i class="fa fa-key"></i>Logout</a></li>
                 </ul>
             </li>
 

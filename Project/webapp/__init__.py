@@ -17,3 +17,4 @@ class EMethods(Enum):
     create = 'CREATE'
     delete = 'DELETE'
     edit = 'EDIT'
+    get = "GET"

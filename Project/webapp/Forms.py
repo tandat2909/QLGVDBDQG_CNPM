@@ -34,7 +34,11 @@ class LoginForm(FlaskForm):
 
     def validate_password(self, field):
         if self._user:
-            if not utils.check_password(self._user.password, self.password.data):
+            if not self._user.invalid:
+                if not utils.check_password_first(self._user.password,self.password.data):
+                    flash("Invalid username or password", category='error')
+                    self._user = None
+            elif not utils.check_password(self._user.password, self.password.data):
                 flash("Invalid username or password", category='error')
                 self._user = None
             return

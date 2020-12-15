@@ -1,0 +1,40 @@
+{% extends 'login.html' %}
+
+{% block body %}
+<div class="register">
+    <div class="container">
+        <div class="row">
+            <div style="margin: 0 auto;width: 50%;">
+                <h1 class="text-center">Change PassWord First</h1>
+                <form method="post" action="{{url_for('changepwfirst')}}">
+
+                    {{ form.csrf_token() }}
+                    <div class="form-group">
+                        {{ form.password_Old.label }}
+                        {{ form.password_Old(class='form-control', autocomplete
+                        ='',placeholder=form.password_Old.label.text
+                        ,minlength = 8, maxlength = 50) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.password_New.label }}
+                        {{ form.password_New(class='form-control',autocomplete
+                        ='',placeholder=form.password_New.label.text
+                        ,minlength = 8, maxlength = 50) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.password_Comfirm.label }}
+                        {{
+                        form.password_Comfirm(class='form-control',autocomplete='',placeholder=form.password_Comfirm.label.text
+                        ,minlength = 8, maxlength = 50) }}
+                    </div>
+                    <div class="form-group " style="margin: 0 auto">
+                        <button type="submit" class="btn btn-primary " style="margin-top: 2px; ">Change Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

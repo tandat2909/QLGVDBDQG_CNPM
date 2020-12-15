@@ -1,24 +1,28 @@
 import json
 import datetime
 
-from flask import request, flash, redirect, url_for, render_template
+from flask import request, flash, redirect, url_for, render_template, abort
 from flask_login import logout_user, login_user, current_user
 
-from webapp import models, Forms, utils, app, decorate, SentEmail
+from webapp import models, Forms, utils, app, decorate, SentEmail, EMethods
 
 
 @app.route('/user/')
 @decorate.login_required_user
 def index_user():
     params = {
-        'title': 'Home'
+        'title': 'Dashboard',
+        'nav_dashboard': 'active'
     }
-    return render_template('user/index.html')
+    return render_template('user/index.html', params=params)
+
+
 @app.route('/user/logout')
 @decorate.login_required_user
 def logout_user():
     logout_user()
     return redirect('/user')
+
 
 @app.route("/user/login", methods=["GET", "POST"])
 def login_us():
@@ -32,8 +36,10 @@ def login_us():
         next_url = request.args.get('next')
         login_info = json.loads(request.form.get("info_connect"))
         if user and user.active == models.EActive.Active.value and user.role == models.Role.manager:
-            flash("Login Success", category='success')
             login_user(user=user, duration=datetime.timedelta(hours=1), remember=True)
+            if not user.invalid:
+                return redirect(url_for('changepwfirst'))
+            flash("Login Success", category='success')
             SentEmail.sent_mail_login(current_user, login_info)
             if next_url:
                 return redirect(next_url)
@@ -45,3 +51,25 @@ def login_us():
             user = None
     return render_template('login.html', form=form, title="Login User", action="login_us")
 
+
+@app.route("/user/players")
+def players():
+    params = {
+        'title': 'Dang sách cầu thủ',
+        'nav_player': 'active'
+    }
+    params['lsplayer'] = utils.get_list_player(teamid=current_user.id)
+    return render_template('user/player.html', params=params)
+
+@app.route("/user/players/createplayer")
+def creatPlayer():
+    params = {
+        'title': 'Thêm cầu thủ',
+        'nav_player': 'active',
+        'positions':models.Position.query.all()
+    }
+
+    if request.method == "POST":
+        pass
+
+    return render_template('user/createplayer.html',params=params)

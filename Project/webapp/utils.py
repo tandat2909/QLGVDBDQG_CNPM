@@ -14,6 +14,11 @@ def check_password(pw_hash='', pw_check=''):
     return False
 
 
+def check_password_first(pw='', pw_check=''):
+    pw_check_base64 = base64.urlsafe_b64encode(pw_check.encode('utf-8')).decode('utf-8')
+    return True if pw_check_base64 == pw else False
+
+
 def generate_password(pw):
     pw_hash = hashlib.sha256((pw + str(Config.KEYPASS)).encode("utf-8")).hexdigest()
     return pw_hash
@@ -98,11 +103,12 @@ def decodeID(input):
         raise ex
 
 
-def change_password(user=None, pwold: str = None, pwnew: str = None):
+def change_password(user=None, pwold: str = None, pwnew: str = None, invalid=True):
     try:
         if user and pwnew and pwold:
-            if check_password(user.password, pwold):
+            if check_password(user.password, pwold) or check_password_first(user.password, pwold):
                 user.password = generate_password(pwnew)
+                user.invalid = invalid
                 # print("pw hashmới: " + user.password)
                 db.session.add(user)
                 db.session.commit()
@@ -269,10 +275,21 @@ def create_account(form):
         return False
 
 
-
 if __name__ == '__main__':
     x = base64.standard_b64encode(os.urandom(8))[:8]
     print(x)
-    xencode = base64.urlsafe_b64encode(x).decode('utf-8')
+    xencode = base64.urlsafe_b64encode('spoNHAn6'.encode('utf-8')).decode('utf-8')
     xdecode = base64.urlsafe_b64decode(xencode).decode('utf-8')
     print(xdecode, xencode)
+    print(check_password_first('c3BvTkhBbjd=', 'spoNHAn6'))
+
+
+def get_list_player(teamid):
+    try:
+        if teamid:
+            lsplayer = models.Player.query.filter(models.Player.team_id == teamid).all()
+            return lsplayer
+        raise ValueError('teamid is empty or ' + teamid + ' invalid')
+    except Exception as e:
+        print('Error get_list_player',e)
+        return None

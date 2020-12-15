@@ -87,6 +87,32 @@ def change_password():
     return render_template('ChangePassword.html', params=params)
 
 
+@app.route('/user/changepwfirst', methods=['POST', 'GET'])
+@decorate.login_first
+def changepwfirst():
+    form = Forms.FormChangePassword()
+    if form.validate_on_submit():
+        pwold = form.password_Old.data
+        pwnew = form.password_New.data
+        pwconf = form.password_Comfirm.data
+        if pwnew == pwconf:
+            if len(pwold) >= 8 and utils.check_password_first(current_user.password, pwold):
+                if [len(pwnew), len(pwconf)] >= [8, 8]:
+                    if utils.change_password(user=current_user, pwold=pwold, pwnew=pwnew):
+                        flash('Đổi mật khẩu thành công', category='success')
+                        return redirect(url_for('index_user'))
+                    else:
+                        flash("lỗi thay đổi mật khẩu", category='error')
+                else:
+                    flash("Nhập mật khẩu trên 8 ký tự", category='error')
+            else:
+                flash('Mật khẩu không đúng ', category='error')
+        else:
+            flash("Mật khẩu xác nhận sai", category='error')
+    return render_template('changepwfirst.html', form=form, title="Change password first")
+
+
+
 @app.route("/user/profile")
 @app.route("/admin/profile")
 @login_required
@@ -143,4 +169,4 @@ def create_round():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,host='192.168.1.5',port='80')
