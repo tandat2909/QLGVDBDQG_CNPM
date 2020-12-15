@@ -19,33 +19,28 @@ function delUser(idu, btn) {
     })
 }
 
-function get_stadium(home,away)
+function get_stadium(home)
 {
     fetch('/admin/match/get_stadium',{
         method: 'POST',
         headers: {"Content-Type": 'application/json'},
         body: JSON.stringify({
-        "hometeam": home,
-        "awayteam": away
+        "hometeam": home
         })
     }).then(res => res.json()).then(data => {
-            let dochtml = "<option value = '"+data.hometeam.id +"'>"+data.hometeam.stadium+" </option> <option value = '"+data.awayteam.id+"' > "+data.awayteam.stadium+"</option>"
-            $("#stadium").removeAttr('disabled').empty().prepend(dochtml)
+            let dochtml = "<option>"+data.hometeam.stadium+" </option>"
+             $("#stadium").empty().prepend(dochtml)
         })
 }
 
 function team_ready()
 {
    let home= $("#hometeam").children("option:selected").val()
-   let away = $("#awayteam").children("option:selected").val()
-   if (home.length > 0 && away.length > 0 ) {
-        if ( away !== home)
-            get_stadium(home,away)
-        else  $("#stadium").empty().prepend("<option value='' >Yêu cầu chọn hai đội khác nhau</option>").attr('disabled','')
+   if (home.length > 0 ) {
+        get_stadium(home)
    }
    else {
-        $("#stadium").empty().prepend("<option value='' >Yêu cầu chọn đội</option>").attr('disabled','')
-
+        $("#stadium").empty().prepend("<option value='' >Yêu cầu chọn đội nhà</option>").attr('disabled','')
    }
 }
 
@@ -64,8 +59,22 @@ function delmatch(idmatch) {
 
          location.reload()
         }
-
-
+    })
+}
+function getmatch(idmatch) {
+    let url = '/admin/match/list/'
+    fetch(url, {
+        method: 'POST',
+        headers: {"Content-Type": 'application/json'},
+        body: JSON.stringify({
+            "idmatch": idmatch,
+        })
+    }).then(res => res.json()).then(data => {
+        if (data.statuss == 400)
+            alert("Thêm kết quả cho trận đấu")
+        else{
+         location.reload()
+        }
     })
 }
 function delgroup(idgroup) {

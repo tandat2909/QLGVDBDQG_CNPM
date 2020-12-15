@@ -63,9 +63,7 @@ class EPosition(Enum):
     LS = "Hậu vệ trái"
     LM = "Tiền vệ trái"
     RM = "Tièn vệ phải"
-class EWiner_Team(Enum):
-    hometeam = '1'
-    awayteam = '2'
+
 
 
 class BaseModel(db.Model):
@@ -93,7 +91,7 @@ class Team(BaseModel, UserMixin):
     # relationship
     players = relationship("Player", backref="team", lazy=True)
     team_group = relationship('TeamsInGroup', backref=backref('team', lazy=True))
-
+    results = relationship('Result', backref=backref('team', lazy=True))
 
 class Position(BaseModel):
     __tablename = "Position"
@@ -254,7 +252,7 @@ class Result(BaseModel):
     # kết quả của trận đấu nào
     match_id = Column(UUIDType(binary=True), ForeignKey(Match.id), nullable=False, primary_key=True)
     # đội thắng
-    winteam = Column(EnumSQL(EWiner_Team), nullable=False)
+    winteam = Column(UUIDType(binary=True), ForeignKey(Team.id))
     # team_id = Column(UUIDType(binary=True), ForeignKey(Team.id), nullable=False)
     # số bàn thắng của đội thắng
     winnergoals = Column(Integer, nullable=False)
@@ -262,7 +260,7 @@ class Result(BaseModel):
     losergoals = Column(Integer, nullable=False)
 
     def __str__(self):
-        return "Result " + str(Match.query.get(self.match_id))
+        return "Results " + str(Match.query.get(self.match_id))
 
 
 def inserPosition():
@@ -312,6 +310,15 @@ if __name__ == '__main__':
                  invalid=True,
                  stadium="Phường 3,Phú Nhuận,HN",
                  )
+    team3 = Team(id=uuid.uuid4(),
+                 name='GJ',
+                 username='team3',
+                 password='d047de6de9348ed903f6ac3631731f26dc3795e09b07f6d3ac993d5f48045558',
+                 email="vutandat29092000@gmail.com",
+                 phonenumber='098765433456',
+                 invalid=True,
+                 stadium="Phường 3,Phú Nhuậđn,HN",
+                 )
     player1 = Player(id=uuid.uuid4(),
                      name="Công Phượng",
                      team_id=team1.id,
@@ -337,7 +344,15 @@ if __name__ == '__main__':
                    datetime=datetime.now(),stadium_id=team1.id)
     match2 = Match(id=uuid.uuid4(), hometeam_id=team2.id, awayteam_id=team1.id, group_id=tuketGroup.id,
                    datetime=datetime.now(),stadium_id=team2.id)
-    resultmatch1 = Result(id=uuid.uuid4(), match_id=match1.id, winnergoals=3, losergoals=2, typeresult=ETypeResult.Win, winteam=EWiner_Team.hometeam)
+    match3 = Match(id=uuid.uuid4(), hometeam_id=team2.id, awayteam_id=team3.id, group_id=tuketGroup.id,
+                   datetime=datetime.now(), stadium_id=team2.id)
+    match4 = Match(id=uuid.uuid4(), hometeam_id=team3.id, awayteam_id=team2.id, group_id=tuketGroup.id,
+                   datetime=datetime.now(), stadium_id=team3.id)
+    resultmatch1 = Result(id=uuid.uuid4(), match_id=match1.id, winnergoals=3, losergoals=2, typeresult=ETypeResult.Win, winteam=team1.id)
+    resultmatch2 = Result(id=uuid.uuid4(), match_id=match2.id, winnergoals=3, losergoals=2, typeresult=ETypeResult.Tie, )
+    resultmatch3 = Result(id=uuid.uuid4(), match_id=match3.id, winnergoals=3, losergoals=2, typeresult=ETypeResult.Win, winteam=team2.id)
+    resultmatch4 = Result(id=uuid.uuid4(), match_id=match4.id, winnergoals=3, losergoals=2, typeresult=ETypeResult.Tie, )
+
     goal1 = Goal(id=uuid.uuid4(), result_id=resultmatch1.id, player_id=player1.id, time=datetime.now(), type_id=1)
     goal2 = Goal(id=uuid.uuid4(), result_id=resultmatch1.id, player_id=player2.id, time=datetime.now(), type_id=2)
     goal3 = Goal(id=uuid.uuid4(), result_id=resultmatch1.id, player_id=player1.id, time=datetime.now(), type_id=3)
@@ -345,13 +360,13 @@ if __name__ == '__main__':
     listcommit = [
         prisort, prisort1,
         config,
-        admin,team1, team2,
+        admin,team1, team2,team3,
         player1, player2,
         tuket, chungket,
         tuketGroup,
         team1intuke, teamintuke,
-        match1, match2,
-        resultmatch1,
+        match1, match2,match3,match4,
+        resultmatch1,resultmatch2,resultmatch3,resultmatch4,
         goal1, goal2, goal3
 
     ]

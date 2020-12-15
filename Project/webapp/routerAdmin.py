@@ -129,13 +129,15 @@ def match_admin():
         group_id = request.form.get('group_id')
         hometeam = request.form.get('hometeam')
         awayteam = request.form.get('awayteam')
-        stadium = request.form.get('stadium')
-        if utils.create_match(datetime=datetime, group_id=group_id, hometeam_id=hometeam, awayteam_id=awayteam,
-                              stadium_id=stadium):
-            flash("Tạo vòng đấu thành công!", category="success")
+        if utils.check_hometeam_stadium(id_hometeam=hometeam, id_awayteam=awayteam, id_group=group_id):
+            if utils.create_match(datetime=datetime, group_id=group_id, hometeam_id=hometeam, awayteam_id=awayteam,
+                                  stadium_id=hometeam):
+                flash("Tạo vòng đấu thành công!", category="success")
+            else:
+                flash("Tạo vòng đấu không thành công!", category="error")
+            return redirect(url_for('match_admin'))
         else:
-            flash("Tạo vòng đấu không thành công!", category="error")
-        return redirect(url_for('match_admin'))
+            flash("Không thể tạo trận đấu!! Đội nhà đã gặp đội khách tại sân nhà! Yêu cầu tạo lại")
     params['listgroup'] = models.Groups.query.all()
     params['listmatch'] = models.Match.query.all()
     params['listround'] = models.Round.query.all()
@@ -144,6 +146,7 @@ def match_admin():
     return render_template('admin/models/match/list.html', params=params)
 
 @app.route('/admin/match/delete', methods=['POST'])
+@decorate.login_required_Admin
 def delete_match():
     match_id = request.json.get('idmatch')
     print(session)
@@ -156,27 +159,26 @@ def delete_match():
         'statuss': 400,
     })
 
+@app.route('/admin/result/list', methods=['GET','POST'])
+@decorate.login_required_Admin
+def resultlist():
+    pass
+
 @app.route('/admin/match/get_stadium', methods=['GET', 'POST'])
 @decorate.login_required_Admin
 def get_stadium():
     data = request.json
-    hometeam = awayteam = None
+    hometeam  = None
     try:
         if data:
             hometeam = models.Team.query.get(data.get('hometeam'))
-            awayteam = models.Team.query.get(data.get('awayteam'))
     except Exception as e:
         print('Error get_stadium', e)
 
     return jsonify({
         "hometeam": {
-            "id": str(hometeam.id) or None,
             "stadium": " - ".join([hometeam.name, hometeam.stadium or ""]) or None
         },
-        "awayteam": {
-            "id": str(awayteam.id) or None,
-            "stadium": " - ".join([awayteam.name, awayteam.stadium or ""]) or None
-        }
     })
 
 
@@ -224,7 +226,6 @@ def delete_round():
         'statuss': 400,
     })
 
-
 @app.route('/admin/list/group/', methods=['GET', 'POST'])
 @decorate.login_required_Admin
 def listgroup():
@@ -261,3 +262,4 @@ def delete_group():
     return jsonify({
         'statuss': 400,
     })
+

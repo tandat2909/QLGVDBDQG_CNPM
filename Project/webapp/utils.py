@@ -1,6 +1,9 @@
 import base64, hashlib, os, random, yagmail
 import datetime
 
+from sqlalchemy import or_, select, not_, and_
+from sqlalchemy.sql.functions import count
+
 from webapp import Config, db, models, config_main
 
 
@@ -165,9 +168,10 @@ def change_config(form):
             config_main.maxAgePlayer = form.get('maxAgePlayer'),
             config_main.minAgePlayer = form.get('minAgePlayer'),
             config_main.thoiDiemGhiBanToiDa = form.get('thoiDiemGhiBanToiDa')
-            prioritySort = models.PrioritySort(name=form.get('PriorityName'),diem=form.get('diem'), hieuSo=form.get('hieuso'),
-                                               tongBanThang=form.get('tongbanthang'),doiKhang=form.get('doikhang'))
-            config_main.prioritySort_id=prioritySort.id
+            prioritySort = models.PrioritySort(name=form.get('PriorityName'), diem=form.get('diem'),
+                                               hieuSo=form.get('hieuso'),
+                                               tongBanThang=form.get('tongbanthang'), doiKhang=form.get('doikhang'))
+            config_main.prioritySort_id = prioritySort.id
 
             db.session.add(config_main)
             db.session.commit()
@@ -182,9 +186,11 @@ def find_player_by_name(name: str):
     players = models.Player.query.filter(models.Player.name.contains(name)).all()
     return players
 
+
 def find_team_by_name(name: str):
     teams = models.Team.query.filter(models.Team.name.contains(name)).all()
     return teams
+
 
 def create_group(groupname: str = None, numberteamin: int = 0, numberteamout: int = 0, round_id=None):
     """
@@ -230,6 +236,10 @@ def create_round(roundname: str = None, numberteamin: int = None, numberteamout:
         return False
 
 
+def add_result():
+    pass
+
+
 def create_match(datetime=None, group_id=None, hometeam_id=None, awayteam_id=None, stadium_id=None):
     """
     :param datetime:
@@ -247,6 +257,8 @@ def create_match(datetime=None, group_id=None, hometeam_id=None, awayteam_id=Non
         return True
     else:
         return False
+
+
 def delete_match(match_id):
     try:
         match = models.Match.query.get(match_id)
@@ -256,18 +268,22 @@ def delete_match(match_id):
     except Exception as e:
         print('Error delete_match:', e)
         return False
+
+
 def delete_group(group_id):
     try:
-        group = models.Groups.query.filter(models.Groups.id ==group_id).first()
+        group = models.Groups.query.filter(models.Groups.id == group_id).first()
         db.session.delete(group)
         db.session.commit()
         return True
     except Exception as e:
         print('Error delete_group:', e)
         return False
+
+
 def delete_round(round_id):
     try:
-        round = models.Round.query.filter(models.Round.id ==round_id).first()
+        round = models.Round.query.filter(models.Round.id == round_id).first()
         db.session.delete(round)
         db.session.commit()
         return True
@@ -275,7 +291,44 @@ def delete_round(round_id):
         print('Error delete_round:', e)
         return False
 
-if __name__ == '__main__':
-    delete_match('29625f47-2238-4899-81b4-adce25dfd23b')
 
-    print(find_player_by_name('Rô')[0].name)
+def check_hometeam_stadium(id_hometeam, id_awayteam, id_group):
+    # các trận đấu trong bảng(trong vòng) đó:
+    matchs = models.Match.query.filter(models.Match.group_id == id_group, models.Match.hometeam_id == id_hometeam,
+                                       models.Match.awayteam_id == id_awayteam).first()
+    if matchs:
+        return False
+    else:
+        return True
+
+
+def get_win_match(teamid):
+    """
+    đếm số lượng trận thắng của một đội bóng nhằm mục đích tính điểm
+    :param teamid:
+    :return:
+    """
+    # matchs = các trận đội bóng đó đã tham gia
+    result = models.Result.query.filter(models.Result.winteam == teamid).all()
+    return result
+
+
+def get_tie_match(teamid):
+    amountie = models.Result.query.join(models.Match).filter(
+        or_(models.Match.awayteam_id == teamid, models.Match.hometeam_id == teamid),
+        models.Result.typeresult == models.ETypeResult.Tie).all()
+    return amountie
+
+
+def get_lose_match(teamid):
+    amountie = models.Result.query.join(models.Match).filter(
+        or_(models.Match.awayteam_id == teamid, models.Match.hometeam_id == teamid),
+        not_(or_(models.Result.typeresult == models.ETypeResult.Tie,
+                 models.Result.typeresult == models.ETypeResult.Win))).all()
+    return amountie
+
+
+if __name__ == '__main__':
+    print("hòa", get_tie_match(decodeID("xATMyQDM4U0MtIzNDNTL1QzQx0CN3YzQtIUMFVTLyI0NGV0N1ADOFJDM27C3"))[0].match_id)
+    print("thắng", get_win_match(decodeID("xATMyQDM4U0MtIzNDNTL1QzQx0CN3YzQtIUMFVTLyI0NGV0N1ADOFJDM27C3"))[0].match_id)
+    print("Thua", get_win_match(decodeID("xATMyQDM4U0MtIzNDNTL1QzQx0CN3YzQtIUMFVTLyI0NGV0N1ADOFJDM27C3"))[0].match_id)

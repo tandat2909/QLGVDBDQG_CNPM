@@ -11,7 +11,7 @@
             </ul>
             <div class="tab-content">
                 <div id="listmatch" class="tab-pane active">
-                    <div class="panel-body">
+                    <div class="panel-body" >
                         <table id="basic-datatables" class="table table-bordered table-hover">
 
                             <thead>
@@ -45,7 +45,7 @@
                                         {% if params.get('result').query.filter(params.get('result').match_id == i.id).first() == None %}
                                         <button class="btn btn-danger" onclick="delmatch('{{i.id}}')">Delete</button>
                                         {% endif %}
-                                        <button class="btn btn-danger">Write Result</button>
+                                        <button class="btn btn-danger" onclick="getmatch('{{i.id}}')">Write Result</button>
                                     </span>
                                 </td>
 
@@ -94,8 +94,8 @@
                         </div>
                         <div class="form-group">
                             <label> Sân </label>
-                            <select class="form-control" disabled required name="stadium" id="stadium">
-                                <option value="">Yêu cầu chọn đội</option>
+                            <select class="form-control" disabled required id="stadium">
+                                <option value="">Yêu cầu chọn đội nhà</option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-success" onsubmit="clearForm()" name="submit"> Tạo</button>
