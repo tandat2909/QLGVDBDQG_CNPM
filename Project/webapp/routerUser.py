@@ -21,7 +21,7 @@ def index_user():
 @decorate.login_required_user
 def logout_user():
     logout_user()
-    return redirect('/user')
+    return redirect(url_for('login_us'))
 
 
 @app.route("/user/login", methods=["GET", "POST"])
@@ -53,6 +53,7 @@ def login_us():
 
 
 @app.route("/user/players")
+@decorate.login_required_user
 def players():
     params = {
         'title': 'Dang sách cầu thủ',
@@ -62,6 +63,7 @@ def players():
     return render_template('user/player.html', params=params)
 
 @app.route("/user/players/createplayer")
+@decorate.login_required_user
 def creatPlayer():
     params = {
         'title': 'Thêm cầu thủ',

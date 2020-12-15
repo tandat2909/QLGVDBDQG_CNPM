@@ -179,7 +179,6 @@ def match_admin():
 @decorate.login_required_Admin
 def delete_match():
     match_id = request.json.get('idmatch')
-    print(session)
     if match_id and utils.delete_match(match_id):
          flash('Xóa match thành công')
          return jsonify({

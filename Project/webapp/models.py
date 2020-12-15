@@ -290,6 +290,7 @@ if __name__ == '__main__':
                  email='vutandat29092000@gmail.com',
                  role=Role.admin,
                  username='admin',
+                 invalid=True,
                  password='d047de6de9348ed903f6ac3631731f26dc3795e09b07f6d3ac993d5f48045558')
     team1 = Team(id=uuid.uuid4(),
                  name='TPHCM',
