@@ -4,7 +4,7 @@ import datetime
 from flask import request, flash, redirect, url_for, render_template, jsonify
 from flask_login import logout_user, login_user, current_user
 
-from webapp import models, Forms, utils, app, decorate, config_main, SentEmail,EMethods
+from webapp import models, Forms, utils, app, decorate, SentEmail,EMethods
 
 
 
@@ -292,3 +292,8 @@ def delete_group():
         'statuss': 400,
     })
 
+#todo xóa round,result,match,group,gold xóa nguyên round và các trận liên quan
+#todo xuất list player
+#todo trang result thêm xóa
+#todo trang edit config
+#todo type goal thêm xóa

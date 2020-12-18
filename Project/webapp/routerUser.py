@@ -1,7 +1,8 @@
 import json
 import datetime
+import os
 
-from flask import request, flash, redirect, url_for, render_template, abort
+from flask import request, flash, redirect, url_for, render_template, abort, jsonify
 from flask_login import logout_user, login_user, current_user
 
 from webapp import models, Forms, utils, app, decorate, SentEmail, EMethods
@@ -52,26 +53,99 @@ def login_us():
     return render_template('login.html', form=form, title="Login User", action="login_us")
 
 
-@app.route("/user/players")
+@app.route("/user/players", methods=["GET", "POST"])
 @decorate.login_required_user
 def players():
     params = {
         'title': 'Dang sách cầu thủ',
-        'nav_player': 'active'
+        'nav_player': 'active',
+        'positions': models.Position.query.all(),
+        'genders': models.EGender,
+        'tyepeplayer': models.ETyEpePlayer,
     }
+
+    if request.method == EMethods.post.value:
+
+        if request.args.get("action").upper() == EMethods.delete.value:
+            playerid = request.json.get("playerid")
+            if utils.delete_player(playerid=playerid):
+                return jsonify({"data": True})
+            return jsonify({"data": False})
+        if request.args.get("action").upper() == EMethods.get.value:
+            try:
+                playerid = request.json.get("playerid")
+                a = models.Player.query.get(playerid)
+                return jsonify({
+                    "firstname": a.firstname,
+                    "lastname": a.lastname,
+                    "position": str(a.position_id),
+                    "note": a.note,
+                    "typeplayer": a.typeplayer.name,
+                    "birthdate": str(a.birthdate.strftime("%Y-%m-%d")),
+                    "gender": a.gender.name,
+                    "scorecount": a.scorecount,
+                    "nationality": a.nationality
+                })
+            except Exception as e:
+                print("Error get player:",e)
+                return jsonify({"data":"error"})
+        if request.args.get("action").upper() == EMethods.edit.value:
+            try:
+                if utils.check_form_add_player(teamid=current_user.id, form=request.form):
+                    avatars = request.files["avatar"]
+                    avatar_path = 'image/avatar/' + avatars.filename
+                    if utils.edit_player(form=request.form, avatar=avatar_path):
+                        if avatars:
+                            avatars.save(os.path.join(app.root_path, 'static/', avatar_path))
+                        flash("Lưu thông tin cầu thủ thành công", category="success")
+                        return redirect(url_for('players'))
+                    else:
+                        flash("Lỗi lưu thông tin cầu thủ", category="error")
+            except ValueError as e:
+                flash(e, category="error")
+            except Exception as e:
+                flash('Lỗi thêm cầu thủ', category='error')
+                print("Error router creatPlayer:", e)
+
     params['lsplayer'] = utils.get_list_player(teamid=current_user.id)
     return render_template('user/player.html', params=params)
 
-@app.route("/user/players/createplayer")
+
+@app.route("/user/players/createplayer", methods=["POST", "GET"])
 @decorate.login_required_user
 def creatPlayer():
     params = {
         'title': 'Thêm cầu thủ',
         'nav_player': 'active',
-        'positions':models.Position.query.all()
+        'positions': models.Position.query.all(),
+        'genders': models.EGender,
+        'tyepeplayer': models.ETyEpePlayer,
+        'form': request.form
     }
-
     if request.method == "POST":
-        pass
+        try:
+            if utils.check_form_add_player(teamid=current_user.id, form=request.form):
+                avatars = request.files["avatar"]
+                avatar_path = 'image/avatar/' + avatars.filename
+                if utils.creat_player(teamid=current_user.id, form=request.form, avatar=avatar_path):
+                    if avatars:
+                        avatars.save(os.path.join(app.root_path, 'static/', avatar_path))
+                    flash("Thêm cầu thủ thành công", category="success")
+                    return redirect(url_for('creatPlayer'))
+                else:
+                    flash("Lỗi thêm cầu thủ", category="error")
+        except ValueError as e:
+            flash(e, category="error")
+        except Exception as e:
+            flash('Lỗi thêm cầu thủ', category='error')
+            print("Error router creatPlayer:", e)
 
-    return render_template('user/createplayer.html',params=params)
+    return render_template('user/createplayer.html', params=params)
+
+#todo profile player, profile tài khoản
+
+
+if __name__ == '__main__':
+    a = models.Player.query.first().birthdate.strftime("%Y-%m-%d")
+
+    print(a)

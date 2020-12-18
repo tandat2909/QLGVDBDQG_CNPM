@@ -9,6 +9,9 @@ from enum import Enum
 from sqlalchemy.orm import relationship, backref
 
 
+class BaseEnum(Enum):
+    print()
+
 class Role(Enum):
     admin = 2
     manager = 1
@@ -22,14 +25,14 @@ class ETypeResult(Enum):
 
 # Danh sach loai cau thu
 class ETyEpePlayer(Enum):
-    localplayer = 1
-    foreignplayer = 2
+    localplayer = "Trong Nước"
+    foreignplayer = "Nước Ngoài"
 
 
 class EGender(Enum):
-    Female = 1
-    Male = 2
-    Orther = 3
+    Female = 'Nữ'
+    Male = 'Nam'
+    Orther = "Khác"
 
 
 class ETypeGoal(Enum):

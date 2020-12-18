@@ -24,6 +24,8 @@ def set_time_match(value):
         return timenow.replace(year=timenow.year+1).strftime("%Y-%m-%dT00:00")
     return "Error"
 
+
+
 app.jinja_env.filters['encodeID'] = encodeID
 app.jinja_env.filters['format_datetime'] = format_datetime
 app.jinja_env.filters['set_time_match'] = set_time_match

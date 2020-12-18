@@ -46,7 +46,7 @@ class LoginForm(FlaskForm):
     def get_user(self):
         return self._user
 class FormChangePassword(FlaskForm):
-    password_Old = PasswordField('Current Password', validators=[DataRequired()])
+    password_Old = PasswordField('Password', validators=[DataRequired()])
     password_New = PasswordField('New Password', validators=[DataRequired()])
     password_Comfirm = PasswordField('Confirm Password ', validators=[DataRequired()])
 

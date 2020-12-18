@@ -4,7 +4,8 @@ import datetime
 from sqlalchemy import or_, select, not_, and_
 from sqlalchemy.sql.functions import count
 
-from webapp import Config, db, models, config_main
+from webapp import Config, db, models
+
 
 
 def check_password(pw_hash='', pw_check=''):
@@ -134,6 +135,7 @@ def lock_account(current_user, user_id, lock: bool = None):
 
 def change_config(form):
     try:
+        config_main = models.Config.query.one()
         if form and config_main:
             config_main.winScore = form.get('winScore'),
             config_main.tieScore = form.get('tieScore'),
@@ -353,6 +355,7 @@ def create_account(form):
         print("Error create_account:", e)
         return False
 
+
 def get_list_player(teamid):
     try:
         if teamid:
@@ -360,16 +363,124 @@ def get_list_player(teamid):
             return lsplayer
         raise ValueError('teamid is empty or ' + teamid + ' invalid')
     except Exception as e:
-        print('Error get_list_player',e)
+        print('Error get_list_player', e)
         return None
-if __name__ == '__main__':
-    print("hòa", get_tie_match(decodeID("xATMyQDM4U0MtIzNDNTL1QzQx0CN3YzQtIUMFVTLyI0NGV0N1ADOFJDM27C3"))[0].match_id)
-    print("thắng", get_win_match(decodeID("xATMyQDM4U0MtIzNDNTL1QzQx0CN3YzQtIUMFVTLyI0NGV0N1ADOFJDM27C3"))[0].match_id)
-    print("Thua", get_win_match(decodeID("xATMyQDM4U0MtIzNDNTL1QzQx0CN3YzQtIUMFVTLyI0NGV0N1ADOFJDM27C3"))[0].match_id)
-    x = base64.standard_b64encode(os.urandom(8))[:8]
-    print(x)
-    xencode = base64.urlsafe_b64encode('spoNHAn6'.encode('utf-8')).decode('utf-8')
-    xdecode = base64.urlsafe_b64decode(xencode).decode('utf-8')
-    print(xdecode, xencode)
-    print(check_password_first('c3BvTkhBbjd=', 'spoNHAn6'))
 
+
+def check_form_add_player(teamid, form):
+    if form and teamid:
+        config_main = models.Config.query.one()
+        if not isValidAge(form.get('birthdate')):
+            raise ValueError(
+                "Tuổi không hợp lệ. Tuổi từ " + str(config_main.minAgePlayer) + " đến " + str(
+                    config_main.maxAgePlayer) + " tuổi")
+        if form.get('typeplayer') == models.ETyEpePlayer.foreignplayer:
+            aTP = amountTypePlayer(teamid)
+            if aTP >= config_main.amountForeignPlayer:
+                raise ValueError(
+                    "Số lượng cầu thủ ngoại đã vượt mức quy định. Hiện tại danh sách có " + str(
+                        aTP) + " cầu thủ ngoại. Mỗi đội có tối đa " +
+                    str(config_main.amountForeignPlayer) + " cầu thủ")
+        if amountPlayer(teamid) >= config_main.maxPlayer:
+            raise ValueError(
+                "Số lượng cầu thủ vượt mức quy định. Quy định mỗi đội tối đa có " + str(
+                    config_main.maxPlayer) + " cầu thủ")
+        return True
+    raise Exception("Form or teamid không hợp lệ")
+
+
+def isValidAge(age: datetime = None):
+
+    try:
+        if age:
+            config_main = models.Config.query.one()
+            age = (datetime.datetime.now() - datetime.datetime.strptime(age, '%Y-%m-%d')).days / 365
+            return config_main.minAgePlayer < age < config_main.maxAgePlayer
+        raise ValueError("Age invalid")
+    except Exception as e:
+        print("Error isValidAge:", e)
+        return False
+
+
+def amountPlayer(teamid):
+    try:
+        amount = models.Player.query.filter(models.Player.team_id == teamid).count()
+        return amount
+    except Exception as e:
+        print("Error amountPlayer:", e, e.with_traceback())
+        return 0
+
+
+def amountTypePlayer(teamid, typeplayer: models.ETyEpePlayer = models.ETyEpePlayer.foreignplayer):
+    amount = models.Player.query.filter(models.Player.team_id == teamid, models.Player.typeplayer == typeplayer).count()
+    return amount
+
+
+def creat_player(teamid, form, avatar):
+    try:
+        if teamid and form:
+            new_player = models.Player(name=" ".join([form.get("lastname", ''), form.get("firstname", '')]),
+                                       firstname=form.get('firstname'),
+                                       lastname=form.get('lastname'),
+                                       birthdate=form.get('birthdate'),
+                                       team_id=teamid,
+                                       typeplayer=models.ETyEpePlayer.__getitem__(form.get('typeplayer')),
+                                       gender=models.EGender.__getitem__(form.get('gender')),
+                                       position_id=models.Position.query.get(form.get('position')).id,
+                                       avatar=avatar,
+                                       nationality=form.get('nationality'),
+                                       )
+            db.session.add(new_player)
+            db.session.commit()
+            return True
+        return False
+    except Exception as e:
+        print("Error create_player", e)
+        return False
+
+def edit_player(form,avatar):
+    try:
+        player = models.Player.query.get(form.get("playerid"))
+        if player:
+            player.lastname = form.get("lastname")
+            player.name = " ".join([form.get("lastname", ''), form.get("firstname", '')])
+            player.firstname = form.get('firstname')
+            player.lastname = form.get('lastname')
+            player.birthdate = form.get('birthdate')
+            player.typeplayer = models.ETyEpePlayer.__getitem__(form.get('typeplayer'))
+            player.gender = models.EGender.__getitem__(form.get('gender'))
+            player.position_id = models.Position.query.get(form.get('position')).id
+            player.avatar = avatar
+            player.nationality = form.get('nationality')
+            db.session.add(player)
+            db.session.commit()
+            return True
+        raise ValueError("Player khong có")
+    except Exception as e:
+        print("Error edit_player: ",e)
+        return False
+
+
+def delete_player(playerid):
+    try:
+        player = models.Player.query.get(playerid)
+        if player:
+            db.session.query(models.Goal).filter(
+                models.Goal.player_id == player.id).delete()
+            db.session.commit()
+            db.session.delete(player)
+            db.session.commit()
+            return True
+        return False
+    except Exception as e:
+        print("Error deletePlayer:", e)
+        return False
+
+
+if __name__ == '__main__':
+
+
+
+    print(encodeID('thoigiankhongchodoiai-2020'))
+    print(decodeID('EDVI9USHlUQOtESP50RDh0TE9USBlULFBjND1iMwIDME06C'))
+    print(models.ETyEpePlayer.__dict__.__getitem__("_value2member_map_").get(1))

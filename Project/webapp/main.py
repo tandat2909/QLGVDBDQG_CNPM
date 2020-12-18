@@ -1,4 +1,4 @@
-from webapp import app, login, models, jinja_filters,config_main,SentEmail
+from webapp import app, login, models, jinja_filters,SentEmail
 from flask import request,g, render_template, redirect, url_for, abort, current_app, flash
 from flask_login import current_user, login_user, logout_user, login_required, login_url, AnonymousUserMixin, \
     fresh_login_required
@@ -6,7 +6,7 @@ from flask_login import current_user, login_user, logout_user, login_required, l
 from webapp.routerAdmin import *
 from webapp.routerUser import *
 
-config_main = models.Config.query.one()
+
 
 @app.route('/')
 def home():
@@ -182,4 +182,4 @@ def create_round():
 
 
 if __name__ == '__main__':
-    app.run(debug=True,host='192.168.1.5',port='80')
+    app.run(debug=True)
