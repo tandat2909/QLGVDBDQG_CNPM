@@ -1,50 +1,29 @@
 {% extends 'home/base.html' %}
 
 {% block contentLeft %}
-	<div class="row">
-    <div class="col-12"><h4 class="st-title">World Cup 2019</h4></div>
-
-</div>
 <div class="row">
-    <div class="col-12">
-    <div class="st-table">
-        <table>
-            <tbody>
-            <tr>
-                <td class="left-team">
-                    <img src="{{url_for('static',filename = 'image/logoTeam/flag-1.jpg')}}" alt="flag-1.jpg">
-                    <h4>Australia</h4>
-                </td>
-                <td class="st-option">
-                    <div class="so-text">MetLife Stadium, Rutherford USA</div>
-                    <h4>1 : 2</h4>
-                    <div class="so-text">15 September 2019</div>
-                </td>
-                <td class="right-team">
-                    <img src="{{url_for('static',filename = 'image/logoTeam/flag-2.jpg')}}" alt="">
-                    <h4>Qatar</h4>
-                </td>
-            </tr>
-             <tr>
-                <td class="left-team">
-                    <img src="{{url_for('static',filename = 'image/logoTeam/flag-1.jpg')}}" alt="flag-1.jpg">
-                    <h4>Australia</h4>
-                </td>
-                <td class="st-option">
-                    <div class="so-text">MetLife Stadium, Rutherford USA</div>
-                    <h4>0 : 2</h4>
-                    <div class="so-text">15 September 2019</div>
-                </td>
-                <td class="right-team">
-                    <img src="{{url_for('static',filename = 'image/logoTeam/flag-2.jpg')}}" alt="">
-                    <h4>Qatar</h4>
-                </td>
-            </tr>
-
-
-            </tbody>
-        </table>
-    </div>
-</div>
+    <div class="col-12"><h4 class="st-title">Kết quả trận đấu mới nhất</h4></div>
+<div class="st-table col-12">
+<table>
+    {% for items in params.get('results') %}
+    <tbody>
+    <tr>
+        <td class="left-team">
+            <img src="{{url_for('static',filename = 'image/logoTeam/flag-1.jpg')}}" alt="flag-1.jpg">
+            <h4>{{params.get('teams').query.get(items.match.hometeam_id)}}</h4>
+        </td>
+        <td class="st-option">
+            <div class="so-text">{{params.get('teams').query.get(items.match.hometeam_id).stadium}}</div>
+            <h4>{{items.winnergoals}} : {{items.losergoals}}</h4>
+            <div class="so-text">{{items.match.datetime}}</div>
+        </td>
+        <td class="right-team">
+            <img src="{{url_for('static',filename = 'image/logoTeam/flag-2.jpg')}}" alt="">
+            <h4>{{params.get('teams').query.get(items.match.awayteam_id)}}</h4>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
 </div>
 {% endblock %}

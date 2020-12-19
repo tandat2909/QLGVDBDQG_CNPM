@@ -15,6 +15,9 @@ def home():
         'title': 'Home',
         'nav_home': 'active',
     }
+    params ['results'] = models.Result.query.all()
+    params ['teams'] = models.Team
+    params ['groups'] = models.Groups.query.all()
     return render_template("home/index.html", params=params)
 @app.route('/search')
 def find():
@@ -36,6 +39,8 @@ def result():
         'title': 'Result',
         'nav_result': 'active'
     }
+    params['results'] = models.Result.query.all()
+    params['teams'] = models.Team
     return render_template('home/result.html', params=params)
 
 
@@ -54,6 +59,9 @@ def schedule():
         'title': 'Schedule',
         'nav_schedule': 'active'
     }
+    params['results'] = models.Result
+    params['matchs'] = models.Match.query.all()
+    params['teams'] = models.Team
     return render_template('home/schedule.html', params=params)
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -182,4 +190,8 @@ def create_round():
 
 
 if __name__ == '__main__':
-    app.run(debug=True,host='192.168.1.5',port='80')
+    grs = models.Groups.query.first()
+    print(models.Groups.query.all())
+    team = grs.teams
+    print(team, grs.id)
+    app.run(debug=True)

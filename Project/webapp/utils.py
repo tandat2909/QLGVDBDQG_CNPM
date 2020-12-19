@@ -362,14 +362,26 @@ def get_list_player(teamid):
     except Exception as e:
         print('Error get_list_player',e)
         return None
+def countmatch(teamid):
+    count = models.Match.query.filter(or_(models.Match.awayteam_id == teamid, models.Match.hometeam_id == teamid)).count()
+    return count
+def get_team_not_in_group():
+    team = models.Team.query.filter(models.Team.team_group == None).all()
+    return team
+def add_team_in_group(teams, idgroup):
+    group = models.Groups.query.get(idgroup)
+    if len(group.teams) + len(teams) <= group.numberteamin:
+        if teams and idgroup:
+            for idteam in teams:
+                if idteam:
+                    newteamingroup = models.TeamsInGroup(group_id= idgroup, team_id =idteam)
+                    db.session.add(newteamingroup)
+            db.session.commit()
+            return True
+        raise ValueError('Group và Team không hợp lệ')
+    raise ValueError('Thêm không vượt quá số đội trong bảng :' + str(group.numberteamin))
+
 if __name__ == '__main__':
-    print("hòa", get_tie_match(decodeID("xATMyQDM4U0MtIzNDNTL1QzQx0CN3YzQtIUMFVTLyI0NGV0N1ADOFJDM27C3"))[0].match_id)
-    print("thắng", get_win_match(decodeID("xATMyQDM4U0MtIzNDNTL1QzQx0CN3YzQtIUMFVTLyI0NGV0N1ADOFJDM27C3"))[0].match_id)
-    print("Thua", get_win_match(decodeID("xATMyQDM4U0MtIzNDNTL1QzQx0CN3YzQtIUMFVTLyI0NGV0N1ADOFJDM27C3"))[0].match_id)
-    x = base64.standard_b64encode(os.urandom(8))[:8]
-    print(x)
-    xencode = base64.urlsafe_b64encode('spoNHAn6'.encode('utf-8')).decode('utf-8')
-    xdecode = base64.urlsafe_b64decode(xencode).decode('utf-8')
-    print(xdecode, xencode)
-    print(check_password_first('c3BvTkhBbjd=', 'spoNHAn6'))
+    print(get_team_not_in_group())
+
 

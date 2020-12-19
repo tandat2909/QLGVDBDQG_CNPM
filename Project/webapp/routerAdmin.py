@@ -5,9 +5,6 @@ from flask import request, flash, redirect, url_for, render_template, jsonify
 from flask_login import logout_user, login_user, current_user
 
 from webapp import models, Forms, utils, app, decorate, config_main, SentEmail,EMethods
-
-
-
 @app.route('/admin')
 @app.route('/admin/')
 @decorate.login_required_Admin
@@ -17,12 +14,10 @@ def index_admin():
     }
     return render_template('admin/index.html', params=pargams)
 
-
 @app.route('/admin/logout')
 def logout_admin():
     logout_user()
     return redirect('/admin')
-
 
 @app.route("/admin/login", methods=["GET", "POST"])
 def login_admin():
@@ -50,7 +45,6 @@ def login_admin():
             user = None
 
     return render_template('login.html', form=form, title='Login Admin', action='login_admin')
-
 
 @app.route('/admin/accounts', methods=['POST', 'GET'])
 @decorate.login_required_Admin
@@ -97,7 +91,6 @@ def accounts():
     params['listuser'] = listuser
     return render_template('admin/UserList.html', params=params)
 
-
 @app.route('/admin/lock/user', methods=["POST"])
 @decorate.login_required_Admin
 def lock_user():
@@ -132,7 +125,6 @@ def lock_user():
             "data": "Error"
         })
 
-
 @app.route('/admin/list/team', methods=['GET', 'POST'])
 @decorate.login_required_Admin
 def listteam():
@@ -144,7 +136,6 @@ def listteam():
     if request.method == "POST":
         pass
     return render_template('admin/models/team/list.html')
-
 
 @app.route('/admin/match/list/', methods=['GET', 'POST'])
 @decorate.login_required_Admin
@@ -209,7 +200,6 @@ def get_stadium():
             "stadium": " - ".join([hometeam.name, hometeam.stadium or ""]) or None
         },
     })
-
 
 @app.route('/admin/create/account', methods=['POST'])
 @decorate.login_required_Admin
@@ -291,4 +281,23 @@ def delete_group():
     return jsonify({
         'statuss': 400,
     })
+@app.route('/admin/group/addteam', methods=['POST', 'GET'])
+def add_team():
+    params = {
+        'title': 'Addteam',
+        'nav_group': 'active',
+    }
+    if request.method == "POST":
+        team = request.form.getlist('checkbox')
+        group = request.form.get('group_id')
+        try:
+            if utils.add_team_in_group(team,group):
+                flash("Thêm team vào bảng thành công", category="success")
+        except ValueError as e:
+            flash(e,category="error")
+        except Exception as e:
+            print('Lỗi add team', e)
+    params['listgroup'] = models.Groups.query.all()
+    params['teams'] = utils.get_team_not_in_group()
+    return render_template('admin/models/group/addteam.html', params=params)
 

@@ -17,39 +17,42 @@
         <div class="callbacks_container">
             <ul class="rslides" id="slider">
                 <li>
-                    <img src="{{url_for('static',filename='home/images/bnr3.jpg')}}" alt="bnr3.jpg">
+                    <img src="{{url_for('static',filename='home/images/Ban1.png')}}" alt="Ban1.png">
                     <div class="banner-info">
-                        <h3>Sed ultricies elementum.</h3>
-                        <p>Lorem Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec a odio quam. Aenean
-                            ipsum arcu,
-                            luctus vel ultricies ut, commodo sed turpis. Phasellus tristique lorem sit amet tellus
-                            dignissim hendrerit.
-                            In hac habitasse platea dictumst. Sed vehicula volutpat varius elit. consectetur adipiscing
-                            elit.</p>
+                        <h3>Khởi tranh giải bóng đá vô địch quốc gia</h3>
+                        <p>Giải bóng đá vô địch quốc gia Việt Nam (còn có tên gọi LS V.League 1)
+                            là giải đấu bóng đá chuyên nghiệp cao nhất Việt Nam,
+                            do Công ty Cổ phần Bóng đá chuyên nghiệp Việt Nam (VPF) điều hành.
+                            Giải đấu bao gồm 14 đội thi đấu theo thể thức đấu vòng tròn sân nhà và sân khách.
+                            Đội về đích đầu tiên ở cuối mùa giải được tham dự AFC Champions League mùa giải sau.
+                            Đồng thời, đội vô địch và đội á quân sẽ tham dự Giải vô địch bóng đá các câu lạc bộ ASEAN
+                            mùa tiếp theo.</p>
                     </div>
                 </li>
                 <li>
-                    <img src="{{url_for('static',filename='home/images/bnr2.jpg')}}" alt="bnr2.jpg">
+                    <img src="{{url_for('static',filename='home/images/Ban2.jpg')}}" alt="Ban2.jpg">
                     <div class="banner-info">
-                        <h3>Curabitur turpis posuere rutrum.</h3>
-                        <p>Lorem Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec a odio quam. Aenean
-                            ipsum arcu,
-                            luctus vel ultricies ut, commodo sed turpis. Phasellus tristique lorem sit amet tellus
-                            dignissim hendrerit.
-                            In hac habitasse platea dictumst. Sed vehicula volutpat varius elit. consectetur adipiscing
-                            elit.</p>
+                        <h3>Khởi tranh giải bóng đá vô địch quốc gia</h3>
+                        <p>Giải bóng đá vô địch quốc gia Việt Nam (còn có tên gọi LS V.League 1)
+                            là giải đấu bóng đá chuyên nghiệp cao nhất Việt Nam,
+                            do Công ty Cổ phần Bóng đá chuyên nghiệp Việt Nam (VPF) điều hành.
+                            Giải đấu bao gồm 14 đội thi đấu theo thể thức đấu vòng tròn sân nhà và sân khách.
+                            Đội về đích đầu tiên ở cuối mùa giải được tham dự AFC Champions League mùa giải sau.
+                            Đồng thời, đội vô địch và đội á quân sẽ tham dự Giải vô địch bóng đá các câu lạc bộ ASEAN
+                            mùa tiếp theo.</p>
                     </div>
                 </li>
                 <li>
-                    <img src="{{url_for('static',filename='home/images/bnr1.jpg')}}" alt="bnr1">
+                    <img src="{{url_for('static',filename='home/images/Ban3.jpg')}}" alt="Ban3.jpg">
                     <div class="banner-info">
-                        <h3>Sed ultricies elementum.</h3>
-                        <p>Lorem Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec a odio quam. Aenean
-                            ipsum arcu,
-                            luctus vel ultricies ut, commodo sed turpis. Phasellus tristique lorem sit amet tellus
-                            dignissim hendrerit.
-                            In hac habitasse platea dictumst. Sed vehicula volutpat varius elit. consectetur adipiscing
-                            elit.</p>
+                        <h3>Khởi tranh giải bóng đá vô địch quốc gia</h3>
+                        <p>Giải bóng đá vô địch quốc gia Việt Nam (còn có tên gọi LS V.League 1)
+                            là giải đấu bóng đá chuyên nghiệp cao nhất Việt Nam,
+                            do Công ty Cổ phần Bóng đá chuyên nghiệp Việt Nam (VPF) điều hành.
+                            Giải đấu bao gồm 14 đội thi đấu theo thể thức đấu vòng tròn sân nhà và sân khách.
+                            Đội về đích đầu tiên ở cuối mùa giải được tham dự AFC Champions League mùa giải sau.
+                            Đồng thời, đội vô địch và đội á quân sẽ tham dự Giải vô địch bóng đá các câu lạc bộ ASEAN
+                            mùa tiếp theo.</p>
                     </div>
                 </li>
             </ul>
@@ -64,16 +67,66 @@
 {% endblock %}
 
 
-
-
 {% block contentLeft %}
-
+<div class="row">
+    <div class="col-12"><h4 class="st-title">Kết quả trận đấu mới nhất</h4></div>
+</div>
+<div class="st-table col-12">
+    <table>
+        {% for items in params.get('results') %}
+        <tbody>
+        <tr>
+            <td class="left-team">
+                <img src="{{url_for('static',filename = 'image/logoTeam/flag-1.jpg')}}" alt="flag-1.jpg">
+                <h4>{{params.get('teams').query.get(items.match.hometeam_id)}}</h4>
+            </td>
+            <td class="st-option">
+                <div class="so-text">{{params.get('teams').query.get(items.match.hometeam_id).stadium}}</div>
+                <h4>{{items.winnergoals}} : {{items.losergoals}}</h4>
+                <div class="so-text">{{items.match.datetime}}</div>
+            </td>
+            <td class="right-team">
+                <img src="{{url_for('static',filename = 'image/logoTeam/flag-2.jpg')}}" alt="">
+                <h4>{{params.get('teams').query.get(items.match.awayteam_id)}}</h4>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
 
 
-
 {% block contentRight %}
-    {{super()}}
+<div>
+    <h1>Bảng xếp hạng</h1>
+    {% for group in params.get('groups') %}
+    <h2>{{group.name}}</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Đội bóng</th>
+            <th>Trận</th>
+            <th>HS</th>
+            <th>Điểm</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for iteam in group.teams %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{iteam.team.name}}</td>
+            <td>{{iteam.team.id |count_match}}</td>
+            <td>{{iteam.team.id |HieuSo}}</td>
+            <td>{{iteam.team.id |Score}}</td>
+        </tr>
+
+    {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
+</div>
 {% endblock %}
 
 

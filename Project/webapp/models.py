@@ -160,7 +160,7 @@ class Groups(BaseModel):
     numberteamin = Column(Integer, nullable=False)
     # Số lượng các đội trong bảng thắng
     numberteamout = Column(Integer, nullable=False)
-    round_id = Column(UUIDType(binary=True), ForeignKey(Round.id),nullable=False, primary_key=True)
+    round_id = Column(UUIDType(binary=True), ForeignKey(Round.id),nullable=False)
     matchs = relationship('Match', backref=backref('groups'), lazy=True)
     teams = relationship('TeamsInGroup', backref=backref('groups', lazy=True))
 
@@ -350,9 +350,9 @@ if __name__ == '__main__':
     match4 = Match(id=uuid.uuid4(), hometeam_id=team3.id, awayteam_id=team2.id, group_id=tuketGroup.id,
                    datetime=datetime.now(), stadium_id=team3.id)
     resultmatch1 = Result(id=uuid.uuid4(), match_id=match1.id, winnergoals=3, losergoals=2, typeresult=ETypeResult.Win, winteam=team1.id)
-    resultmatch2 = Result(id=uuid.uuid4(), match_id=match2.id, winnergoals=3, losergoals=2, typeresult=ETypeResult.Tie, )
+    resultmatch2 = Result(id=uuid.uuid4(), match_id=match2.id, winnergoals=3, losergoals=3, typeresult=ETypeResult.Tie, )
     resultmatch3 = Result(id=uuid.uuid4(), match_id=match3.id, winnergoals=3, losergoals=2, typeresult=ETypeResult.Win, winteam=team2.id)
-    resultmatch4 = Result(id=uuid.uuid4(), match_id=match4.id, winnergoals=3, losergoals=2, typeresult=ETypeResult.Tie, )
+    resultmatch4 = Result(id=uuid.uuid4(), match_id=match4.id, winnergoals=3, losergoals=3, typeresult=ETypeResult.Tie, )
 
     goal1 = Goal(id=uuid.uuid4(), result_id=resultmatch1.id, player_id=player1.id, time=datetime.now(), type_id=1)
     goal2 = Goal(id=uuid.uuid4(), result_id=resultmatch1.id, player_id=player2.id, time=datetime.now(), type_id=2)

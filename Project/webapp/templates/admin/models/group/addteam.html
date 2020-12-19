@@ -1,0 +1,29 @@
+{% extends 'admin/base.html' %}
+
+{% block body %}
+<div>
+    <form action="{{ url_for('add_team') }}" method="post">
+        <div class="form-group">
+            <label>Bảng</label>
+            <select class="form-control" required name="group_id">
+                {% for items in params.get('listgroup') %}
+                <option value="{{items.id}}">{{items}}</option>
+                {% endfor %}
+            </select>
+            <div>
+                <label class="">Chọn đội</label>
+                <div class="row">
+                    {% for tm in params.get('teams') %}
+                        <div class="col-md-3">
+                            <label>{{tm.name}}</label>
+                            <input class="form-checkbox" type="checkbox" name="checkbox" value="{{tm.id}}" id="checkbox">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-danger">Thêm</button>
+    </form>
+</div>
+
+{% endblock %}
