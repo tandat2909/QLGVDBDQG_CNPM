@@ -1,0 +1,35 @@
+{% extends 'home/base.html' %}
+{% block contentLeft %}
+<div>
+    {% for items in params.get('teams') %}
+    <h1>{{items.name}}</h1>
+    <div>
+        {%for player in params.get('players').query.filter(params.get('players').team_id == items.id).all()%}
+        <table class="table table-bordered table-hover" >
+            <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên</th>
+                <th>Tuổi</th>
+                <th>Quốc tịch</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{loop.index}}</td>
+                <td>{{player.firstname}}</td>
+                <td>{{player.birthdate}}</td>
+                <td>{{player.nationality}}</td>
+                <td>
+                    <a href="{{url_for('player_profile', idp =player.id)}}"><button class="btn btn-danger" >View Profile</button></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

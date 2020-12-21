@@ -394,6 +394,8 @@ def sort_team_in_group(group_id):
     team = sorted(team, key= itemgetter(1,2,3), reverse=True)
     teams = [i[0] for i in team]
     return teams
+def get_player_by_ID(playerid):
+    return models.Player.query.get(playerid)
 if __name__ == '__main__':
     pass
 
