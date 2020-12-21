@@ -1,10 +1,11 @@
 import base64, hashlib, os, random, yagmail
 import datetime
+from operator import itemgetter
 
 from sqlalchemy import or_, select, not_, and_
 from sqlalchemy.sql.functions import count
 
-from webapp import Config, db, models, config_main
+from webapp import Config, db, models, config_main, jinja_filters
 
 
 def check_password(pw_hash='', pw_check=''):
@@ -380,8 +381,23 @@ def add_team_in_group(teams, idgroup):
             return True
         raise ValueError('Group và Team không hợp lệ')
     raise ValueError('Thêm không vượt quá số đội trong bảng :' + str(group.numberteamin))
-
+def sort_team_in_group(group_id):
+    teamingr = models.Groups.query.get(group_id).teams
+    print(teamingr)
+    team = []
+    for i in teamingr:
+        score = jinja_filters.Score(i.team.id)
+        hs = jinja_filters.HS(i.team.id)
+        bt = jinja_filters.BT(i.team.id)
+        team.append((i,score,hs,bt))
+    print(team)
+    team = sorted(team, key= itemgetter(1,2,3), reverse=True)
+    teams = [i[0] for i in team]
+    return teams
 if __name__ == '__main__':
-    print(get_team_not_in_group())
+    pass
+
+
+
 
 

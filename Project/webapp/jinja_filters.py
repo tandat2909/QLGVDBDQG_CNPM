@@ -47,6 +47,24 @@ def HS(idteam):
         BB += i.losergoals
     return BT - BB
 
+def BT(idteam):
+    """
+    Hàm này trả về tổng số bàn thắng của 1 đội
+    :param idteam:
+    :return:
+    """
+    BT = 0
+    win = utils.get_win_match(idteam)
+    for i in win:
+        BT += i.winnergoals
+    lose = utils.get_lose_match(idteam)
+    for i in lose:
+        BT += i.losergoals
+    tie = utils.get_tie_match(idteam)
+    for i in tie:
+        BT += i.winnergoals
+    return BT
+
 
 def Score(idteam):
     diem = 0
@@ -62,3 +80,4 @@ app.jinja_env.filters['set_time_match'] = set_time_match
 app.jinja_env.filters['count_match'] = count_match
 app.jinja_env.filters['HieuSo'] = HS
 app.jinja_env.filters['Score'] = Score
+app.jinja_env.filters['Sort'] = utils.sort_team_in_group

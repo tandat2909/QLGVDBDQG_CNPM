@@ -99,32 +99,31 @@
 
 {% block contentRight %}
 <div>
-    <h1>Bảng xếp hạng</h1>
+    <h1 class="text-center st-title">Bảng xếp hạng</h1>
     {% for group in params.get('groups') %}
-    <h2>{{group.name}}</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Đội bóng</th>
-            <th>Trận</th>
-            <th>HS</th>
-            <th>Điểm</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for iteam in group.teams %}
-        <tr>
-            <td>{{loop.index}}</td>
-            <td>{{iteam.team.name}}</td>
-            <td>{{iteam.team.id |count_match}}</td>
-            <td>{{iteam.team.id |HieuSo}}</td>
-            <td>{{iteam.team.id |Score}}</td>
-        </tr>
-
-    {% endfor %}
-        </tbody>
-    </table>
+        <label>{{group.name}}</label>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Đội bóng</th>
+                <th>Trận</th>
+                <th>HS</th>
+                <th>Điểm</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for iteam in group.id |Sort%}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td>{{iteam.team.name}}</td>
+                <td>{{iteam.team.id |count_match}}</td>
+                <td>{{iteam.team.id |HieuSo}}</td>
+                <td>{{iteam.team.id |Score}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     {% endfor %}
 </div>
 {% endblock %}
