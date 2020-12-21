@@ -18,8 +18,10 @@
         <td>{{i.typeplayer.value}}</td>
         <td>{{'' if i.note == None else i.note}}</td>
         <td>
-            <button class="btn btn-info" style="margin:2px" data-toggle="modal" data-target="#exampleModal" data-id="{{i.id}}" data-name="{{i.name}}"><i
+            <a href="{{url_for('profile_player',idp = i.id)}}"><button class="btn btn-info" style="margin:2px"><i class="fa fa-info"></i></button></a>
+            <button class="btn btn-warning" style="margin:2px" data-toggle="modal" data-target="#exampleModal" data-id="{{i.id}}" data-name="{{i.name}}"><i
                     class="fa  fa-edit"></i></button>
+
             <button class="btn btn-danger" style="background: #ff0800;margin:2px" onclick="delplayer('{{i.id}}',this)"><i
                     class="fa  fa-trash"></i></button>
 

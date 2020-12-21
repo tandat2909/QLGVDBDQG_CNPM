@@ -7,7 +7,6 @@ from sqlalchemy.sql.functions import count
 from webapp import Config, db, models
 
 
-
 def check_password(pw_hash='', pw_check=''):
     pw_check_hash = hashlib.sha256((pw_check + str(Config.KEYPASS)).encode("utf-8")).hexdigest()
     if pw_hash == pw_check_hash:
@@ -132,25 +131,36 @@ def lock_account(current_user, user_id, lock: bool = None):
     except:
         return False
 
-
+def check_change_config(form):
+    if form:
+        if not int(form.get('winScore')) > int(form.get('tieScore')) >int(form.get('loseScore')):
+            raise ValueError("Điểm thắng > Điểm hòa > Điểm thua")
+        if int(form.get('maxPlayer')) < int(form.get('minPlayer')):
+            raise ValueError("Cầu thủ tối đa >= cầu thủ tối thiểu")
+        if int(form.get('maxAgePlayer')) <  int(form.get('minAgePlayer')):
+            raise ValueError("Tuổi tối đa >= tuổi tối thiểu")
+        if not sum([int(form.get('doiKhang')), int(form.get('diem')), int(form.get('hieuSo')) , int(form.get('tongBanThang'))]) == 10:
+            raise ValueError("Thứ tự ưu tiên không đúng: 4 giá trị phải khác nhau,1 là ưu tiên cao nhất")
+        return True
+    raise ValueError("Form không hợp kệ")
 def change_config(form):
     try:
+
         config_main = models.Config.query.one()
         if form and config_main:
-            config_main.winScore = form.get('winScore'),
-            config_main.tieScore = form.get('tieScore'),
-            config_main.loseScore = form.get('loseScore'),
-            config_main.maxPlayer = form.get('maxPlayer'),
-            config_main.minPlayer = form.get('minPlayer'),
-            config_main.amountForeignPlayer = form.get('amountForeignPlayer'),
-            config_main.maxAgePlayer = form.get('maxAgePlayer'),
-            config_main.minAgePlayer = form.get('minAgePlayer'),
-            config_main.thoiDiemGhiBanToiDa = form.get('thoiDiemGhiBanToiDa')
-            prioritySort = models.PrioritySort(name=form.get('PriorityName'), diem=form.get('diem'),
-                                               hieuSo=form.get('hieuso'),
-                                               tongBanThang=form.get('tongbanthang'), doiKhang=form.get('doikhang'))
-            config_main.prioritySort_id = prioritySort.id
-
+            config_main.winScore = int(form.get('winScore'))
+            config_main.tieScore = int(form.get('tieScore'))
+            config_main.loseScore = int(form.get('loseScore'))
+            config_main.maxPlayer = int(form.get('maxPlayer'))
+            config_main.minPlayer = int(form.get('minPlayer'))
+            config_main.amountForeignPlayer = int(form.get('amountForeignPlayer'))
+            config_main.maxAgePlayer = int(form.get('maxAgePlayer'))
+            config_main.minAgePlayer = int(form.get('minAgePlayer'))
+            config_main.thoiDiemGhiBanToiDa = int(form.get('thoiDiemGhiBanToiDa'))
+            config_main.diem = int(form.get('diem'))
+            config_main.hieuSo = int(form.get('hieuSo'))
+            config_main.tongBanThang = int(form.get('tongBanThang'))
+            config_main.doiKhang = int(form.get('doiKhang'))
             db.session.add(config_main)
             db.session.commit()
             return True
@@ -299,11 +309,12 @@ def get_tie_match(teamid):
 
 
 def get_lose_match(teamid):
-    amountie = models.Result.query.join(models.Match).filter(
+    amounlose = models.Result.query.join(models.Match).filter(
         or_(models.Match.awayteam_id == teamid, models.Match.hometeam_id == teamid),
         not_(or_(models.Result.typeresult == models.ETypeResult.Tie,
                  models.Result.typeresult == models.ETypeResult.Win))).all()
-    return amountie
+
+    return amounlose
 
 
 def check_form_register_account(form):
@@ -390,7 +401,6 @@ def check_form_add_player(teamid, form):
 
 
 def isValidAge(age: datetime = None):
-
     try:
         if age:
             config_main = models.Config.query.one()
@@ -438,7 +448,8 @@ def creat_player(teamid, form, avatar):
         print("Error create_player", e)
         return False
 
-def edit_player(form,avatar):
+
+def edit_player(form, avatar):
     try:
         player = models.Player.query.get(form.get("playerid"))
         if player:
@@ -457,7 +468,7 @@ def edit_player(form,avatar):
             return True
         raise ValueError("Player khong có")
     except Exception as e:
-        print("Error edit_player: ",e)
+        print("Error edit_player: ", e)
         return False
 
 
@@ -477,10 +488,16 @@ def delete_player(playerid):
         return False
 
 
+def get_team_by_ID(teamid):
+    team = models.Team.query.get(teamid)
+    return team
+
+
+def get_player_by_ID(teamid):
+    player = models.Player.query.get(teamid)
+    return player
+
+
 if __name__ == '__main__':
 
-
-
-    print(encodeID('thoigiankhongchodoiai-2020'))
-    print(decodeID('EDVI9USHlUQOtESP50RDh0TE9USBlULFBjND1iMwIDME06C'))
-    print(models.ETyEpePlayer.__dict__.__getitem__("_value2member_map_").get(1))
+    print(sum([2,1,3,4]),1+2+3+4)

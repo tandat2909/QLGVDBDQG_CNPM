@@ -188,10 +188,15 @@ def delete_match():
         'statuss': 400,
     })
 
-@app.route('/admin/result/list', methods=['GET','POST'])
+@app.route('/admin/results', methods=['GET','POST'])
 @decorate.login_required_Admin
-def resultlist():
-    pass
+def results():
+    params = {
+        'title': "Kết quả",
+        'nav_result':'active',
+        'results': models.Result.query.all()
+    }
+    return render_template('admin/result.html',params=params)
 
 @app.route('/admin/match/get_stadium', methods=['GET', 'POST'])
 @decorate.login_required_Admin
@@ -291,9 +296,31 @@ def delete_group():
     return jsonify({
         'statuss': 400,
     })
+@app.route('/admin/changeconfig',methods = ["GET","POST"])
+@decorate.login_required_Admin
+def changeconfig():
 
+    if request.method == EMethods.post.value:
+        try:
+            utils.check_change_config(request.form)
+            if utils.change_config(request.form):
+                flash("Lưu thay đổi thành công",category='success')
+                return redirect(url_for('changeconfig'))
+            else:
+                flash("Lỗi thay đổi quy định")
+        except ValueError as e:
+            flash("Lỗi lưu quy định: "+str(e) ,category='error' )
+        except Exception as e:
+            print("Lỗi change config",e)
+
+    params = {
+        'title': 'Thay đổi quy định',
+        'config': models.Config.query.first(),
+    }
+    return render_template('admin/config.html',params=params)
 #todo xóa round,result,match,group,gold xóa nguyên round và các trận liên quan
 #todo xuất list player
 #todo trang result thêm xóa
 #todo trang edit config
 #todo type goal thêm xóa
+

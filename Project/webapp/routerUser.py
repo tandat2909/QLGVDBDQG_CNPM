@@ -3,7 +3,7 @@ import datetime
 import os
 
 from flask import request, flash, redirect, url_for, render_template, abort, jsonify
-from flask_login import logout_user, login_user, current_user
+from flask_login import logout_user, login_user, current_user,login_required
 
 from webapp import models, Forms, utils, app, decorate, SentEmail, EMethods
 
@@ -19,8 +19,8 @@ def index_user():
 
 
 @app.route('/user/logout')
-@decorate.login_required_user
-def logout_user():
+@login_required
+def logout_usr():
     logout_user()
     return redirect(url_for('login_us'))
 
@@ -142,7 +142,6 @@ def creatPlayer():
 
     return render_template('user/createplayer.html', params=params)
 
-#todo profile player, profile tài khoản
 
 
 if __name__ == '__main__':

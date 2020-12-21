@@ -1,0 +1,35 @@
+{% extends 'profile.html' %}
+
+{% block div_image %}
+<div>
+    <img src="{{url_for('profile_team',idt = params.get('team').id)}}">
+</div>
+{% endblock %}
+
+{% block info %}
+<table class="table table-hover table-responsive">
+    <thead>
+    <tr>
+        <th colspan="2" class="text-center"><h2>{{params.get('team').name}}</h2></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Email:</td>
+        <td>{{ params.get('team').email }}</td>
+    </tr>
+    <tr>
+        <td>Số điện thoại:</td>
+        <td>{{ params.get('team').phonenumber }}</td>
+    </tr>
+    <tr>
+        <td>Stadium:</td>
+        <td>{{ params.get('team').stadium }}</td>
+    </tr>
+    <tr>
+        <td>Tổng số cầu thủ trong danh sách:</td>
+        <td>{{ params.get('team').id | amount_player }}</td>
+    </tr>
+    </tbody>
+</table>
+{% endblock%}

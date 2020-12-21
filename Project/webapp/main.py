@@ -126,32 +126,38 @@ def changepwfirst():
 
 
 
-@app.route("/user/profile")
-@app.route("/admin/profile")
+@app.route("/user/profile-player")
+@app.route("/admin/profile-player")
 @login_required
-def profile():
-    # request.args.get('id')
-    # http: // 127.0.0.1: 5000 / admin / profile?id = 3f7d454b - 0283 - 4389 - a439 - b5e0b3a4c650
+def profile_player():
+
     """
-    hiển thị thong tin chi tiết của user
+    hiển thị thong tin chi tiết của player
     :return:
     """
-    id_user = request.args.get("id")
-    # print(id_blog)
-    if id_user is None:
+    playerid= request.args.get("idp")
+    player = utils.get_player_by_ID(playerid)
+    if player is None:
         abort(404)
     params = {
-        'title': "Profile",
-        'nav_user': 'active'
+        'title': "Thông tin cầu thủ",
+        'player': player
     }
-    if current_user.role == models.Role.admin:
-        params['user'] = utils.get_team_by_ID(id=id_user)
-        return render_template('profile.html', params=params)
-
-    params['user'] = current_user
     return render_template('profile.html', params=params)
 
-
+@app.route("/user/profile-team")
+@app.route("/admin/profile-team")
+@login_required
+def profile_team():
+    teamid = request.args.get("idt")
+    team = utils.get_team_by_ID(teamid)
+    if team is None:
+        abort(404)
+    params = {
+        'title': "Thông tin đội bóng",
+        'team': team
+    }
+    return render_template('profile_team.html', params=params)
 @app.route("/logout")
 def logout():
     logout_user()
@@ -174,10 +180,6 @@ def special_exception_handler(error):
 @login.user_loader
 def get_user(id):
     return models.Team.query.get(id)
-
-@app.route("/admin/createround")
-def create_round():
-    pass
 
 
 

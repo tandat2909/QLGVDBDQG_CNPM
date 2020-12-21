@@ -1,5 +1,5 @@
 import os
-from webapp import utils
+from webapp import utils, models
 from webapp import app
 import datetime
 import uuid
@@ -24,8 +24,13 @@ def set_time_match(value):
         return timenow.replace(year=timenow.year+1).strftime("%Y-%m-%dT00:00")
     return "Error"
 
+def amount_player(teamid):
 
+    amount = utils.amountPlayer(teamid=teamid)
+
+    return amount
 
 app.jinja_env.filters['encodeID'] = encodeID
 app.jinja_env.filters['format_datetime'] = format_datetime
 app.jinja_env.filters['set_time_match'] = set_time_match
+app.jinja_env.filters['amount_player'] = amount_player

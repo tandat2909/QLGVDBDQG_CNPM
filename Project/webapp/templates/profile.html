@@ -1,10 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Profile</title>
-</head>
-<body>
+{% extends 'admin/base.html' if current_user.role.name == 'admin' else 'user/base.html' %}
 
-</body>
-</html>
+{% block body %}
+<div class="row">
+    <div class="col-md-4">
+        {% block div_image %}
+        <div>
+            <img src="{{url_for('static',filename= params.get('player').avatar)}}" class="img-responsive" >
+        </div>
+        {% endblock %}
+    </div>
+    <div class="col-md-5">
+
+        <style>
+            tbody tr td{
+                font-size: 1.3em;
+            }
+        </style>
+        {% block info %}
+        <table class="table">
+
+            <thead>
+
+            <tr>
+                <th colspan="2" class="text-center"><h2>{{ params.get('player').name }}</h2></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Ngày tháng năm sinh:</td>
+                <td>
+                    <a href="#">{{ params.get('player').birthdate | format_datetime }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Giới tính:</td>
+                <td>
+                    <a href="#">{{ params.get('player').gender.value}}</a>
+                </td>
+
+            </tr>
+             <tr>
+                <td>Quốc tịch:</td>
+                <td>
+                    <a href="#">{{ params.get('player').nationality}}</a>
+                </td>
+
+            </tr>
+            <tr>
+                <td>Thuộc Đội:</td>
+                <td>
+                    <a href="#">{{ params.get('player').team.name}}</a>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+        {% endblock%}
+    </div>
+</div>
+{% endblock %}
