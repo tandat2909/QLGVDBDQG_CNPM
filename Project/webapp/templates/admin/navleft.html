@@ -11,26 +11,7 @@
                     </ul>
                 </li>
 
-                <!--  <li >
-                      <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label">Other Pages</span><span
-                              class="fa arrow"></span></a>
-                      <ul class="nav nav-second-level collapse">
 
-                              <li><a href="{{ url_for('login_admin') }}">Login Admin</a></li>
-                              <li><a href="{{ url_for('login_us') }}">Login User</a></li>
-                              <li><a href="{{ url_for('register') }}">Register</a></li>
-                              <li><a href="404">404 Page</a></li>
-                              <li><a href="{{ url_for('home') }}">Home</a></li>
-                              <li><a href="lockscreen.html">Lockscreen</a></li>
-                              <li><a href="{#{ url_for('change_password') }#}">Change password</a></li>
-                              <li><a href="{#{ url_for('blog_list') }#}">Blog list</a></li>
-                              <li><a href="{#{ url_for('blog_detail') }#}">Blog detail</a></li>
-                              <li><a href="{#{ url_for('contact') }#}">Contact Page</a></li>
-                              <li><a href="{#{ url_for('about_us') }#}">About Page</a></li>
-
-                      </ul>
-
-                  </li> -->
 
                 <li class="{{ params.get('nav_team') }}">
                     <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Team</span><span
@@ -97,8 +78,8 @@
                     <a href="#"><span class="nav-label">Type Goal</span><span
                             class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="{#{ url_for('blog_list') }#}">Create Type Goal</a></li>
-                        <li><a href="{#{ url_for('blog_list') }#}">List Type Goal</a></li>
+                        <li><a href="{{ url_for('typeGoal')}}">Create Type Goal</a></li>
+                        <li><a href="{{ url_for('typeGoal')}}">List Type Goal</a></li>
                     </ul>
                 </li>
                  <li class=" {{params.get('nav_player')}}">

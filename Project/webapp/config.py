@@ -1,8 +1,8 @@
 class thongso:
     server = 'localhost'
     database = 'dbmanagersoccer'
-    username = 'user1'
-    password = 'Khongbietphaidatgi'
+    username = 'root'
+    password = 'Taonha@123'
     driver = 'utf8mb4'
 class Config(object):
     #'mysql+pymysql://root:123456@localhost/saledbv1?charset=utf8'

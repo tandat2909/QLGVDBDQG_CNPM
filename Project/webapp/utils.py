@@ -132,18 +132,22 @@ def lock_account(current_user, user_id, lock: bool = None):
     except:
         return False
 
+
 def check_change_config(form):
     if form:
-        if not int(form.get('winScore')) > int(form.get('tieScore')) >int(form.get('loseScore')):
+        if not int(form.get('winScore')) > int(form.get('tieScore')) > int(form.get('loseScore')):
             raise ValueError("Điểm thắng > Điểm hòa > Điểm thua")
         if int(form.get('maxPlayer')) < int(form.get('minPlayer')):
             raise ValueError("Cầu thủ tối đa >= cầu thủ tối thiểu")
-        if int(form.get('maxAgePlayer')) <  int(form.get('minAgePlayer')):
+        if int(form.get('maxAgePlayer')) < int(form.get('minAgePlayer')):
             raise ValueError("Tuổi tối đa >= tuổi tối thiểu")
-        if not sum([int(form.get('doiKhang')), int(form.get('diem')), int(form.get('hieuSo')) , int(form.get('tongBanThang'))]) == 10:
+        if not sum([int(form.get('doiKhang')), int(form.get('diem')), int(form.get('hieuSo')),
+                    int(form.get('tongBanThang'))]) == 10:
             raise ValueError("Thứ tự ưu tiên không đúng: 4 giá trị phải khác nhau,1 là ưu tiên cao nhất")
         return True
     raise ValueError("Form không hợp kệ")
+
+
 def change_config(form):
     try:
 
@@ -367,6 +371,7 @@ def create_account(form):
         print("Error create_account:", e)
         return False
 
+
 def get_list_player(teamid):
     try:
         if teamid:
@@ -430,9 +435,10 @@ def get_coach_by_teamID(teamid):
     HLV = models.Player.query.join(models.Team, models.Position).filter(teamid == models.Team.id,
                                                                         models.Position.symbol == "HLV").first()
     return HLV
+
+
 def count_goal_by_playerid(playerid):
     return len(models.Player.query.get(playerid).goals)
-
 
 
 def check_form_add_player(teamid, form):
@@ -544,6 +550,16 @@ def delete_player(playerid):
         print("Error deletePlayer:", e)
         return False
 
+
+def create_type_goal(name):
+    try:
+        typeGoal = models.TypeGoals(name=name,value='')
+        db.session.add(typeGoal)
+        db.session.commit()
+        return True
+    except Exception as e:
+        print("Error create_type_goal:", e)
+        return False
 if __name__ == '__main__':
     print(count_goal_by_playerid("9cada7c7-e74c-417d-89c2-dc3e43b8adb6"))
-    print(sum([2,1,3,4]),1+2+3+4)
+    print(sum([2, 1, 3, 4]), 1 + 2 + 3 + 4)

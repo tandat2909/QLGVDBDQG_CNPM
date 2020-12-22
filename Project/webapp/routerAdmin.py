@@ -349,6 +349,23 @@ def changeconfig():
     }
     return render_template('admin/config.html', params=params)
 
+@app.route('/admin/typegoal',  methods=['GET', 'POST'])
+@decorate.login_required_Admin
+def typeGoal():
+    if request.method == EMethods.post.value:
+        typeGoal = request.form.get('typeGoal')
+        if typeGoal and utils.create_type_goal(typeGoal):
+            flash('Thêm loại bàn thắng thành công')
+        else:
+            flash('Lỗi thêm loại bàn thắng')
+        return redirect(url_for('typeGoal'))
+
+    params = {
+        'title': 'loại bàn thắng',
+        'typeGoal': models.TypeGoals.query.all()
+    }
+    return render_template('admin/TypeGoal.html',params=params)
+
 
 # todo xóa round,result,match,group,gold xóa nguyên round và các trận liên quan
 # todo xuất list player
