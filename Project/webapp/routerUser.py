@@ -84,7 +84,8 @@ def players():
                     "birthdate": str(a.birthdate.strftime("%Y-%m-%d")),
                     "gender": a.gender.name,
                     "scorecount": a.scorecount,
-                    "nationality": a.nationality
+                    "nationality": a.nationality,
+                    "number":a.number
                 })
             except Exception as e:
                 print("Error get player:",e)

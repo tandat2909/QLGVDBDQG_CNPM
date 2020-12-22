@@ -162,6 +162,7 @@ $('#exampleModal').on('show.bs.modal', function (event) {
             $("#typeplayer").val(data.typeplayer)
             $("#nationality").val(data.nationality)
             $("#position").val(data.position)
+            $("#number").val(data.number)
             $("#playerid").val(row.data("id"))
 
         }

@@ -2,7 +2,7 @@
      aria-hidden="true">
     <div class="modal-dialog" style="margin-top: 62px" role="document">
         <div class="modal-content " style="background-color: #2f323b;">
-            <div class="modal-header" >
+            <div class="modal-header">
                 <h2 class="modal-title" id="exampleModalLabel"></h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true" style="color: white;
@@ -10,7 +10,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form class="" action="{{url_for('players',action ='edit')}}"  method="post" enctype="multipart/form-data">
+                <form class="" action="{{ url_for('players',action ='edit') }}" method="post"
+                      enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="lastname">Họ & Tên đệm</label>
                         <input class="form-control" id="lastname"
@@ -19,9 +20,16 @@
                     </div>
                     <div class="form-group">
                         <label for="firstname">Tên</label>
-                        <input class="form-control"   type="text"
+                        <input class="form-control" type="text"
                                id="firstname"
                                name="firstname" required
+                               autocomplete="">
+                    </div>
+                    <div class="form-group">
+                        <label for="number">số áo</label>
+                        <input class="form-control"  type="text"
+                               id="number"
+                               name="number" required
                                autocomplete="">
                     </div>
                     <div class="form-group">
@@ -36,7 +44,7 @@
                         <select class="form-control" style="width: 100%" id="gender" name="gender" required>
                             <option disabled value="" selected> Chọn giới tính</option>
                             {% for i in params.get('genders') %}
-                            <option value="{{i.name}}">{{i.value}}</option>
+                                <option value="{{ i.name }}">{{ i.value }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -46,7 +54,7 @@
                             <option disabled selected value="">Chọn loại cầu thủ</option>
 
                             {% for i in params.get('tyepeplayer') %}
-                            <option value="{{i.name}}">{{i.value}}</option>
+                                <option value="{{ i.name }}">{{ i.value }}</option>
 
                             {% endfor %}
                         </select>
@@ -311,7 +319,7 @@
                                 autocomplete="">
                             <option disabled selected value="">Chọn vị trí</option>
                             {% for i in params.get('positions') %}
-                            <option value="{{i.id}}">{{i.name}}</option>
+                                <option value="{{ i.id }}">{{ i.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
