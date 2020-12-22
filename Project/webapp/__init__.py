@@ -11,10 +11,10 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 login = LoginManager(app)
 login.login_view='login_us'
-config_main = None
 #admin = Admin(app,name='Quản lý giải vô địch bóng đá quốc gia',template_mode='bootstrap4')
 class EMethods(Enum):
     create = 'CREATE'
     delete = 'DELETE'
     edit = 'EDIT'
     get = "GET"
+    post = "POST"

@@ -1,0 +1,128 @@
+{% extends 'admin/base.html' %}
+
+{% block body%}
+<div class="row">
+
+    <button class="btn btn-danger" onclick="changeconfig(this)">Thay đổi</button>
+    <button class="btn btn-success" id="btnsubmit" style="display: none" onclick="$('#btn_submit').click()">Save
+    </button>
+    <form action="{{url_for('changeconfig')}}" method="post">
+        <input type="submit" id="btn_submit" style="display: none">
+        <table class="table table-bordered table-responsive table-responsive-md table-responsive-sm table-responsive-lg table-hover">
+            <style>
+                tbody tr td:nth-child(1) {
+                    font-size: 1.3em;
+                }
+
+                tbody tr td:nth-child(2) input {
+                    width: 50%;
+                }
+
+                #prioritySort input {
+                    margin-right: 7px;
+                    width: 10%;
+                }
+
+
+            </style>
+            <tbody>
+            <tr>
+                <td>Điểm thắng:</td>
+                <td><input type="number" min="0" required disabled maxlength="100" id="winScore" class="form-control"
+                           name="winScore"
+                           value="{{params.get('config').winScore}}"></td>
+            </tr>
+            <tr>
+                <td>Điểm hòa:</td>
+                <td><input type="number" min="0" required disabled maxlength="100" id="tieScore" class="form-control"
+                           name="tieScore"
+                           value="{{params.get('config').tieScore}}"></td>
+            </tr>
+            <tr>
+                <td>Điểm thua:</td>
+                <td><input type="number" min="0" required disabled maxlength="100" id="loseScore" class="form-control"
+                           name="loseScore"
+                           value="{{params.get('config').loseScore}}"></td>
+            </tr>
+            <tr>
+                <td>cầu thủ tối đa:</td>
+                <td><input type="number" min="0" required disabled maxlength="100" id="maxPlayer" class="form-control"
+                           name="maxPlayer"
+                           value="{{params.get('config').maxPlayer}}"></td>
+            </tr>
+            <tr>
+                <td>cầu thủ tối thiểu:</td>
+                <td><input type="number" min="0" required disabled maxlength="100" id="minPlayer" class="form-control"
+                           name="minPlayer"
+                           value="{{params.get('config').minPlayer}}"></td>
+            </tr>
+            <tr>
+                <td>cầu thủ ngoại:</td>
+                <td><input type="number" min="0" required disabled maxlength="100" id="amountForeignPlayer"
+                           class="form-control"
+                           name="amountForeignPlayer" value="{{params.get('config').amountForeignPlayer}}"></td>
+            </tr>
+            <tr>
+                <td>Tuổi tối đa:</td>
+                <td><input type="number" min="0" required disabled maxlength="100" id="maxAgePlayer"
+                           class="form-control"
+                           name="maxAgePlayer" value="{{params.get('config').maxAgePlayer}}"></td>
+            </tr>
+            <tr>
+                <td>Tuổi tối thiểu:</td>
+                <td><input type="number" min="0" required disabled maxlength="100" id="minAgePlayer"
+                           class="form-control"
+                           name="minAgePlayer" value="{{params.get('config').minAgePlayer}}"></td>
+            </tr>
+            <tr>
+                <td>Thời điểm ghi bàn:</td>
+                <td><input type="number" min="0" required disabled maxlength="100" id="thoiDiemGhiBanToiDa"
+                           class="form-control"
+                           name="thoiDiemGhiBanToiDa" value="{{params.get('config').thoiDiemGhiBanToiDa}}"></td>
+            </tr>
+            <tr>
+                <td>Ưu tiên sắp xếp:</td>
+                <td>
+                    <div class="form-group form-inline" id = "prioritySort">
+                        <label for="diem"> Điểm: </label>
+                        <input type="number" min="1" max="4" required disabled maxlength="100" id="diem"
+                               class="form-control"
+                               name="diem" value="{{params.get('config').diem}}">
+                        <label for="hieuSo"> Hiệu số: </label>
+                        <input type="number" min="1" max="4" required disabled maxlength="100" id="hieuSo"
+                               class="form-control"
+                               name="hieuSo" value="{{params.get('config').hieuSo}}">
+                        <label for="tongBanThang"> Tổng bàn thắng: </label>
+                        <input type="number" min="1" max="4" required disabled maxlength="100" id="tongBanThang"
+                               class="form-control"
+                               name="tongBanThang" value="{{params.get('config').tongBanThang}}">
+                        <label for="doiKhang"> Đối Kháng: </label>
+                        <input type="number" min="1" max="4" required disabled maxlength="100" id="doiKhang"
+                               class="form-control"
+                               name="doiKhang" value="{{params.get('config').doiKhang}}">
+                    </div>
+
+
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+
+    </form>
+
+</div>
+{% endblock %}
+{% block script %}
+{{super()}}
+<script>
+    $("#prioritySort_id").val("{{params.get('config').prioritySort_id}}")
+
+    function changeconfig(btn) {
+        $("table .form-control").removeAttr('disabled')
+        $("#winScore").focus()
+        $("#btnsubmit").css('display', '')
+        $(btn).remove()
+    }
+</script>
+{% endblock %}

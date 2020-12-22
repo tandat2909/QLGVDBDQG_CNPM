@@ -9,6 +9,9 @@ from enum import Enum
 from sqlalchemy.orm import relationship, backref
 
 
+class BaseEnum(Enum):
+    print()
+
 class Role(Enum):
     admin = 2
     manager = 1
@@ -22,14 +25,14 @@ class ETypeResult(Enum):
 
 # Danh sach loai cau thu
 class ETyEpePlayer(Enum):
-    localplayer = 1
-    foreignplayer = 2
+    localplayer = "Trong Nước"
+    foreignplayer = "Nước Ngoài"
 
 
 class EGender(Enum):
-    Female = 1
-    Male = 2
-    Orther = 3
+    Female = 'Nữ'
+    Male = 'Nam'
+    Orther = "Khác"
 
 
 class ETypeGoal(Enum):
@@ -210,21 +213,10 @@ class Config(BaseModel):
     maxAgePlayer = Column(Integer, nullable=False)
     minAgePlayer = Column(Integer, nullable=False)
     thoiDiemGhiBanToiDa = Column(Integer, nullable=False)
-    prioritySort_id = Column(Integer, ForeignKey('PrioritySort.id'))
-
-
-class PrioritySort(BaseModel):
-    __tablename__ = "PrioritySort"
-    """
-        thứ tự ưu tiên sắp xếp
-    """
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    diem = Column(Integer, nullable=False, default=1)
-    hieuSo = Column(Integer, nullable=False, default=2)
-    tongBanThang = Column(Integer, nullable=False, default=3)
-    doiKhang = Column(Integer, nullable=False, default=4)
-    configs = relationship('Config', backref=backref('prioritySort'), lazy=True)
-
+    diem = Column(Integer, nullable=False)
+    hieuSo = Column(Integer, nullable=False)
+    tongBanThang = Column(Integer, nullable=False)
+    doiKhang = Column(Integer, nullable=False)
 
 # Bán thắng
 class Goal(BaseModel):
@@ -283,9 +275,8 @@ if __name__ == '__main__':
     # ==========insert data============#
     inserPosition()
     insertypegoals()
-    prisort = PrioritySort(id=1, name='DHTD', diem=1, hieuSo=2, tongBanThang=3, doiKhang=4)
-    prisort1 = PrioritySort(id=2, name='DTHD', diem=1, hieuSo=3, tongBanThang=2, doiKhang=4)
-    config = Config(amountForeignPlayer=3, minAgePlayer=18, maxAgePlayer=20, prioritySort_id=prisort.id, loseScore=1,
+
+    config = Config(amountForeignPlayer=3, minAgePlayer=18, maxAgePlayer=20, diem=1,tongBanThang=2,hieuSo=3,doiKhang=4, loseScore=1,
                     winScore=3,
                     tieScore=2, thoiDiemGhiBanToiDa=96, maxPlayer=18, minPlayer=12)
     admin = Team(id=uuid.uuid4(), name="Admin",
@@ -361,7 +352,6 @@ if __name__ == '__main__':
     goal3 = Goal(id=uuid.uuid4(), result_id=resultmatch1.id, player_id=player1.id, time=datetime.now(), type_id=3)
 
     listcommit = [
-        prisort, prisort1,
         config,
         admin,team1, team2,team3,
         player1, player2,

@@ -73,9 +73,16 @@ def Score(idteam):
         utils.get_lose_match(idteam)) * config.loseScore
     return diem
 
+def amount_player(teamid):
+
+    amount = utils.amountPlayer(teamid=teamid)
+
+    return amount
+
 app.jinja_env.filters['encodeID'] = encodeID
 app.jinja_env.filters['format_datetime'] = format_datetime
 app.jinja_env.filters['set_time_match'] = set_time_match
+app.jinja_env.filters['amount_player'] = amount_player
 app.jinja_env.filters['count_match'] = count_match
 app.jinja_env.filters['HieuSo'] = HS
 app.jinja_env.filters['Score'] = Score

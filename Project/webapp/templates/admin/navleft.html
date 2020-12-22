@@ -74,7 +74,7 @@
                             class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{#{ url_for('blog_list') }#}">Create Result</a></li>
-                        <li><a href="{{ url_for('resultlist') }}">List Result</a></li>
+                        <li><a href="{{ url_for('results') }}">List Result</a></li>
                     </ul>
                 </li>
                 <li class=" {{params.get('nav_goal')}}">
@@ -114,7 +114,7 @@
                             class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{#{ url_for('blog_list') }#}">Create Config</a></li>
-                        <li><a href="{#{ url_for('blog_list') }#}">List Config</a></li>
+                        <li><a href="{{ url_for('changeconfig') }}">List Config</a></li>
                     </ul>
                 </li>
 

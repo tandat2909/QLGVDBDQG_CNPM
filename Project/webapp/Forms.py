@@ -14,6 +14,7 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(), validators.length(8, 50)])
     remember_me = BooleanField('Remember me', default=False)
 
+
     submit = SubmitField('Sign In')
 
     def __init__(self, *k, **kk):
@@ -46,7 +47,7 @@ class LoginForm(FlaskForm):
     def get_user(self):
         return self._user
 class FormChangePassword(FlaskForm):
-    password_Old = PasswordField('Current Password', validators=[DataRequired()])
+    password_Old = PasswordField('Password', validators=[DataRequired()])
     password_New = PasswordField('New Password', validators=[DataRequired()])
     password_Comfirm = PasswordField('Confirm Password ', validators=[DataRequired()])
 

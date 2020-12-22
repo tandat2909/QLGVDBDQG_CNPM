@@ -14,7 +14,7 @@
                     <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Tài khoản</span><span
                             class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="{#{ url_for('profile', id = current_user.id|encodeID).replace("/admin/","/user/",1) }#}">Thông tin tài khoản</a></li>
+                        <li><a href="{{ url_for('profile_team', idt = current_user.id).replace('/admin/','/user/',1) }}">Thông tin tài khoản</a></li>
                         <li><a href="{{ url_for('change_password') }}">Đổi mật khẩu</a></li>
 
                     </ul>

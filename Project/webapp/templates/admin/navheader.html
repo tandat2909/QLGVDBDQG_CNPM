@@ -1,21 +1,21 @@
- <div class="container-fluid">
-        <button type="button" class="navbar-minimalize minimalize-styl-2  pull-left "><i class="fa fa-bars"></i>
+<div class="container-fluid">
+    <button type="button" class="navbar-minimalize minimalize-styl-2  pull-left "><i class="fa fa-bars"></i>
+    </button>
+
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
         </button>
+        <a class="navbar-brand" href="#">{{ params.get('title') }}</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
 
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">{{ params.get('title') }}</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-
-            <ul class="nav navbar-nav navbar-right navbar-top-drops">
-                <li class="dropdown"><a href="#" class="dropdown-toggle button-wave" data-toggle="dropdown">
+        <ul class="nav navbar-nav navbar-right navbar-top-drops">
+            <li class="dropdown"><a href="#" class="dropdown-toggle button-wave" data-toggle="dropdown">
                              <span>
                                         <img alt="image" class="img-circle"
                                              src="{{url_for('static',filename = current_user.avatar or 'admin/images/avatar2.jpg')}}"
@@ -23,26 +23,27 @@
                                  {{current_user.name}}
                                  <b class="caret"></b>
                                     </span>
-                </a>
+            </a>
 
-                    <style>
-                        .style-dropdown-menu-right li i{
+                <style>
+                    .style-dropdown-menu-right li i {
 
-                                margin-right: 8px;
-                        }
-                    </style>
-                    <ul class="dropdown-menu  style-dropdown-menu-right dropdown-lg animated fadeInRight ">
-                        <li><a href="{{ url_for('profile',id = current_user.id|encodeID)}}"><i class="fa fa-user"></i>My Profile</a></li>
-                        <li><a href="{{ url_for('change_password') }}">Change password</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#"><i class="fa fa-lock"></i>Screen lock</a></li>
-                        <li><a href="{{url_for('logout_admin')}}"><i class="fa fa-key"></i>Logout</a></li>
-                    </ul>
-
-
-                </li>
+                        margin-right: 8px;
+                    }
+                </style>
+                <ul class="dropdown-menu  style-dropdown-menu-right dropdown-lg animated fadeInRight ">
+                    <li><a href="{{ url_for('profile_team',idt = current_user.id)}}"><i class="fa fa-user"></i>My
+                        Profile</a></li>
+                    <li><a href="{{ url_for('change_password') }}"><i class="fa fa-key"></i>Change password</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#"><i class="fa fa-lock"></i>Screen lock</a></li>
+                    <li><a href="{{ url_for('logout_admin')}}"><i class="fa fa-sign-out"></i>Logout</a></li>
+                </ul>
 
 
-            </ul>
-        </div><!--/.nav-collapse -->
+            </li>
+
+
+        </ul>
+    </div><!--/.nav-collapse -->
 </div><!--/.container-fluid -->

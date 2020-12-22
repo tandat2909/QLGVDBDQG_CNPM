@@ -3,34 +3,50 @@
 {% block body %}
 <div class="row">
     <div class="col-5">
-        <form class="" action="{{url_for('creatPlayer')}}" method="post">
+        <form class="" action="{{url_for('creatPlayer')}}" method="post" enctype="multipart/form-data">
+            {% set form = params.get('form') %}
             <div class="form-group">
                 <label for="lastname">Họ & Tên đệm</label>
-                <input class="form-control" style="width: 20em" id="lastname" name="lastname" required autocomplete="">
+                <input class="form-control" value="{{form.lastname}}" style="width: 20em" id="lastname" name="lastname"
+                       required autocomplete="">
             </div>
             <div class="form-group">
                 <label for="firstname">Tên</label>
-                <input class="form-control" style="width: 20em" type="text" id="firstname" name="firstname" required
+                <input class="form-control" value="{{form.firstname}}" style="width: 20em" type="text" id="firstname"
+                       name="firstname" required
                        autocomplete="">
             </div>
             <div class="form-group">
                 <label for="birthdate">Ngày sinh</label>
-                <input class="form-control form-control-sm" style="width: 20em" type="date" id="birthdate"
+                <input class="form-control form-control-sm" value="{{form.birthdate}}" style="width: 20em" type="date"
+                       id="birthdate"
                        name="birthdate" required autocomplete="">
             </div>
             <div class="form-group">
                 <label for="gender">Giới tính</label>
                 <select class="form-control" style="width: 20em" id="gender" name="gender" required>
                     <option disabled value="" selected> Chọn giới tính</option>
-                    <option value="">Nam</option>
-                    <option value="">Nữ</option>
-                    <option value="">Khác</option>
-
+                    {% for i in params.get('genders') %}
+                    <option value="{{i.name}}">{{i.value}}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="form-group">
+                <label for="typeplayer">Loại Cầu thủ</label>
+                <select class="form-control"  style="width: 20em" id="typeplayer" name="typeplayer" required>
+                    <option disabled selected value="">Chọn loại cầu thủ</option>
+
+                    {% for i in params.get('tyepeplayer') %}
+                    <option value="{{i.name}}">{{i.value}}</option>
+
+                    {% endfor %}
+                </select>
+
+            </div>
+            <div class="form-group">
                 <label for="nationality">Quốc Tịch</label>
-                <select class="form-control" style="width: 20em" id="nationality" name="nationality" required
+                <select class="form-control" value="{{form.nationality}}" style="width: 20em" id="nationality"
+                        name="nationality" required
                         autocomplete="">
                     <option disabled selected value="">Chọn quốc tịch</option>
                     <option>Việt Nam</option>
@@ -279,20 +295,21 @@
                     <option>Vanuatu</option>
                 </select>
             </div>
+
             <div class="form-group">
                 <label for="position">Vị trí đá</label>
-                <select class="form-control" style="width: 20em" id="position" name="position" required
+                <select class="form-control" value="{{form.position}}" style="width: 20em" id="position" name="position" required
                         autocomplete="">
                     <option disabled selected value="">Chọn vị trí</option>
                     {% for i in params.get('positions') %}
-                         <option value="{{i.id}}">{{i.name}}</option>
+                    <option value="{{i.id}}">{{i.name}}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="form-group">
                 <label for="avatar">Ảnh Cầu thủ</label>
-                <input class="form-control form-control-file" style="width: 20em" type="file" id="avatar" name="avatar"
-                       required
+                <input class="form-control form-control-file" oncuechange="validateFileType()" accept=".jpg,.jpeg,.png"
+                       style="width: 20em" type="file" id="avatar" name="avatar"
                        autocomplete="">
             </div>
             <div class="form-group">
@@ -302,4 +319,3 @@
     </div>
 </div>
 {% endblock %}
-

@@ -43,7 +43,8 @@
                                         {% if params.get('result').query.filter(params.get('result').match_id == i.id).first() == None %}
                                         <button class="btn btn-danger" onclick="delmatch('{{i.id}}')">Delete</button>
                                         {% endif %}
-                                        <button class="btn btn-danger" onclick="getmatch('{{i.id}}')">Write Result</button>
+                                        <button class="btn btn-danger" data-toggle="modal" data-target="#writeresult" data-matchid="{{i.id}}" >Write Result</button>
+
                                     </span>
                                 </td>
 
@@ -109,6 +110,7 @@
     </div>
 
 </div>
+{% include 'admin/models/result/create.html' %}
 {% endblock %}
 
 {% block script %}

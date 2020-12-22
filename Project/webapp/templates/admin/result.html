@@ -1,0 +1,68 @@
+{% extends 'admin/base.html' %}
+
+{% block body %}
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab">
+            <div class="panel-title row" role="button">
+                <div class="col-md-1 text-center" style="color: white">STT</div>
+                <div class="col-md-1 text-center" style="color: white">Đội 1</div>
+                <div class="col-md-1 text-center" style="color: white">Tỉ số</div>
+                <div class="col-md-1 text-center" style="color: white">Đội 2</div>
+                <div class="col-md-2 text-center" style="color: white">Giờ</div>
+                <div class="col-md-6 text-center" style="color: white">Sân</div>
+            </div>
+        </div>
+    </div>
+    {% for i in params.get('results') %}
+    <div class="panel panel-default ">
+        <div class="panel-heading" role="tab" id="heading{{loop.index}}">
+            <div class="panel-title row" role="button" data-toggle="collapse" data-parent="#accordion"
+                 href="#collapse{{loop.index}}"
+                 aria-expanded="true" aria-controls="collapseOne">
+                <div class="col-md-1 text-center">{{loop.index}}</div>
+                <div class="col-md-1 text-center">{{i.match.hometeams.name}}</div>
+                <div class="col-md-1 text-center"> {{ '%s - %s' %(i.winnergoals,i.losergoals) if i.match.hometeams.id ==
+                    i.winteam else '%s - %s' %(i.losergoals,i.winnergoals)}}
+                </div>
+                <div class="col-md-1 text-center">{{i.match.awayteams.name}}</div>
+                <div class="col-md-2 text-center">{{i.match.datetime | format_datetime('%H:%M %d-%m-%Y')}}</div>
+                <div class="col-md-6">{{i.match.stadiumofteam.stadium}}</div>
+
+            </div>
+
+        </div>
+        <div id="collapse{{loop.index}}" class="panel-collapse collapse" role="tabpanel"
+             aria-labelledby="heading{{loop.index}}"
+             aria-expanded="true" style="">
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Cầu thủ</th>
+                        <th>Đội</th>
+                        <th>Loại bàn thắng</th>
+                        <th>Thời điểm</th>
+                    </tr>
+
+                    </thead>
+                    <tbody>
+                    {% for itemgoal in i.goals %}
+                    <tr>
+                        <td> {{loop.index}}</td>
+                        <td>{{itemgoal.player.name}}</td>
+                        <td>{{itemgoal.player.team.name}}</td>
+                        <td>{{itemgoal.typeGoal.name}}</td>
+                        <td>{{itemgoal.time}} </td>
+
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

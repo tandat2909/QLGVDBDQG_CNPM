@@ -64,16 +64,17 @@
                             <label>Số lượng đội được chọn</label>
                             <input type="text" name="numberteamout" class="form-control">
                         </div>
-                            <div class="form_group">
-                                <p>Vòng</p>
-                                <select class="form-control" name="round_id">
-                                    {% for items in params.get('listround') %}
-                                    <option value="{{items.id}}">{{items}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-                        <button type="submit" class="btn btn-success" name="submit"> Tạo</button>
+                        <div class="form_group">
+                            <label>Vòng</label>
+                            <select class="form-control" name="round_id">
+                                {% for items in params.get('listround') %}
+                                <option value="{{items.id}}">{{items}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-top: 15px">
+                            <button type="submit" class="btn btn-success" name="submit"> Tạo</button>
+                        </div>
                     </form>
                 </div>
             </div>
