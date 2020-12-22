@@ -3,6 +3,7 @@
     <tr>
         <th>STT</th>
         <th>Cầu thủ</th>
+         <th>số áo</th>
         <th>Ngày sinh</th>
         <th>Loại cầu thủ</th>
         <th>Ghi Chú</th>
@@ -14,6 +15,7 @@
     <tr >
         <td>{{loop.index}}</td>
         <td>{{i.name}}</td>
+        <td>{{ i.number }}</td>
         <td>{{i.birthdate |format_datetime}}</td>
         <td>{{i.typeplayer.value}}</td>
         <td>{{'' if i.note == None else i.note}}</td>

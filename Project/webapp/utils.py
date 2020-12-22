@@ -503,6 +503,7 @@ def creat_player(teamid, form, avatar):
                                        position_id=models.Position.query.get(form.get('position')).id,
                                        avatar=avatar,
                                        nationality=form.get('nationality'),
+                                       number=form.get('number')
                                        )
             db.session.add(new_player)
             db.session.commit()
@@ -521,6 +522,7 @@ def edit_player(form, avatar):
             player.name = " ".join([form.get("lastname", ''), form.get("firstname", '')])
             player.firstname = form.get('firstname')
             player.lastname = form.get('lastname')
+            player.number = form.get('number')
             player.birthdate = form.get('birthdate')
             player.typeplayer = models.ETyEpePlayer.__getitem__(form.get('typeplayer'))
             player.gender = models.EGender.__getitem__(form.get('gender'))
