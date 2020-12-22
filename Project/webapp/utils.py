@@ -2,6 +2,7 @@ import base64, hashlib, os, random, yagmail
 import datetime
 from operator import itemgetter
 
+from flask import jsonify
 from sqlalchemy import or_, select, not_, and_
 from sqlalchemy.sql.functions import count
 
@@ -553,13 +554,41 @@ def delete_player(playerid):
 
 def create_type_goal(name):
     try:
-        typeGoal = models.TypeGoals(name=name,value='')
+        typeGoal = models.TypeGoals(name=name, value='')
         db.session.add(typeGoal)
         db.session.commit()
         return True
     except Exception as e:
         print("Error create_type_goal:", e)
         return False
+
+
+def get_result_for_writematch(matchid):
+    try:
+        match = models.Match.query.get(matchid)
+        result = match.results[0]
+        goals = result.goals
+        resulthome=[]
+        resultaway=[]
+        for index,i in enumerate(goals):
+            if i.player.team_id == match.hometeam_id:
+                resulthome.append({
+                    'playerid': str(i.player_id),
+                    'type': str(i.type_id),
+                    'time': str(i.time)
+                })
+
+            else:
+                resultaway.append({
+                    'playerid': str(i.player_id),
+                    'type': str(i.type_id),
+                    'time': str(i.time)
+                })
+        return resulthome,resultaway
+    except Exception as e:
+        print("Error get_result_for_writematch:", e)
+        return {}
+
+
 if __name__ == '__main__':
-    print(count_goal_by_playerid("9cada7c7-e74c-417d-89c2-dc3e43b8adb6"))
-    print(sum([2, 1, 3, 4]), 1 + 2 + 3 + 4)
+    print(get_result_for_writematch('c63a7f9a-383d-444c-9c87-d0a23cfe50be'))

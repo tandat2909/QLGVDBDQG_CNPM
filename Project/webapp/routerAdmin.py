@@ -170,6 +170,7 @@ def match_admin():
     params['listround'] = models.Round.query.all()
     params['listteam'] = models.Team.query.all()
     params['result'] = models.Result
+    params['typegoals'] = models.TypeGoals.query.all()
     return render_template('admin/models/match/list.html', params=params)
 
 @app.route('/admin/match/delete', methods=['POST'])
@@ -177,10 +178,11 @@ def match_admin():
 def delete_match():
     match_id = request.json.get('idmatch')
     if match_id and utils.delete_match(match_id):
-        flash('Xóa match thành công')
+        flash('Xóa trận đấu thành công',category='success')
         return jsonify({
             'statuss': 200,
         })
+    flash('Lỗi xóa trận đấu', category='success')
     return jsonify({
         'statuss': 400,
     })
@@ -196,7 +198,40 @@ def results():
             print(form.getlist('awaygoalplayer'))
             print(request.form_data_parser_class.__dict__)
         if request.args.get("action").upper() == EMethods.get.value:
-            pass
+            try:
+                hometeamid = request.json.get('hometeamid')
+                awayteamid = request.json.get('awayteamid')
+                matchid = request.json.get('matchid')
+                playerhome = utils.get_list_player(hometeamid)
+                playeraway = utils.get_list_player(awayteamid)
+                match = models.Match.query.get(matchid)
+                # lấy kết quả của trận đấu get result => get typegoal => player
+                # lấy goal => result , player id ,
+                html_option_playerhome = ""
+                html_option_playeraway = ""
+                for i in playerhome:
+                    html_option_playerhome += "<option value='%s'>%s</option>" %(i.id,i.name)
+                for i in playeraway:
+                    html_option_playeraway += "<option value='%s'>%s</option>" % (i.id, i.name)
+                resulthome,resultaway = utils.get_result_for_writematch(matchid)
+                return jsonify({
+                    'data':{
+                        'home':{
+                            'player':html_option_playerhome,
+                            'result': resulthome
+                        },
+                        'away': {
+                            'player': html_option_playerhome,
+                            'result': resultaway
+                        },
+                    }
+                })
+            except Exception as e:
+                print("Error result get list player",e)
+                return jsonify({
+                    'data':'error'
+                })
+
 
 
     params = {
@@ -355,9 +390,9 @@ def typeGoal():
     if request.method == EMethods.post.value:
         typeGoal = request.form.get('typeGoal')
         if typeGoal and utils.create_type_goal(typeGoal):
-            flash('Thêm loại bàn thắng thành công')
+            flash('Thêm loại bàn thắng thành công',category='success')
         else:
-            flash('Lỗi thêm loại bàn thắng')
+            flash('Lỗi thêm loại bàn thắng',category='error')
         return redirect(url_for('typeGoal'))
 
     params = {

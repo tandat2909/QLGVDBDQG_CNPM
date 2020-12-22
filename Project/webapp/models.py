@@ -139,7 +139,7 @@ class TypeGoals(BaseModel):
     name = Column(String(100), nullable=False)
     value = Column(String(500), nullable=False)
 
-    goals = relationship('Goal', backref=backref('typeGoal'), lazy=True)
+    goals = relationship('Goal', backref='typeGoal', lazy=True)
 
 # Bảng đấu
 class Round(BaseModel):
@@ -240,7 +240,7 @@ class Result(BaseModel):
     typeresult = Column(EnumSQL(ETypeResult), nullable=False)
 
     # relationship
-    goals = relationship('Goal', backref=backref('result'), lazy=True)
+    goals = relationship('Goal', backref='result', lazy=True)
 
     # ForeignKey
     # kết quả của trận đấu nào

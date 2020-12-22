@@ -9,7 +9,7 @@
             </ul>
             <div class="tab-content">
                 <div id="listmatch" class="tab-pane active">
-                    <div class="panel-body" >
+                    <div class="panel-body">
                         <table id="basic-datatables" class="table table-bordered table-hover">
 
                             <thead>
@@ -43,7 +43,13 @@
                                         {% if params.get('result').query.filter(params.get('result').match_id == i.id).first() == None %}
                                         <button class="btn btn-danger" onclick="delmatch('{{i.id}}')">Delete</button>
                                         {% endif %}
-                                        <button class="btn btn-danger" data-toggle="modal" data-target="#writeresult" data-matchid="{{i.id}}" >Write Result</button>
+                                        <button class="btn btn-danger" data-toggle="modal" data-target="#writeresult"
+                                                data-matchid="{{i.id}}"
+                                                data-match="{{i}}"
+                                                data-awayname="{{i.awayteams.name}}"
+                                                data-homename="{{i.hometeams.name}}"
+                                                data-awayteam="{{i.awayteams.id}}"
+                                                data-hometeam="{{i.hometeams.id}}">Write Result</button>
 
                                     </span>
                                 </td>
@@ -55,7 +61,7 @@
                     </div>
                 </div>
                 <div id="create" class="tab-pane">
-                    <form action="{{ url_for('match_admin') }}" method="post" >
+                    <form action="{{ url_for('match_admin') }}" method="post">
                         <div class="form-group">
                             <label>Bảng</label>
                             <select class="form-control" required name="group_id">
@@ -114,10 +120,10 @@
 {% endblock %}
 
 {% block script %}
-    {{super()}}
-    <script>
-        function clearForm(form){
-            form.reset()
-        }
-    </script>
+{{super()}}
+<script>
+    function clearForm(form) {
+        form.reset()
+    }
+</script>
 {% endblock %}
