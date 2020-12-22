@@ -543,6 +543,22 @@ def delete_player(playerid):
     except Exception as e:
         print("Error deletePlayer:", e)
         return False
+def change_team_profile(email, phone, stadium,logo,idteam,description=' '):
+    try:
+        if email and phone and stadium and idteam and logo and description:
+            team = models.Team.query.get(idteam)
+            team.email = email
+            team.phonenumber = phone
+            team.stadium= stadium
+            team.logo = logo
+            team.description= description
+            db.session.add(team)
+            db.session.commit()
+            return True
+        raise Exception('Nhập thiếu thông tin')
+    except Exception as e:
+        print("Error change_profile:", e)
+        return False
 
 if __name__ == '__main__':
     print(count_goal_by_playerid("9cada7c7-e74c-417d-89c2-dc3e43b8adb6"))

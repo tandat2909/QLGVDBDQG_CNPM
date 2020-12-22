@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div id="create" class="tab-pane">
-                    <form action="{{ url_for('listgroup') }}" method="post">
+                    <form action="{{ url_for('listgroup').repla }}" method="post">
                         <div class="form-group">
                             <label>Tên bảng </label>
                             <input type="text" name="groupname" class="form-control">
@@ -83,6 +83,5 @@
         </div>
 
     </div>
-
 </div>
 {% endblock %}

@@ -2,7 +2,10 @@
 {% block contentLeft %}
 <div>
     <div class="row">
-        <div class="col-md-2"><img src="{{url_for('static', filename=params.get('team').logo or '')}}"></div>
+        <div class="col-md-2">
+            <div><img src="{{url_for('static', filename=params.get('team').logo or '')}}" class="img-fluid rounded float-left" style="width: 100%"></div>
+
+        </div>
         <div class="col-md-10">
             <h1 class="st-title">{{params.get('team').name}}</h1>
             <div class="row" style="margin-top: 6%">
@@ -53,7 +56,7 @@
                         <tbody>
                         {% for i in params.get('players') %}
                         <tr>
-                            <td><img scr="{{url_for('static', filename=params.get('i').avatar)}}"></td>
+                            <td><img src="{{url_for('static', filename= i.avatar or '')}}" style="width: 32px" class=""></td>
                             <td><a href="{{url_for('player_profile', idp =i.id)}}">{{i.name}}</a></td>
                             <td>{{i.number}}</td>
                             <td>{{i.position}}</td>
@@ -65,7 +68,6 @@
                 <div role="tabpanel" class="tab-pane fade" id="imfomation">
                     <h4>Sân nhà: {{params.get('team').stadium}}</h4>
                     {{params.get('team').description}}
-                    <h4>Số trận thắng: </h4>
                 </div>
             </div>
         </div>

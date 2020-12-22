@@ -78,7 +78,7 @@
         <tr>
             <td class="left-team">
                 <a href="{{url_for('team_profile', idp=items.match.hometeam_id)}}">
-                    <img src="{{url_for('static',filename = 'image/logoTeam/flag-1.jpg')}}" alt="flag-1.jpg">
+                    <img src="{{url_for('static',filename =items.match.hometeams.logo or '') }}" alt="" class="img-responsive">
                 <h4>{{params.get('teams').query.get(items.match.hometeam_id)}}</h4>
                 </a>
             </td>
@@ -89,7 +89,7 @@
             </td>
             <td class="right-team">
                 <a href="{{url_for('team_profile', idp=items.match.awayteam_id)}}">
-                <img src="{{url_for('static',filename = 'image/logoTeam/flag-2.jpg')}}" alt="">
+                <img src="{{url_for('static',filename =items.match.awayteams.logo or '') }}" alt="" class="img-responsive">
                 <h4>{{params.get('teams').query.get(items.match.awayteam_id)}}</h4>
                 </a>
             </td>

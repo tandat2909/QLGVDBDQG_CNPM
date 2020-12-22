@@ -4,7 +4,7 @@
     <div class="col-md-3">
         {% block div_image %}
         <div>
-            <img src="{#{url_for('static',filename= params.get('player').avatar)}#}" class="img-responsive">
+            <img src="{{url_for('static',filename= params.get('player').avatar or '')}}" class="img-fluid">
         </div>
         {% endblock %}
     </div>
