@@ -2,7 +2,7 @@
 
 {% block div_image %}
 
-<img src="{{url_for('static',filename = params.get('team').logo)}}" class="img-responsive">
+<img src="{{url_for('static',filename = params.get('team').logo or '')}}" class="img-responsive">
 {% endblock %}
 
 {% block info %}

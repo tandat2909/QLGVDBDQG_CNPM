@@ -336,7 +336,7 @@ def listplayer():
         'title': 'Player',
         'nav_player': 'active',
     }
-    params["teams"] = models.Team.query.all()
+    params["teams"] = models.Team.query.filter(models.Team.role == models.Role.manager).all()
     return render_template('admin/models/player/list.html', params=params)
 
 @app.route('/admin/group/delete', methods=['POST'])

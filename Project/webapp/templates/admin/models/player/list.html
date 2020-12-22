@@ -6,19 +6,35 @@
     <div>
         <h2>{{team.name}}</h2>
         <div>
-            <table class="table table-hover">
-            <tbody>
-            {% for i in team.players %}
-            <tr>
-                <td><img src="{{url_for('static', filename= i.avatar or '')}}" style="width: 32px" class=""></td>
-                <td><a href="{{url_for('profile_player', idp =i.id)}}">{{i.name}}</a></td>
-                <td>{{i.number}}</td>
-                <td>{{i.position}}</td>
-                <td>{{ i.birthdate | format_datetime }} </td>
-                <td>{{ i.nationality}}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
+            <table class="table table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Ảnh</th>
+                    <th>Họ tên</th>
+                    <th>Tuổi</th>
+                    <th>Quốc tịch</th>
+                    <th>Số áo</th>
+                    <th>Vị trí </th>
+                    <th>Loại cầu thủ</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in team.players %}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td><img src="{{url_for('static', filename= i.avatar or '')}}" style="width: 32px" class=""></td>
+                    <td><a href="{{url_for('profile_player', idp =i.id)}}">{{i.name}}</a></td>
+                    <td>{{ i.birthdate | format_datetime }}</td>
+                     <td>{{ i.nationality}}</td>
+                    <td>{{i.number}}</td>
+                    <td>{{i.position}}</td>
+                    <td>{{i.typeplayer.value}}</td>
+
+
+                </tr>
+                {% endfor %}
+                </tbody>
             </table>
         </div>
     </div>
