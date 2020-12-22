@@ -1,5 +1,5 @@
-from webapp import app, login, models, jinja_filters,SentEmail
-from flask import request,g, render_template, redirect, url_for, abort, current_app, flash
+from webapp import app, login, models, jinja_filters, SentEmail
+from flask import request, g, render_template, redirect, url_for, abort, current_app, flash
 from flask_login import current_user, login_user, logout_user, login_required, login_url, AnonymousUserMixin, \
     fresh_login_required
 # from webapp.admin import *
@@ -7,24 +7,24 @@ from webapp.routerAdmin import *
 from webapp.routerUser import *
 
 
-
 @app.route('/')
 def home():
-
     params = {
         'title': 'Home',
         'nav_home': 'active',
     }
-    params ['results'] = models.Result.query.all()
-    params ['teams'] = models.Team
-    params ['groups'] = models.Groups.query.all()
+    params['results'] = models.Result.query.all()
+    params['teams'] = models.Team
+    params['groups'] = models.Groups.query.all()
     return render_template("home/index.html", params=params)
+
+
 @app.route('/search')
 def find():
     kw = request.args.get("kw")
     players = utils.find_player_by_name(kw)
     teams = utils.find_team_by_name(kw)
-    print(kw,players,teams)
+    print(kw, players, teams)
     params = {
         'title': 'Home',
         'nav_home': 'active',
@@ -32,6 +32,7 @@ def find():
         'teams': teams
     }
     return render_template("home/search.html", params=params)
+
 
 @app.route('/result')
 def result():
@@ -42,7 +43,6 @@ def result():
     params['results'] = models.Result.query.all()
     params['teams'] = models.Team
     return render_template('home/result.html', params=params)
-
 
 
 @app.route('/schedule')
@@ -65,6 +65,8 @@ def player_profile():
     params['player'] = utils.get_player_by_ID(request.args.get('idp'))
 
     return render_template('home/playerprofile.html', params=params)
+
+
 @app.route("/team/profile")
 def team_profile():
     params = {
@@ -75,6 +77,7 @@ def team_profile():
     params['groups'] = models.Groups.query.all()
 
     return render_template('home/teamproflie.html', params=params)
+
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -145,17 +148,15 @@ def changepwfirst():
     return render_template('changepwfirst.html', form=form, title="Change password first")
 
 
-
 @app.route("/user/profile-player")
 @app.route("/admin/profile-player")
 @login_required
 def profile_player():
-
     """
     hiển thị thong tin chi tiết của player
     :return:
     """
-    playerid= request.args.get("idp")
+    playerid = request.args.get("idp")
     player = utils.get_player_by_ID(playerid)
     if player is None:
         abort(404)
@@ -165,19 +166,43 @@ def profile_player():
     }
     return render_template('profile.html', params=params)
 
-@app.route("/user/profile-team")
+
+@app.route("/user/profile-team", methods=['POST', 'GET'])
 @app.route("/admin/profile-team")
 @login_required
 def profile_team():
     teamid = request.args.get("idt")
     team = utils.get_team_by_ID(teamid)
+    if request.method == "POST":
+        try:
+            email = request.form.get('email')
+            phone = request.form.get('phonenumber')
+            stadium = request.form.get('stadium')
+            logo= request.files["logo"]
+            logo_path = 'image/logoTeam/' + logo.filename
+
+            if utils.change_team_profile(email=email, phone=phone, stadium=stadium,logo = logo_path, idteam=current_user.id):
+                logo.save(os.path.join(app.root_path, 'static/', logo_path))
+                flash("Thay đổi thông tin đội bóng thành công!", category="success")
+            else:
+                flash("Thay không thành công!", category="success")
+            return redirect(url_for('profile_team', idt=current_user.id))
+        except ValueError as e:
+            flash(e,category="error")
+            return redirect(url_for('profile_team', idt=current_user.id))
+        except Exception as e:
+            print('lỗi profile_team', e)
+            return redirect(url_for('profile_team', idt=current_user.id))
     if team is None:
         abort(404)
     params = {
         'title': "Thông tin đội bóng",
         'team': team
     }
+
     return render_template('profile_team.html', params=params)
+
+
 @app.route("/logout")
 def logout():
     logout_user()
@@ -188,9 +213,11 @@ def logout():
 def page_not_found(error):
     return render_template('error.html', code=404, ms='Error Page'), 404
 
+
 @app.errorhandler(405)
 def page_not_found(error):
     return render_template('error.html', code=405, ms='Error Page'), 405
+
 
 @app.errorhandler(500)
 def special_exception_handler(error):
@@ -200,8 +227,6 @@ def special_exception_handler(error):
 @login.user_loader
 def get_user(id):
     return models.Team.query.get(id)
-
-
 
 
 if __name__ == '__main__':

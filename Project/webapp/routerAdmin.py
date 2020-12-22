@@ -329,6 +329,16 @@ def listgroup():
     params['listmatch'] = models.Match
     return render_template('admin/models/group/list.html', params=params)
 
+@app.route('/admin/player/list/')
+@decorate.login_required_Admin
+def listplayer():
+    params = {
+        'title': 'Player',
+        'nav_player': 'active',
+    }
+    params["teams"] = models.Team.query.all()
+    return render_template('admin/models/player/list.html', params=params)
+
 @app.route('/admin/group/delete', methods=['POST'])
 def delete_group():
     group_id = request.json.get('idgroup')
