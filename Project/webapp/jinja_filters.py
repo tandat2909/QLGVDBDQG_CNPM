@@ -73,7 +73,6 @@ def Score(idteam):
         utils.get_lose_match(idteam)) * config.loseScore
     return diem
 
-
 app.jinja_env.filters['encodeID'] = encodeID
 app.jinja_env.filters['format_datetime'] = format_datetime
 app.jinja_env.filters['set_time_match'] = set_time_match
@@ -81,3 +80,4 @@ app.jinja_env.filters['count_match'] = count_match
 app.jinja_env.filters['HieuSo'] = HS
 app.jinja_env.filters['Score'] = Score
 app.jinja_env.filters['Sort'] = utils.sort_team_in_group
+app.jinja_env.filters['GoalPl'] = utils.count_goal_by_playerid

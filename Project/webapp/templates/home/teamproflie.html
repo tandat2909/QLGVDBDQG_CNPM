@@ -1,0 +1,104 @@
+{% extends 'home/base.html' %}
+{% block contentLeft %}
+<div>
+    <div class="row">
+        <div class="col-md-2"><img src="{{url_for('static', filename=params.get('team').logo or '')}}"></div>
+        <div class="col-md-10">
+            <h1 class="st-title">{{params.get('team').name}}</h1>
+            <div class="row" style="margin-top: 6%">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img class="reponsive" src="{{url_for('static' ,filename='image/stadium-icon.png')}}">
+                        </div>
+                        <div class="col-md-9">
+                            <div class="col"><h4>Sân vận động</h4></div>
+                            <div class="col">{{params.get('team').stadium}}</div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="{{url_for('static', filename='image/coach-icon.png')}}">
+                        </div>
+                        <div class="col-md-9">
+                            <div class="col"><h4>Huấn luyện viên</h4></div>
+                            <div class="col">Khongdungtaodavoamommay</div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 6%">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="btn active" href="#playerlist" role="tab" data-toggle="tab">
+                        <label>Cầu thủ</label>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn" href="#imfomation" role="tab" data-toggle="tab">Thông tin</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active show" id="playerlist">
+                    <table class="table table-hover">
+                        <tbody>
+                        {% for i in params.get('players') %}
+                        <tr>
+                            <td><img scr="{{url_for('static', filename=params.get('i').avatar)}}"></td>
+                            <td><a href="{{url_for('player_profile', idp =i.id)}}">{{i.name}}</a></td>
+                            <td>{{i.number}}</td>
+                            <td>{{i.position}}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="imfomation">
+                    <h4>Sân nhà: {{params.get('team').stadium}}</h4>
+                    {{params.get('team').description}}
+                    <h4>Số trận thắng: </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block contentRight %}
+<div>
+    <h1 class="text-center st-title">Bảng xếp hạng</h1>
+    {% for group in params.get('groups') %}
+        <label>{{group.name}}</label>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Đội bóng</th>
+                <th>Trận</th>
+                <th>HS</th>
+                <th>Điểm</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for iteam in group.id |Sort%}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td>{{iteam.team.name}}</td>
+                <td>{{iteam.team.id |count_match}}</td>
+                <td>{{iteam.team.id |HieuSo}}</td>
+                <td>{{iteam.team.id |Score}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+</div>
+{% endblock %}

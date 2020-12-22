@@ -354,6 +354,7 @@ def create_account(form):
         print("Error create_account:", e)
         return False
 
+
 def get_list_player(teamid):
     try:
         if teamid:
@@ -361,26 +362,35 @@ def get_list_player(teamid):
             return lsplayer
         raise ValueError('teamid is empty or ' + teamid + ' invalid')
     except Exception as e:
-        print('Error get_list_player',e)
+        print('Error get_list_player', e)
         return None
+
+
 def countmatch(teamid):
-    count = models.Match.query.filter(or_(models.Match.awayteam_id == teamid, models.Match.hometeam_id == teamid)).count()
+    count = models.Match.query.filter(
+        or_(models.Match.awayteam_id == teamid, models.Match.hometeam_id == teamid)).count()
     return count
+
+
 def get_team_not_in_group():
     team = models.Team.query.filter(models.Team.team_group == None).all()
     return team
+
+
 def add_team_in_group(teams, idgroup):
     group = models.Groups.query.get(idgroup)
     if len(group.teams) + len(teams) <= group.numberteamin:
         if teams and idgroup:
             for idteam in teams:
                 if idteam:
-                    newteamingroup = models.TeamsInGroup(group_id= idgroup, team_id =idteam)
+                    newteamingroup = models.TeamsInGroup(group_id=idgroup, team_id=idteam)
                     db.session.add(newteamingroup)
             db.session.commit()
             return True
         raise ValueError('Group và Team không hợp lệ')
     raise ValueError('Thêm không vượt quá số đội trong bảng :' + str(group.numberteamin))
+
+
 def sort_team_in_group(group_id):
     teamingr = models.Groups.query.get(group_id).teams
     print(teamingr)
@@ -389,17 +399,27 @@ def sort_team_in_group(group_id):
         score = jinja_filters.Score(i.team.id)
         hs = jinja_filters.HS(i.team.id)
         bt = jinja_filters.BT(i.team.id)
-        team.append((i,score,hs,bt))
+        team.append((i, score, hs, bt))
     print(team)
-    team = sorted(team, key= itemgetter(1,2,3), reverse=True)
+    team = sorted(team, key=itemgetter(1, 2, 3), reverse=True)
     teams = [i[0] for i in team]
     return teams
+
+
 def get_player_by_ID(playerid):
     return models.Player.query.get(playerid)
+
+
+def get_team_by_ID(teamid):
+    return models.Team.query.get(teamid)
+
+
+def get_coach_by_teamID(teamid):
+    HLV = models.Player.query.join(models.Team, models.Position).filter(teamid == models.Team.id,
+                                                                        models.Position.symbol == "HLV").first()
+    return HLV
+def count_goal_by_playerid(playerid):
+    return len(models.Player.query.get(playerid).goals)
+
 if __name__ == '__main__':
-    pass
-
-
-
-
-
+    print(count_goal_by_playerid("9cada7c7-e74c-417d-89c2-dc3e43b8adb6"))

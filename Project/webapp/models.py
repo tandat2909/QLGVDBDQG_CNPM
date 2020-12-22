@@ -86,6 +86,8 @@ class Team(BaseModel, UserMixin):
     phonenumber = Column(String(20), nullable=True)
     stadium = Column(String(200))
     active = Column(Boolean, nullable=False, default=True)
+    logo = Column(String(200))
+    description = Column(String(600))
     # Được duyệt hay chưa
     invalid = Column(Boolean, default=False)
     # relationship
@@ -107,6 +109,7 @@ class Player(BaseModel):
     nationality = Column(String(100), default="")
     lastname = Column(String(100))
     firstname = Column(String(100))
+    number = Column(String(100))
     # loai cầu thủ
     typeplayer = Column(EnumSQL(ETyEpePlayer), nullable=False, default=ETyEpePlayer.localplayer)
     #  Tổng số bàn thắng
@@ -169,7 +172,6 @@ class TeamsInGroup(db.Model):
     group_id = Column(UUIDType(binary=True), ForeignKey('Groups.id'), primary_key=True)
     team_id = Column(UUIDType(binary=True), ForeignKey('Team.id'), primary_key=True)
     timeJoinRound = Column(DATETIME, default=datetime.now())
-
 
 # Trận đấu
 class Match(BaseModel):

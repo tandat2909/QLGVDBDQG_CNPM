@@ -1,4 +1,103 @@
 {% extends 'home/base.html' %}
 {% block contentLeft %}
+<div class="row">
+    <div class="col-md-3">
+        {% block div_image %}
+        <div>
+            <img src="{#{url_for('static',filename= params.get('player').avatar)}#}" class="img-responsive">
+        </div>
+        {% endblock %}
+    </div>
+    <div class="col-md-9">
 
+        <style>
+            #info tbody tr td{
+                font-size: 1.3em;
+            }
+
+        </style>
+        {% block info %}
+        <table class="table" id="info">
+
+            <thead>
+
+            <tr>
+                <th colspan="2" class="text-center st-title"><h2>{{ params.get('player').name }}</h2></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Ngày tháng năm sinh:</td>
+                <td>
+                    {{ params.get('player').birthdate | format_datetime }}
+                </td>
+            </tr>
+            <tr>
+                <td>Số áo:</td>
+                <td>
+                    {{ params.get('player').number}}
+                </td>
+            </tr>
+            <tr>
+                <td>Vị trí:</td>
+                <td>
+                    {{ params.get('player').position}}
+                </td>
+            </tr>
+            <tr>
+                <td>Giới tính:</td>
+                <td>
+                    {{ params.get('player').gender.value}}
+                </td>
+
+            </tr>
+            <tr>
+                <td>Quốc tịch:</td>
+                <td>
+                    {{ params.get('player').nationality}}
+                </td>
+
+            </tr>
+            <tr>
+                <td>Thuộc Đội:</td>
+                <td>
+                    {{ params.get('player').team.name}}
+                </td>
+            </tr>
+            <tr>
+                <td>Tổng số bàn thắng:</td>
+                <td>
+                    {{ params.get('player').id |GoalPl}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        {% endblock%}
+    </div>
+</div>
+{% endblock %}
+{% block contentRight %}
+<div>
+    <h1 class="text-center st-title">Bàn thắng</h1>
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Trận</th>
+            <th>Thời gian</th>
+            <th>Loại</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in params.get('player').goals %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{i.result.match}}</td>
+            <td>{{i.time}}</td>
+            <td>{{i.typeGoal}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

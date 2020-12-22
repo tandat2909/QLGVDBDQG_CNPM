@@ -65,25 +65,24 @@ def schedule():
     return render_template('home/schedule.html', params=params)
 
 
-@app.route("/player/list")
-def player_list():
-    params = {
-        'title': 'Schedule',
-        'nav_schedule': 'active'
-    }
-    params['teams'] = models.Team.query.all()
-    params['players'] = models.Player
-
-    return render_template('home/listplayer.html', params=params)
 @app.route("/player/profile")
 def player_profile():
     params = {
-        'title': 'Schedule',
-        'nav_schedule': 'active'
+        'title': 'Playerprofile',
     }
-    params['players'] = utils.get_player_by_ID(request.args.get('idp'))
+    params['player'] = utils.get_player_by_ID(request.args.get('idp'))
 
     return render_template('home/playerprofile.html', params=params)
+@app.route("/team/profile")
+def team_profile():
+    params = {
+        'title': 'teamprofile',
+    }
+    params['team'] = utils.get_team_by_ID(request.args.get('idp'))
+    params['players'] = models.Team.query.get(request.args.get('idp')).players
+    params['groups'] = models.Groups.query.all()
+
+    return render_template('home/teamproflie.html', params=params)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
