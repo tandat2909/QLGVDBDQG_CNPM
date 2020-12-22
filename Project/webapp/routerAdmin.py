@@ -4,8 +4,7 @@ import datetime
 from flask import request, flash, redirect, url_for, render_template, jsonify
 from flask_login import logout_user, login_user, current_user
 
-from webapp import models, Forms, utils, app, decorate, SentEmail,EMethods
-
+from webapp import models, Forms, utils, app, decorate, SentEmail, EMethods
 
 
 @app.route('/admin')
@@ -88,10 +87,10 @@ def accounts():
             print(idteam)
             if idteam and SentEmail.sent_account_to_mail(idteam):
                 return jsonify({
-                    'status':200
+                    'status': 200
                 })
             return jsonify({
-                'status':400
+                'status': 400
             })
     listuser = models.Team.query.filter(models.Team.id != current_user.id)
     params['listuser'] = listuser
@@ -175,34 +174,48 @@ def match_admin():
     params['result'] = models.Result
     return render_template('admin/models/match/list.html', params=params)
 
+
 @app.route('/admin/match/delete', methods=['POST'])
 @decorate.login_required_Admin
 def delete_match():
     match_id = request.json.get('idmatch')
     if match_id and utils.delete_match(match_id):
-         flash('Xóa match thành công')
-         return jsonify({
-             'statuss': 200,
-         })
+        flash('Xóa match thành công')
+        return jsonify({
+            'statuss': 200,
+        })
     return jsonify({
         'statuss': 400,
     })
 
-@app.route('/admin/results', methods=['GET','POST'])
+
+@app.route('/admin/results', methods=['GET', 'POST'])
 @decorate.login_required_Admin
 def results():
+    if request.method == EMethods.post.value:
+        if request.args.get("action").upper() == EMethods.edit.value:
+            form = request.form
+            print(form.to_dict())
+            print(form.getlist('awaygoalplayer'))
+            print(request.form_data_parser_class.__dict__)
+        if request.args.get("action").upper() == EMethods.get.value:
+            pass
+
+
     params = {
         'title': "Kết quả",
-        'nav_result':'active',
+        'nav_result': 'active',
         'results': models.Result.query.all()
     }
-    return render_template('admin/result.html',params=params)
+
+    return render_template('admin/result.html', params=params)
+
 
 @app.route('/admin/match/get_stadium', methods=['GET', 'POST'])
 @decorate.login_required_Admin
 def get_stadium():
     data = request.json
-    hometeam  = None
+    hometeam = None
     try:
         if data:
             hometeam = models.Team.query.get(data.get('hometeam'))
@@ -247,18 +260,20 @@ def listround():
     params['listgroup'] = models.Groups
     return render_template('admin/models/round/list.html', params=params)
 
+
 @app.route('/admin/round/delete', methods=['POST'])
 def delete_round():
     round_id = request.json.get('idround')
     print(round_id)
     if round_id and utils.delete_round(round_id):
-         flash('Xóa group thành công')
-         return jsonify({
-             'statuss': 200,
-         })
+        flash('Xóa group thành công')
+        return jsonify({
+            'statuss': 200,
+        })
     return jsonify({
         'statuss': 400,
     })
+
 
 @app.route('/admin/list/group/', methods=['GET', 'POST'])
 @decorate.login_required_Admin
@@ -284,43 +299,46 @@ def listgroup():
     params['listmatch'] = models.Match
     return render_template('admin/models/group/list.html', params=params)
 
+
 @app.route('/admin/group/delete', methods=['POST'])
 def delete_group():
     group_id = request.json.get('idgroup')
     print(group_id)
     if group_id and utils.delete_group(group_id):
-         flash('Xóa group thành công')
-         return jsonify({
-             'statuss': 200,
-         })
+        flash('Xóa group thành công')
+        return jsonify({
+            'statuss': 200,
+        })
     return jsonify({
         'statuss': 400,
     })
-@app.route('/admin/changeconfig',methods = ["GET","POST"])
+
+
+@app.route('/admin/changeconfig', methods=["GET", "POST"])
 @decorate.login_required_Admin
 def changeconfig():
-
     if request.method == EMethods.post.value:
         try:
             utils.check_change_config(request.form)
             if utils.change_config(request.form):
-                flash("Lưu thay đổi thành công",category='success')
+                flash("Lưu thay đổi thành công", category='success')
                 return redirect(url_for('changeconfig'))
             else:
                 flash("Lỗi thay đổi quy định")
         except ValueError as e:
-            flash("Lỗi lưu quy định: "+str(e) ,category='error' )
+            flash("Lỗi lưu quy định: " + str(e), category='error')
         except Exception as e:
-            print("Lỗi change config",e)
+            print("Lỗi change config", e)
 
     params = {
         'title': 'Thay đổi quy định',
         'config': models.Config.query.first(),
     }
-    return render_template('admin/config.html',params=params)
-#todo xóa round,result,match,group,gold xóa nguyên round và các trận liên quan
-#todo xuất list player
-#todo trang result thêm xóa
-#todo trang edit config
-#todo type goal thêm xóa
+    return render_template('admin/config.html', params=params)
 
+
+# todo xóa round,result,match,group,gold xóa nguyên round và các trận liên quan
+# todo xuất list player
+# todo trang result thêm xóa
+# todo trang edit config
+# todo type goal thêm xóa

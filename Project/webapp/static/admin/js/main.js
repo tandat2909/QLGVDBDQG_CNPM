@@ -191,3 +191,44 @@ $("#nationality").click(function () {
 
     $("#nationality").empty().append(my_options);
 });
+// write result
+$('#writeresult').on('show.bs.modal', function (event) {
+    var row = $(event.relatedTarget) // Button that triggered the modal
+    var modal = $(this)
+    //set title
+    modal.find('.modal-title').text(row.data("match"))
+
+    fetch('/user/players?action=GET', {
+        method: 'POST',
+        headers: {"Content-Type": 'application/json'},
+        body: JSON.stringify({
+            "playerid": row.data('id'),
+        })
+    }).then(res => res.json()).then(data => {
+        if (data.data != "error") {
+            console.log(data)
+            modal.find('.modal-title').text('Edit ' + data.firstname + " " + data.lastname)
+            $("#lastname").val(data.lastname)
+            $("#firstname").val(data.firstname)
+            $("#birthdate").val(data.birthdate)
+            $("#gender").val(data.gender)
+            $("#typeplayer").val(data.typeplayer)
+            $("#nationality").val(data.nationality)
+            $("#position").val(data.position)
+            $("#playerid").val(row.data("id"))
+
+        }
+    })
+})
+
+
+function addgoal(btn) {
+    if (btn.getAttribute('value') == "home") {
+        var inputamountgoal = $("#amountgoalhome")
+        inputamountgoal.val(parseInt(inputamountgoal.val()) + 1)
+        var table = $("#homegoalplayer tbody")
+
+
+    }
+
+}
