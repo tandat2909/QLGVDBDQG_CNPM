@@ -5,7 +5,7 @@ from operator import itemgetter
 from sqlalchemy import or_, select, not_, and_
 from sqlalchemy.sql.functions import count
 
-from webapp import Config, db, models, config_main, jinja_filters
+from webapp import Config, db, models, jinja_filters
 
 
 def check_password(pw_hash='', pw_check=''):
@@ -132,7 +132,18 @@ def lock_account(current_user, user_id, lock: bool = None):
     except:
         return False
 
-
+def check_change_config(form):
+    if form:
+        if not int(form.get('winScore')) > int(form.get('tieScore')) >int(form.get('loseScore')):
+            raise ValueError("Điểm thắng > Điểm hòa > Điểm thua")
+        if int(form.get('maxPlayer')) < int(form.get('minPlayer')):
+            raise ValueError("Cầu thủ tối đa >= cầu thủ tối thiểu")
+        if int(form.get('maxAgePlayer')) <  int(form.get('minAgePlayer')):
+            raise ValueError("Tuổi tối đa >= tuổi tối thiểu")
+        if not sum([int(form.get('doiKhang')), int(form.get('diem')), int(form.get('hieuSo')) , int(form.get('tongBanThang'))]) == 10:
+            raise ValueError("Thứ tự ưu tiên không đúng: 4 giá trị phải khác nhau,1 là ưu tiên cao nhất")
+        return True
+    raise ValueError("Form không hợp kệ")
 def change_config(form):
     try:
 

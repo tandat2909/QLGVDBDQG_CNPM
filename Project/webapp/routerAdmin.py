@@ -4,7 +4,7 @@ import datetime
 from flask import request, flash, redirect, url_for, render_template, jsonify
 from flask_login import logout_user, login_user, current_user
 
-from webapp import models, Forms, utils, app, decorate, config_main, SentEmail,EMethods
+from webapp import models, Forms, utils, app, decorate, SentEmail,EMethods
 @app.route('/admin')
 @app.route('/admin/')
 @decorate.login_required_Admin
@@ -246,7 +246,7 @@ def listround():
         numberteamin = request.form.get('numberteamin')
         numberteamout = request.form.get('numberteamout')
         format = request.form.get('format')
-        flash(roundname + numberteamin + '     ' + numberteamout)
+
         if utils.create_round(roundname=roundname, numberteamin=int(numberteamin), numberteamout=int(numberteamout),
                               format=format):
             flash("Tạo vòng đấu thành công!", category="success")
@@ -260,7 +260,7 @@ def listround():
 @app.route('/admin/round/delete', methods=['POST'])
 def delete_round():
     round_id = request.json.get('idround')
-    print(round_id)
+
     if round_id and utils.delete_round(round_id):
         flash('Xóa group thành công')
         return jsonify({

@@ -1,4 +1,4 @@
-from webapp import app, login, models, jinja_filters,config_main,SentEmail
+from webapp import app, login, models, jinja_filters,SentEmail
 from flask import request,g, render_template, redirect, url_for, abort, current_app, flash
 from flask_login import current_user, login_user, logout_user, login_required, login_url, AnonymousUserMixin, \
     fresh_login_required
@@ -43,14 +43,6 @@ def result():
     params['teams'] = models.Team
     return render_template('home/result.html', params=params)
 
-
-@app.route('/match')
-def match():
-    params = {
-        'title': 'Match',
-        'nav_match': 'active'
-    }
-    return render_template('home/match.html', params=params)
 
 
 @app.route('/schedule')
@@ -213,4 +205,4 @@ def get_user(id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,host="192.168.1.3",port ="80")
