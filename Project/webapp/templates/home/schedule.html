@@ -6,15 +6,15 @@
 </div>
 <div class="row">
     <div class="st-table col-12">
-    <table>
-        {% for items in params.get('matchs') %}
+        <table>
+            {% for items in params.get('matchs') %}
             {% if params.get('results').query.filter(params.get('results').match_id == items.id).first() == None %}
             <tbody>
             <tr>
                 <td class="left-team">
                     <a href="{{url_for('team_profile', idp=items.match.hometeam_id)}}">
-                    <img src="{{url_for('static',filename = 'image/logoTeam/flag-1.jpg')}}" alt="flag-1.jpg">
-                    <h4>{{params.get('teams').query.get(items.hometeam_id)}}</h4>
+                        <img src="{{url_for('static',filename = 'image/logoTeam/flag-1.jpg')}}" alt="flag-1.jpg">
+                        <h4>{{params.get('teams').query.get(items.hometeam_id)}}</h4>
                     </a>
                 </td>
                 <td class="st-option">
@@ -24,15 +24,45 @@
                 </td>
                 <td class="right-team">
                     <a href="{{url_for('team_profile', idp=items.match.awayteam_id)}}">
-                    <img src="{{url_for('static',filename = 'image/logoTeam/flag-2.jpg')}}" alt="">
-                    <h4>{{params.get('teams').query.get(items.awayteam_id)}}</h4>
+                        <img src="{{url_for('static',filename = 'image/logoTeam/flag-2.jpg')}}" alt="">
+                        <h4>{{params.get('teams').query.get(items.awayteam_id)}}</h4>
                     </a>
                 </td>
             </tr>
             {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block contentRight %}
+<div>
+    <h1 class="text-center st-title">Bảng xếp hạng</h1>
+    {% for group in params.get('groups') %}
+    <label>{{group.name}}</label>
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Đội bóng</th>
+            <th>Trận</th>
+            <th>HS</th>
+            <th>Điểm</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for iteam in group.id |Sort%}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{iteam.team.name}}</td>
+            <td>{{iteam.team.id |count_match}}</td>
+            <td>{{iteam.team.id |HieuSo}}</td>
+            <td>{{iteam.team.id |Score}}</td>
+        </tr>
         {% endfor %}
         </tbody>
     </table>
-</div>
+    {% endfor %}
 </div>
 {% endblock %}

@@ -1,18 +1,32 @@
 {% extends "home/index.html" %}
 {% block contentLeft %}
-
-{% for items in params.get('players') %}
-<h1>Player
-    {{items.id}}
-    {{items.name}}
-</h1>
-
-{% endfor %}
-{% for items in params.get('teams')  %}
-<h1>Teams
-    {{items.id}}
-    {{items.name}}
-</h1>
-{% endfor %}
+{% if params.get('players') != None%}
+<table class="table table-hover">
+    <tbody>
+    {% for i in params.get('players') %}
+    <tr>
+        <td><img src="{{url_for('static', filename= i.avatar or '')}}" style="width: 32px" class=""></td>
+        <td><a href="{{url_for('player_profile', idp =i.id)}}">{{i.name}}</a></td>
+        <td>{{i.number}}</td>
+        <td>{{i.position}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{%endif%}
+{% if params.get('teams') != None%}
+<table class="table table-hover">
+    <tbody>
+    {% for i in params.get('teams') %}
+    <tr>
+        <td><img src="{{url_for('static', filename= i.logo or '')}}" style="width: 32px" class=""></td>
+        <td><a href="{{url_for('player_profile', idp =i.id)}}">{{i.name}}</a></td>
+        <td>{{i.stadium}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{%endif%}
 {% endblock %}
+
 

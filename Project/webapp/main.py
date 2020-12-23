@@ -29,7 +29,8 @@ def find():
         'title': 'Home',
         'nav_home': 'active',
         'players': players,
-        'teams': teams
+        'teams': teams,
+        'groups': models.Groups.query.all()
     }
     return render_template("home/search.html", params=params)
 
@@ -42,6 +43,7 @@ def result():
     }
     params['results'] = models.Result.query.all()
     params['teams'] = models.Team
+    params['groups'] = models.Groups.query.all()
     return render_template('home/result.html', params=params)
 
 
@@ -54,6 +56,7 @@ def schedule():
     params['results'] = models.Result
     params['matchs'] = models.Match.query.all()
     params['teams'] = models.Team
+    params['groups'] = models.Groups.query.all()
     return render_template('home/schedule.html', params=params)
 
 
