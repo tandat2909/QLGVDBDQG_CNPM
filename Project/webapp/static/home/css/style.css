@@ -2111,7 +2111,7 @@ ol.breadcrumb {
 
 .st-table table tbody tr td img {
 	height: 30px;
-	width: 50px;
+	width: auto;
 }
 
 .st-table table tbody tr td h4 {
