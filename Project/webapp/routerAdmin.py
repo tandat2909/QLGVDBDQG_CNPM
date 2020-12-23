@@ -4,7 +4,9 @@ import datetime
 from flask import request, flash, redirect, url_for, render_template, jsonify
 from flask_login import logout_user, login_user, current_user
 
-from webapp import models, Forms, utils, app, decorate, SentEmail,EMethods
+from webapp import models, Forms, utils, app, decorate, SentEmail, EMethods
+
+
 @app.route('/admin')
 @app.route('/admin/')
 @decorate.login_required_Admin
@@ -85,10 +87,10 @@ def accounts():
             print(idteam)
             if idteam and SentEmail.sent_account_to_mail(idteam):
                 return jsonify({
-                    'status':200
+                    'status': 200
                 })
             return jsonify({
-                'status':400
+                'status': 400
             })
     listuser = models.Team.query.filter(models.Team.id != current_user.id)
     params['listuser'] = listuser
@@ -173,12 +175,13 @@ def match_admin():
     params['typegoals'] = models.TypeGoals.query.all()
     return render_template('admin/models/match/list.html', params=params)
 
+
 @app.route('/admin/match/delete', methods=['POST'])
 @decorate.login_required_Admin
 def delete_match():
     match_id = request.json.get('idmatch')
     if match_id and utils.delete_match(match_id):
-        flash('Xóa trận đấu thành công',category='success')
+        flash('Xóa trận đấu thành công', category='success')
         return jsonify({
             'statuss': 200,
         })
@@ -194,9 +197,12 @@ def results():
     if request.method == EMethods.post.value:
         if request.args.get("action").upper() == EMethods.edit.value:
             form = request.form
-            print(form.to_dict())
-            print(form.getlist('awaygoalplayer'))
-            print(request.form_data_parser_class.__dict__)
+            if utils.write_result(form):
+                flash("Lưu kết quả thàng công",category='success')
+            else:
+                flash("Lỗi lưu kết quả", category='error')
+            return redirect(url_for('match_admin'))
+
         if request.args.get("action").upper() == EMethods.get.value:
             try:
                 hometeamid = request.json.get('hometeamid')
@@ -210,29 +216,27 @@ def results():
                 html_option_playerhome = ""
                 html_option_playeraway = ""
                 for i in playerhome:
-                    html_option_playerhome += "<option value='%s'>%s</option>" %(i.id,i.name)
+                    html_option_playerhome += "<option value='%s'>%s</option>" % (i.id, i.name)
                 for i in playeraway:
                     html_option_playeraway += "<option value='%s'>%s</option>" % (i.id, i.name)
-                resulthome,resultaway = utils.get_result_for_writematch(matchid)
+                resulthome, resultaway = utils.get_result_for_writematch(matchid)
                 return jsonify({
-                    'data':{
-                        'home':{
-                            'player':html_option_playerhome,
+                    'data': {
+                        'home': {
+                            'player': html_option_playerhome,
                             'result': resulthome
                         },
                         'away': {
-                            'player': html_option_playerhome,
+                            'player': html_option_playeraway,
                             'result': resultaway
                         },
                     }
                 })
             except Exception as e:
-                print("Error result get list player",e)
+                print("Error result get list player", e)
                 return jsonify({
-                    'data':'error'
+                    'data': 'error'
                 })
-
-
 
     params = {
         'title': "Kết quả",
@@ -292,6 +296,7 @@ def listround():
     params['listgroup'] = models.Groups
     return render_template('admin/models/round/list.html', params=params)
 
+
 @app.route('/admin/round/delete', methods=['POST'])
 def delete_round():
     round_id = request.json.get('idround')
@@ -304,6 +309,7 @@ def delete_round():
     return jsonify({
         'statuss': 400,
     })
+
 
 @app.route('/admin/list/group/', methods=['GET', 'POST'])
 @decorate.login_required_Admin
@@ -329,6 +335,7 @@ def listgroup():
     params['listmatch'] = models.Match
     return render_template('admin/models/group/list.html', params=params)
 
+
 @app.route('/admin/player/list/')
 @decorate.login_required_Admin
 def listplayer():
@@ -339,10 +346,11 @@ def listplayer():
     params["teams"] = models.Team.query.filter(models.Team.role == models.Role.manager).all()
     return render_template('admin/models/player/list.html', params=params)
 
+
 @app.route('/admin/group/delete', methods=['POST'])
 def delete_group():
     group_id = request.json.get('idgroup')
-    print(group_id)
+
     if group_id and utils.delete_group(group_id):
         flash('Xóa group thành công')
         return jsonify({
@@ -351,6 +359,8 @@ def delete_group():
     return jsonify({
         'statuss': 400,
     })
+
+
 @app.route('/admin/group/addteam', methods=['POST', 'GET'])
 def add_team():
     params = {
@@ -361,10 +371,10 @@ def add_team():
         team = request.form.getlist('checkbox')
         group = request.form.get('group_id')
         try:
-            if utils.add_team_in_group(team,group):
+            if utils.add_team_in_group(team, group):
                 flash("Thêm team vào bảng thành công", category="success")
         except ValueError as e:
-            flash(e,category="error")
+            flash(e, category="error")
         except Exception as e:
             print('Lỗi add team', e)
     params['listgroup'] = models.Groups.query.all()
@@ -394,23 +404,23 @@ def changeconfig():
     }
     return render_template('admin/config.html', params=params)
 
-@app.route('/admin/typegoal',  methods=['GET', 'POST'])
+
+@app.route('/admin/typegoal', methods=['GET', 'POST'])
 @decorate.login_required_Admin
 def typeGoal():
     if request.method == EMethods.post.value:
         typeGoal = request.form.get('typeGoal')
         if typeGoal and utils.create_type_goal(typeGoal):
-            flash('Thêm loại bàn thắng thành công',category='success')
+            flash('Thêm loại bàn thắng thành công', category='success')
         else:
-            flash('Lỗi thêm loại bàn thắng',category='error')
+            flash('Lỗi thêm loại bàn thắng', category='error')
         return redirect(url_for('typeGoal'))
 
     params = {
         'title': 'loại bàn thắng',
         'typeGoal': models.TypeGoals.query.all()
     }
-    return render_template('admin/TypeGoal.html',params=params)
-
+    return render_template('admin/TypeGoal.html', params=params)
 
 # todo xóa round,result,match,group,gold xóa nguyên round và các trận liên quan
 # todo xuất list player

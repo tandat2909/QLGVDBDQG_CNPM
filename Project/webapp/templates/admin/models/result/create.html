@@ -15,9 +15,10 @@
             <div class="modal-body">
                 <form class="" action="{{url_for('results',action ='edit')}}" method="post">
                     <div class="form-group row">
+                        <input type="hidden" name="resultmatchid" id="resultmatchid">
                         <div class="col-md-6">
                             <label for="amountgoalhome" id="homename">Đội nhà</label>
-                            <input type="number" class="form-control" disabled id="amountgoalhome"
+                            <input type="number" class="form-control" id="amountgoalhome"
                                    name="amountgoalhome" min="0" value="0"
                                    required autocomplete="">
                             <table class="table table-active " id="homegoalplayer">
@@ -29,25 +30,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr style="display: none" id="row_goalhome">
-                                    <td width="50%">
-                                        <select class="form-control homeplayers" required style="width: 100%"
-                                                name="homegoalplayer">
-                                            <option selected value="" disabled>Chọn cầu thủ</option>
-                                        </select>
-                                    </td>
-                                    <td width="30%"><select class="form-control hometypegoal" required style="width: 100%"
-                                                            name="hometypegoal">
-                                        <option disabled value="" selected>Chọn loại bàn thắng</option>
-                                        {% for i in params.get('typegoals') %}
-                                        <option value="{{i.id}}">{{i.name}}</option>
-                                        {%endfor%}
-                                    </select>
-                                    </td>
-                                    <td width="20%"><input type="number" min="0" value="0" max="120" name="timer"
-                                                           required class="hometime form-control">
-                                    </td>
-                                </tr>
+
                                 </tbody>
                             </table>
                             <a class="btn btn-danger" value="home" onclick="addgoal('home')">Thêm bàn thắng</a>
@@ -55,7 +38,7 @@
                         <div class="col-md-6">
 
                             <label for="amountgoalaway" id="awayname">Đội Khách</label>
-                            <input type="number" class="form-control" disabled id="amountgoalaway"
+                            <input type="number" class="form-control" id="amountgoalaway"
                                    name="amountgoalaway" min="0" value="0"
                                    required autocomplete="">
 
@@ -69,25 +52,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr style="display: none" id="row_goalaway">
-                                    <td width="50%">
-                                        <select class="form-control awayplayers" required style="width: 100%"
-                                                name="awaygoalplayer">
-                                            <option selected value="" disabled>Chọn cầu thủ</option>
-                                        </select>
-                                    </td>
-                                    <td width="30%"><select class="form-control awaytypegoal" required style="width: 100%"
-                                                            name="awaytypegoal">
-                                        <option disabled value="" selected>Chọn loại bàn thắng</option>
-                                        {% for i in params.get('typegoals') %}
-                                        <option value="{{i.id}}">{{i.name}}</option>
-                                        {%endfor%}
-                                    </select>
-                                    </td>
-                                    <td width="20%"><input type="number" min="0" value="0" max="120" name="timer"
-                                                           required class="awaytime form-control">
-                                    </td>
-                                </tr>
+
                                 </tbody>
                             </table>
                             <a class="btn btn-danger" value="away" onclick="addgoal('away')">Thêm bàn thắng</a>
@@ -96,10 +61,52 @@
                     </div>
                     <input type="submit" id="btnsubmit" style="display: none">
                 </form>
+                <div style="display: none">
+                    <table>
+                        <tr style="display: none" id="row_goalhome">
+                            <td width="50%">
+                                <select class="form-control homeplayers" required style="width: 100%"
+                                        name="homeresult">
+                                    <option selected value="" disabled>Chọn cầu thủ</option>
+                                </select>
+                            </td>
+                            <td width="30%"><select class="form-control hometypegoal" required style="width: 100%"
+                                                    name="homeresult">
+                                <option disabled value="" selected>Chọn loại bàn thắng</option>
+                                {% for i in params.get('typegoals') %}
+                                <option value="{{i.id}}">{{i.name}}</option>
+                                {%endfor%}
+                            </select>
+                            </td>
+                            <td width="20%"><input type="number" min="0" value="0" max="120" name="timer"
+                                                   required class="hometime form-control">
+                            </td>
+                        </tr>
+                        <tr style="display: none" id="row_goalaway">
+                            <td width="50%">
+                                <select class="form-control awayplayers" required style="width: 100%"
+                                        name="awayresult">
+                                    <option selected value="" disabled>Chọn cầu thủ</option>
+                                </select>
+                            </td>
+                            <td width="30%"><select class="form-control awaytypegoal" required style="width: 100%"
+                                                    name="awayresult">
+                                <option disabled value="" selected>Chọn loại bàn thắng</option>
+                                {% for i in params.get('typegoals') %}
+                                <option value="{{i.id}}">{{i.name}}</option>
+                                {%endfor%}
+                            </select>
+                            </td>
+                            <td width="20%"><input type="number" min="0" value="0" max="120" name="awayresult"
+                                                   required class="awaytime form-control">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn" style="background: rebeccapurple" data-dismiss="modal">Close</button>
-                <button type="button" onclick=" $('#btnsubmit').click()" class="btn btn-primary">Save</button>
+                <button type="button" onclick="$('#btnsubmit').click()" class="btn btn-primary">Save</button>
             </div>
 
 

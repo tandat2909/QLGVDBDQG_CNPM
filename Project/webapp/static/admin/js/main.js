@@ -203,6 +203,7 @@ $('#writeresult').on('show.bs.modal', function (event) {
     modal.find('#homename').text(row.data("homename"))
     $("#homegoalplayer tbody tr:not('tr#row_goalhome')").remove()
     $("#awaygoalplayer tbody tr:not('tr#row_goalaway')").remove()
+    $("#resultmatchid").val(row.data('matchid'))
     fetch('/admin/results?action=GET', {
         method: 'POST',
         headers: {"Content-Type": 'application/json'},
@@ -216,32 +217,32 @@ $('#writeresult').on('show.bs.modal', function (event) {
         if (data.data != "error") {
             $("#row_goalhome select.homeplayers").empty().append(["<option selected value='' disabled>Chọn cầu thủ</option>", data.data.home.player])
             $("#row_goalaway select.awayplayers").empty().append(["<option selected value='' disabled>Chọn cầu thủ</option>", data.data.away.player])
-            console.log(data.data)
+
+
             var tableresulthome = $("#homegoalplayer tbody")
             var tableresultaway = $("#awaygoalplayer tbody")
             var resulthome = data.data.home.result
             for (i = 0; i < resulthome.length; i++) {
                 var row = $("#row_goalhome").clone()
-                row.find('select.homeplayers').val(resulthome[i].playerid)
-                row.find('select.hometypegoal').val(resulthome[i].type)
-                row.find('select.hometime').val(resulthome[i].time)
+                row.find('select.homeplayers').attr('name', 'homeresult' + (i + 1)).val(resulthome[i].playerid)
+                row.find('select.hometypegoal').attr('name', 'homeresult' + (i + 1)).val(resulthome[i].type)
+                row.find('input.hometime').attr('name', 'homeresult' + (i + 1)).val(resulthome[i].time)
                 row.removeAttr('id').css('display', '')
                 tableresulthome.append(row)
-                console.log(row[0])
 
             }
             var resultaway = data.data.away.result
             for (i = 0; i < resultaway.length; i++) {
                 var row = $("#row_goalaway").clone()
-                row.find('select.awayplayers').val(resultaway[i].playerid)
-                row.find('select.awaytypegoal').val(resultaway[i].type)
-                row.find('select.awaytime').val(resultaway[i].time)
+                row.find('select.awayplayers').attr('name', 'awayresult' + (i + 1)).val(resultaway[i].playerid)
+                row.find('select.awaytypegoal').attr('name', 'awayresult' + (i + 1)).val(resultaway[i].type)
+                row.find('input.awaytime').attr('name', 'awayresult' + (i + 1)).val(resultaway[i].time)
                 row.removeAttr('id').css('display', '')
                 tableresultaway.append(row)
-                console.log(resultaway[i].playerid)
             }
+            $("#amountgoalhome").val(resulthome.length)
 
-
+            $("#amountgoalaway").val(resultaway.length)
         }
     })
 })
@@ -253,6 +254,9 @@ function addgoal(btn) {
         inputamountgoal.val(parseInt(inputamountgoal.val()) + 1)
         var table = $("#homegoalplayer tbody")
         var row = $("#row_goalhome").clone()
+        row.find('select.homeplayers').attr('name', 'homeresult' + inputamountgoal.val())
+        row.find('select.hometypegoal').attr('name', 'homeresult' + inputamountgoal.val())
+        row.find('input.hometime').attr('name', 'homeresult' + inputamountgoal.val())
         row.removeAttr('id').css('display', '')
         $(table).append(row)
     }
@@ -261,8 +265,12 @@ function addgoal(btn) {
         inputamountgoal.val(parseInt(inputamountgoal.val()) + 1)
         var table = $("#awaygoalplayer tbody")
         var row = $("#row_goalaway").clone()
+        row.find('select.awayplayers').attr('name', 'awayresult' + inputamountgoal.val())
+        row.find('select.awaytypegoal').attr('name', 'awayresult' + inputamountgoal.val())
+        row.find('input.awaytime').attr('name', 'awayresult' + inputamountgoal.val())
         row.removeAttr('id').css('display', '')
         $(table).append(row)
     }
 
 }
+

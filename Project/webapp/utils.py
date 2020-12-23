@@ -411,14 +411,14 @@ def add_team_in_group(teams, idgroup):
 
 def sort_team_in_group(group_id):
     teamingr = models.Groups.query.get(group_id).teams
-    print(teamingr)
+
     team = []
     for i in teamingr:
         score = jinja_filters.Score(i.team.id)
         hs = jinja_filters.HS(i.team.id)
         bt = jinja_filters.BT(i.team.id)
         team.append((i, score, hs, bt))
-    print(team)
+
     team = sorted(team, key=itemgetter(1, 2, 3), reverse=True)
     teams = [i[0] for i in team]
     return teams
@@ -552,15 +552,17 @@ def delete_player(playerid):
     except Exception as e:
         print("Error deletePlayer:", e)
         return False
-def change_team_profile(email, phone, stadium,logo,idteam,description=' '):
+
+
+def change_team_profile(email, phone, stadium, logo, idteam, description=' '):
     try:
         if email and phone and stadium and idteam and logo and description:
             team = models.Team.query.get(idteam)
             team.email = email
             team.phonenumber = phone
-            team.stadium= stadium
+            team.stadium = stadium
             team.logo = logo
-            team.description= description
+            team.description = description
             db.session.add(team)
             db.session.commit()
             return True
@@ -586,9 +588,9 @@ def get_result_for_writematch(matchid):
         match = models.Match.query.get(matchid)
         result = match.results[0]
         goals = result.goals
-        resulthome=[]
-        resultaway=[]
-        for index,i in enumerate(goals):
+        resulthome = []
+        resultaway = []
+        for index, i in enumerate(goals):
             if i.player.team_id == match.hometeam_id:
                 resulthome.append({
                     'playerid': str(i.player_id),
@@ -602,10 +604,60 @@ def get_result_for_writematch(matchid):
                     'type': str(i.type_id),
                     'time': str(i.time)
                 })
-        return resulthome,resultaway
+        return resulthome, resultaway
     except Exception as e:
         print("Error get_result_for_writematch:", e)
         return {}
+
+
+def write_result(form):
+    try:
+
+        amountgoalhome = form.get('amountgoalhome')
+        amountgoalaway = form.get('amountgoalaway')
+        resulthome = []
+        resultaway = []
+        matchid = form.get('resultmatchid')
+        for i in range(int(amountgoalhome)):
+            resulthome.append(form.getlist('homeresult' + str(i + 1)))
+        for i in range(int(amountgoalaway)):
+            resultaway.append(form.getlist('awayresult' + str(i + 1)))
+
+        if amountgoalhome and amountgoalaway and int(amountgoalhome) == len(resulthome) and int(amountgoalaway) == len(
+                resultaway):
+            match = models.Match.query.get(matchid)
+            result = match.results[0]
+            goals = result.goals
+            if not result:
+                result = models.Result(match_id=match.id)
+            if int(amountgoalhome) >= int(amountgoalaway):
+                result.typeresult = models.ETypeResult.Win
+                result.winteam = match.hometeam_id
+                result.winnergoals = int(amountgoalhome)
+                result.losergoals = int(amountgoalaway)
+            elif int(amountgoalhome) < int(amountgoalaway):
+                result.typeresult = models.ETypeResult.Win
+                result.winteam = match.awayteam_id
+                result.winnergoals = int(amountgoalaway)
+                result.losergoals = int(amountgoalhome)
+            else:
+                result.typeresult = models.ETypeResult.Tie
+                result.winteam = None
+                result.winnergoals = int(amountgoalaway)
+                result.losergoals = int(amountgoalhome)
+            for i in resulthome:
+                goaltemp = models.Goal(player_id=i[0],type_id=int(i[1]),result_id=result.id,time=datetime.datetime.now())
+                db.session.add(goaltemp)
+            for i in resultaway:
+                goaltemp = models.Goal(player_id=i[0],type_id=int(i[1]),result_id=result.id,time=datetime.datetime.now())
+                db.session.add(goaltemp)
+            db.session.add(result)
+            db.session.commit()
+        return True
+    except Exception as e:
+        print("Error write_result", e)
+        return False
+
 
 
 if __name__ == '__main__':
