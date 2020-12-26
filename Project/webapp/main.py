@@ -1,3 +1,5 @@
+from sqlalchemy.sql.functions import user
+
 from webapp import app, login, models, jinja_filters, SentEmail
 from flask import request, g, render_template, redirect, url_for, abort, current_app, flash
 from flask_login import current_user, login_user, logout_user, login_required, login_url, AnonymousUserMixin, \
@@ -78,6 +80,7 @@ def team_profile():
     params['team'] = utils.get_team_by_ID(request.args.get('idp'))
     params['players'] = models.Team.query.get(request.args.get('idp')).players
     params['groups'] = models.Groups.query.all()
+
 
     return render_template('home/teamproflie.html', params=params)
 

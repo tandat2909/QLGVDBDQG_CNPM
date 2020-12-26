@@ -44,16 +44,16 @@
             <form action="{{ url_for('profile_team').replace('/admin/','/user/',1) }}" method="post"
                   enctype="multipart/form-data">
                 <div class="form-group">
-                    <label>Email: {{ params.get('team').email }}</label>
-                    <input type="text" name="email" class="form-control">
+                    <label>Email</label>
+                    <input type="text" name="email" value="{{ params.get('team').email }}" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label>Số điện thoại: {{ params.get('team').phonenumber }}</label>
-                    <input type="text" name="phonenumber" class="form-control">
+                    <label>Số điện thoại</label>
+                    <input type="text" name="phonenumber" value="{{ params.get('team').phonenumber }}" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label>Stadium: {{ params.get('team').stadium }}</label>
-                    <input type="text" name="stadium" class="form-control">
+                    <label>Stadium </label>
+                    <input type="text" name="stadium" value="{{ params.get('team').stadium }}" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="logo">Logo</label>

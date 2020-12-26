@@ -78,6 +78,8 @@ def amount_player(teamid):
     amount = utils.amountPlayer(teamid=teamid)
 
     return amount
+def get_hlv(va):
+    return utils.get_coach_by_teamID(va).name
 
 app.jinja_env.filters['encodeID'] = encodeID
 app.jinja_env.filters['format_datetime'] = format_datetime
@@ -88,3 +90,4 @@ app.jinja_env.filters['HieuSo'] = HS
 app.jinja_env.filters['Score'] = Score
 app.jinja_env.filters['Sort'] = utils.sort_team_in_group
 app.jinja_env.filters['GoalPl'] = utils.count_goal_by_playerid
+app.jinja_env.filters['get_hlv'] =get_hlv

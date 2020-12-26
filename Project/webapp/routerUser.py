@@ -57,7 +57,7 @@ def login_us():
 @decorate.login_required_user
 def players():
     params = {
-        'title': 'Dang sách cầu thủ',
+        'title': 'Danh sách thành viên',
         'nav_player': 'active',
         'positions': models.Position.query.all(),
         'genders': models.EGender,
